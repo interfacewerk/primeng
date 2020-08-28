@@ -1,72 +1,55 @@
 import { Component, OnInit } from '@angular/core';
-import { Customer } from '../../domain/customer';
-import { CustomerService } from '../../service/customerservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
     templateUrl: './tablescrolldemo.html'
 })
 export class TableScrollDemo implements OnInit {
 
-    customers: Customer[];
+    cars1: Car[];
 
-    frozenValue: Customer[];
-    
-    dialogVisible: boolean;
+    cars2: Car[];
 
-    scrollableCols: any[];
+    cols: any[];
+
+    frozenCars: Car[];
 
     frozenCols: any[];
 
-    constructor(private customerService: CustomerService) { }
+    scrollableCols: any[];
+    
+    dialogVisible: boolean;
+
+    constructor(private carService: CarService) {}
 
     ngOnInit() {
-        this.customerService.getCustomersLarge().then(data => this.customers = data);
+        this.carService.getCarsMedium().then(cars => this.cars1 = cars);
+        this.carService.getCarsSmall().then(cars => this.cars2 = cars);
 
-        this.frozenValue = [
-            {
-                id: 1255,
-                name: "James McAdams",
-                country: {
-                    name: "United States",
-                    code: "us"
-                },
-                company: "McAdams Consulting Ltd",
-                date: "2014-02-13",
-                status: "qualified",
-                activity: 23,
-                representative: {
-                    name: "Ioni Bowcher",
-                    image: "ionibowcher.png"
-                }
-            },
-            {
-                id: 5135,
-                name: "Geraldine Bisset",
-                country: {
-                    name: "France",
-                    code: "fr"
-                },
-                company: "Bisset Group",
-                status: "proposal",
-                date: "2019-05-05",
-                activity: 0,
-                representative: {
-                    name: "Amy Elsner",
-                    image: "amyelsner.png"
-                }
-            }
-        ];
-
-        this.frozenCols = [
-            { field: 'name', header: 'Name' }
+        this.cols = [
+            { field: 'vin', header: 'Vin' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
         ];
 
         this.scrollableCols = [
-            { field: 'id', header: 'Id' },
-            { field: 'date', header: 'Date' },
-            { field: 'company', header: 'Company' },
-            { field: 'status', header: 'Status' },
-            { field: 'activity', header: 'Activity' }
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
+        ];
+
+        this.frozenCols = [
+            { field: 'vin', header: 'Vin' }
+        ];
+
+        this.frozenCars = [
+            { "brand": "BMW", "year": 2013, "color": "Grey", "vin": "fh2uf23" },
+            { "brand": "Chevrolet", "year": 2011, "color": "Black", "vin": "4525g23" }
         ];
     }
 

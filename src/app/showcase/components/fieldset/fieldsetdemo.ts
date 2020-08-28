@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-    templateUrl: './fieldsetdemo.html',
-    styleUrls: ['./fieldsetdemo.scss']
+    templateUrl: './fieldsetdemo.html'
 })
 export class FieldsetDemo {
 

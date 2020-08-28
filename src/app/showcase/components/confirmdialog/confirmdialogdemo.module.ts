@@ -6,7 +6,7 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ButtonModule} from 'primeng/button';
 import {MessagesModule} from 'primeng/messages';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -15,8 +15,8 @@ import {AppCodeModule} from '../../app.code.component';
         ConfirmDialogModule,
         ButtonModule,
         MessagesModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		ConfirmDialogDemo

@@ -100,14 +100,12 @@ export class DomHandler {
 
         if ((targetOffset.top + targetHeight + elementDimensions.height) > viewport.height) {
             top = -1 * (elementDimensions.height);
-            element.style.transformOrigin = 'bottom';
             if (targetOffset.top + top < 0) {
                 top = -1 * targetOffset.top;
             }
         }
         else {
             top = targetHeight;
-            element.style.transformOrigin = 'top';
         }
 
         if (elementDimensions.width > viewport.width) {
@@ -141,15 +139,12 @@ export class DomHandler {
 
         if (targetOffset.top + targetOuterHeight + elementOuterHeight > viewport.height) {
             top = targetOffset.top + windowScrollTop - elementOuterHeight;
-            element.style.transformOrigin = 'bottom';
-
             if (top < 0) {
                 top = windowScrollTop;
             }
         } 
         else {
             top = targetOuterHeight + targetOffset.top + windowScrollTop;
-            element.style.transformOrigin = 'top';
         }
 
         if (targetOffset.left + elementOuterWidth > viewport.width)
@@ -353,11 +348,11 @@ export class DomHandler {
     }
     
     public static getOffset(el) {
-        var rect = el.getBoundingClientRect();
-
+        let rect = el.getBoundingClientRect();
+        
         return {
-            top: rect.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0),
-            left: rect.left + (window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0),
+            top: rect.top + document.body.scrollTop,
+            left: rect.left + document.body.scrollLeft
         };
     }
 
@@ -440,7 +435,7 @@ export class DomHandler {
                 return this.calculatedScrollbarWidth;
             
             let scrollDiv = document.createElement("div");
-            scrollDiv.className = "p-scrollbar-measure";
+            scrollDiv.className = "ui-scrollbar-measure";
             document.body.appendChild(scrollDiv);
 
             let scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
@@ -457,7 +452,7 @@ export class DomHandler {
             return this.calculatedScrollbarHeight;
         
         let scrollDiv = document.createElement("div");
-        scrollDiv.className = "p-scrollbar-measure";
+        scrollDiv.className = "ui-scrollbar-measure";
         document.body.appendChild(scrollDiv);
 
         let scrollbarHeight = scrollDiv.offsetHeight - scrollDiv.clientHeight;
@@ -551,10 +546,5 @@ export class DomHandler {
                     visibleFocusableElements.push(focusableElement);
             }
         return visibleFocusableElements;
-    }
-
-    static generateZIndex() {
-        this.zindex = this.zindex||999;
-        return ++this.zindex;
     }
 }

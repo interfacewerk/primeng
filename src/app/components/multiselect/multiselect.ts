@@ -1,5 +1,5 @@
 import { NgModule, Component, ElementRef, OnInit, AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy, Input, Output, Renderer2, EventEmitter,
-    forwardRef, ViewChild, ChangeDetectorRef, TemplateRef, ContentChildren, QueryList, ContentChild, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+    forwardRef, ViewChild, ChangeDetectorRef, TemplateRef, ContentChildren, QueryList, ContentChild, ChangeDetectionStrategy } from '@angular/core';
 import { trigger,state,style,transition,animate,AnimationEvent} from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { SelectItem } from 'primeng/api';
@@ -9,8 +9,7 @@ import { SharedModule, PrimeTemplate, Footer, Header } from 'primeng/api';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FilterUtils } from 'primeng/utils';
-import { TooltipModule } from 'primeng/tooltip';
-import { RippleModule } from 'primeng/ripple';
+import {TooltipModule} from 'primeng/tooltip';
 
 export const MULTISELECT_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -21,19 +20,19 @@ export const MULTISELECT_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-multiSelectItem',
     template: `
-        <li class="p-multiselect-item" (click)="onOptionClick($event)" (keydown)="onOptionKeydown($event)" [attr.aria-label]="option.label"
-            [attr.tabindex]="option.disabled ? null : '0'" [ngStyle]="{'height': itemSize + 'px'}"
-            [ngClass]="{'p-highlight': selected, 'p-disabled': (option.disabled || (maxSelectionLimitReached && !selected))}">
-            <div class="p-checkbox p-component">
-                <div class="p-checkbox-box" [ngClass]="{'p-highlight': selected}">
-                    <span class="p-checkbox-icon" [ngClass]="{'pi pi-check': selected}"></span>
+        <li class="ui-multiselect-item ui-corner-all" (click)="onOptionClick($event)" (keydown)="onOptionKeydown($event)" [attr.aria-label]="option.label"
+            [style.display]="visible ? 'block' : 'none'" [attr.tabindex]="option.disabled ? null : '0'" [ngStyle]="{'height': itemSize + 'px'}"
+            [ngClass]="{'ui-state-highlight': selected, 'ui-state-disabled': (option.disabled || (maxSelectionLimitReached && !selected))}">
+            <div class="ui-chkbox ui-widget">
+                <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default"
+                    [ngClass]="{'ui-state-active': selected}">
+                    <span class="ui-chkbox-icon ui-clickable" [ngClass]="{'pi pi-check': selected}"></span>
                 </div>
             </div>
             <span *ngIf="!template">{{option.label}}</span>
             <ng-container *ngTemplateOutlet="template; context: {$implicit: option}"></ng-container>
         </li>
-    `,
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class MultiSelectItem {
 
@@ -73,47 +72,46 @@ export class MultiSelectItem {
 @Component({
     selector: 'p-multiSelect',
     template: `
-        <div #container [ngClass]="{'p-multiselect p-component':true,'p-multiselect-open':overlayVisible,'p-focus':focus,'p-disabled': disabled}" [ngStyle]="style" [class]="styleClass"
+        <div #container [ngClass]="{'ui-multiselect ui-widget ui-state-default ui-corner-all':true,'ui-multiselect-open':overlayVisible,'ui-state-focus':focus,'ui-state-disabled': disabled}" [ngStyle]="style" [class]="styleClass"
             (click)="onMouseclick($event,in)">
-            <div class="p-hidden-accessible">
+            <div class="ui-helper-hidden-accessible">
                 <input #in type="text" readonly="readonly" [attr.id]="inputId" [attr.name]="name" (focus)="onInputFocus($event)" (blur)="onInputBlur($event)"
                        [disabled]="disabled" [attr.tabindex]="tabindex" (keydown)="onKeydown($event)" aria-haspopup="listbox" [attr.aria-expanded]="overlayVisible"
                        [attr.aria-labelledby]="ariaLabelledBy" role="listbox">
             </div>
-            <div class="p-multiselect-label-container" [pTooltip]="tooltip" [tooltipPosition]="tooltipPosition" [positionStyle]="tooltipPositionStyle" [tooltipStyleClass]="tooltipStyleClass">
-                <div class="p-multiselect-label" [ngClass]="{'p-placeholder': valuesAsString === (defaultLabel || placeholder), 'p-multiselect-label-empty': ((valuesAsString == null || valuesAsString.length === 0) && (placeholder == null || placeholder.length === 0))}">
-                    <ng-container *ngIf="!selectedItemsTemplate">{{valuesAsString || 'empty'}}</ng-container>
+            <div class="ui-multiselect-label-container" [pTooltip]="tooltip" [tooltipPosition]="tooltipPosition" [positionStyle]="tooltipPositionStyle" [tooltipStyleClass]="tooltipStyleClass">
+                <span class="ui-multiselect-label ui-corner-all">
+                    <ng-container *ngIf="!selectedItemsTemplate">{{valuesAsString}}</ng-container>
                     <ng-container *ngTemplateOutlet="selectedItemsTemplate; context: {$implicit: value}"></ng-container>
-                </div>
+                </span>
             </div>
-            <div [ngClass]="{'p-multiselect-trigger':true}">
-                <span class="p-multiselect-trigger-icon" [ngClass]="dropdownIcon"></span>
+            <div [ngClass]="{'ui-multiselect-trigger ui-state-default ui-corner-right':true}">
+                <span class="ui-multiselect-trigger-icon ui-clickable" [ngClass]="dropdownIcon"></span>
             </div>
-            <div *ngIf="overlayVisible" [ngClass]="['p-multiselect-panel p-component']" [@overlayAnimation]="{value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}" (@overlayAnimation.start)="onOverlayAnimationStart($event)"
+            <div *ngIf="overlayVisible" [ngClass]="['ui-multiselect-panel ui-widget ui-widget-content ui-corner-all ui-shadow']" [@overlayAnimation]="{value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}" (@overlayAnimation.start)="onOverlayAnimationStart($event)"
                 [ngStyle]="panelStyle" [class]="panelStyleClass" (keydown)="onKeydown($event)">
-                <div class="p-multiselect-header" *ngIf="showHeader">
-                    <ng-content select="p-header"></ng-content>
-                    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-                    <div class="p-checkbox p-component" *ngIf="showToggleAll && !selectionLimit">
-                        <div class="p-hidden-accessible">
+                <div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix" [ngClass]="{'ui-multiselect-header-no-toggleall': !showToggleAll}" *ngIf="showHeader">
+                <ng-content select="p-header"></ng-content>
+                <div class="ui-chkbox ui-widget" *ngIf="showToggleAll && !selectionLimit">
+                        <div class="ui-helper-hidden-accessible">
                             <input type="checkbox" readonly="readonly" [checked]="isAllChecked()" (focus)="onHeaderCheckboxFocus()" (blur)="onHeaderCheckboxBlur()" (keydown.space)="toggleAll($event)">
                         </div>
-                        <div class="p-checkbox-box" role="checkbox" [attr.aria-checked]="isAllChecked()" [ngClass]="{'p-highlight':isAllChecked(), 'p-focus': headerCheckboxFocus}" (click)="toggleAll($event)">
-                            <span class="p-checkbox-icon" [ngClass]="{'pi pi-check':isAllChecked()}"></span>
+                        <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" role="checkbox" [attr.aria-checked]="isAllChecked()" [ngClass]="{'ui-state-active':isAllChecked(), 'ui-state-focus': headerCheckboxFocus}" (click)="toggleAll($event)">
+                            <span class="ui-chkbox-icon ui-clickable" [ngClass]="{'pi pi-check':isAllChecked()}"></span>
                         </div>
                     </div>
-                    <div class="p-multiselect-filter-container" *ngIf="filter">
-                        <input #filterInput type="text" role="textbox" [value]="filterValue||''" (input)="onFilter()" class="p-multiselect-filter p-inputtext p-component" [attr.placeholder]="filterPlaceHolder" [attr.aria-label]="ariaFilterLabel">
-                        <span class="p-multiselect-filter-icon pi pi-search"></span>
+                    <div class="ui-multiselect-filter-container" *ngIf="filter">
+                        <input #filterInput type="text" role="textbox" [value]="filterValue||''" (input)="onFilter()" class="ui-inputtext ui-widget ui-state-default ui-corner-all" [attr.placeholder]="filterPlaceHolder" [attr.aria-label]="ariaFilterLabel">
+                        <span class="ui-multiselect-filter-icon pi pi-search"></span>
                     </div>
-                    <button class="p-multiselect-close p-link" type="button" (click)="close($event)" pRipple>
-                        <span class="p-multiselect-close-icon pi pi-times"></span>
-                    </button>
+                    <a class="ui-multiselect-close ui-corner-all" tabindex="0" (click)="close($event)" (keydown.enter)="close($event)">
+                        <span class="pi pi-times"></span>
+                    </a>
                 </div>
-                <div class="p-multiselect-items-wrapper" [style.max-height]="virtualScroll ? 'auto' : (scrollHeight||'auto')">
-                    <ul class="p-multiselect-items p-component" role="listbox" aria-multiselectable="true">
+                <div class="ui-multiselect-items-wrapper" [style.max-height]="virtualScroll ? 'auto' : (scrollHeight||'auto')">
+                    <ul class="ui-multiselect-items ui-multiselect-list ui-widget-content ui-widget ui-corner-all ui-helper-reset" role="listbox" aria-multiselectable="true">
                         <ng-container *ngIf="!virtualScroll; else virtualScrollList">
-                            <ng-template ngFor let-option let-i="index" [ngForOf]="visibleOptions">
+                            <ng-template ngFor let-option let-i="index" [ngForOf]="options">
                                 <p-multiSelectItem [option]="option" [selected]="isSelected(option.value)" (onClick)="onOptionClick($event)" (onKeydown)="onOptionKeydown($event)"
                                         [maxSelectionLimitReached]="maxSelectionLimitReached" [visible]="isItemVisible(option)" [template]="itemTemplate"></p-multiSelectItem>
                             </ng-template>
@@ -126,41 +124,41 @@ export class MultiSelectItem {
                                 </ng-container>
                             </cdk-virtual-scroll-viewport>
                         </ng-template>
-                        <li *ngIf="filter && visibleOptions && visibleOptions.length === 0" class="p-multiselect-empty-message">{{emptyFilterMessage}}</li>
+                        <li *ngIf="filter && visibleOptions && visibleOptions.length === 0" class="ui-multiselect-empty-message">{{emptyFilterMessage}}</li>
                     </ul>
                 </div>
-                <div class="p-multiselect-footer" *ngIf="footerFacet || footerTemplate">
+                <div class="ui-multiselect-footer ui-widget-content" *ngIf="footerFacet">
                     <ng-content select="p-footer"></ng-content>
-                    <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
                 </div>
             </div>
         </div>
     `,
     animations: [
         trigger('overlayAnimation', [
-            transition(':enter', [
-                style({opacity: 0, transform: 'scaleY(0.8)'}),
-                animate('{{showTransitionParams}}')
-              ]),
-              transition(':leave', [
-                animate('{{hideTransitionParams}}', style({ opacity: 0 }))
-              ])
+            state('void', style({
+                transform: 'translateY(5%)',
+                opacity: 0
+            })),
+            state('visible', style({
+                transform: 'translateY(0)',
+                opacity: 1
+            })),
+            transition('void => visible', animate('{{showTransitionParams}}')),
+            transition('visible => void', animate('{{hideTransitionParams}}'))
         ])
     ],
     host: {
-        '[class.p-inputwrapper-filled]': 'filled',
-        '[class.p-inputwrapper-focus]': 'focus'
+        '[class.ui-inputwrapper-filled]': 'filled',
+        '[class.ui-inputwrapper-focus]': 'focus'
     },
     providers: [MULTISELECT_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./multiselect.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterViewChecked,OnDestroy,ControlValueAccessor {
 
     @Input() scrollHeight: string = '200px';
 
-    _defaultLabel: string;
+    _defaultLabel: string = 'Choose';
 
     @Input() set defaultLabel(val: string) {
         this._defaultLabel = val;
@@ -169,17 +167,6 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
 
     get defaultLabel(): string {
         return this._defaultLabel;
-    }
-
-    _placeholder: string;
-
-    @Input() set placeholder(val: string) {
-        this._placeholder = val;
-        this.updateLabel();
-    }
-
-    get placeholder(): string {
-        return this._placeholder;
     }
 
     @Input() style: any;
@@ -244,9 +231,9 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
 
     @Input() itemSize: number;
 
-    @Input() showTransitionOptions: string = '.12s cubic-bezier(0, 0, 0.2, 1)';
+    @Input() showTransitionOptions: string = '225ms ease-out';
 
-    @Input() hideTransitionOptions: string = '.1s linear';
+    @Input() hideTransitionOptions: string = '195ms ease-in';
 
     @Input() ariaFilterLabel: string;
 
@@ -312,10 +299,6 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
 
     public itemTemplate: TemplateRef<any>;
 
-    public headerTemplate: TemplateRef<any>;
-
-    public footerTemplate: TemplateRef<any>;
-
     public selectedItemsTemplate: TemplateRef<any>;
 
     public headerCheckboxFocus: boolean;
@@ -328,7 +311,7 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
 
     preventModelTouched: boolean;
 
-    constructor(public el: ElementRef, public renderer: Renderer2, public cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef, public renderer: Renderer2, private cd: ChangeDetectorRef) {}
 
     @Input() get options(): any[] {
         return this._options;
@@ -358,14 +341,6 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
 
                 case 'selectedItems':
                     this.selectedItemsTemplate = item.template;
-                break;
-                
-                case 'header':
-                    this.headerTemplate = item.template;
-                break;
-
-                case 'footer':
-                    this.footerTemplate = item.template;
                 break;
 
                 default:
@@ -633,7 +608,6 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
             this.onFilter();
         }
         this.onPanelHide.emit();
-        this.cd.markForCheck();
     }
 
     close(event) {
@@ -722,7 +696,7 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
         let nextItem = item.nextElementSibling;
 
         if (nextItem)
-            return DomHandler.hasClass(nextItem.children[0], 'p-disabled') || DomHandler.isHidden(nextItem.children[0]) ? this.findNextItem(nextItem) : nextItem.children[0];
+            return DomHandler.hasClass(nextItem.children[0], 'ui-state-disabled') || DomHandler.isHidden(nextItem.children[0]) ? this.findNextItem(nextItem) : nextItem.children[0];
         else
             return null;
     }
@@ -731,7 +705,7 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
         let prevItem = item.previousElementSibling;
 
         if (prevItem)
-            return DomHandler.hasClass(prevItem.children[0], 'p-disabled') || DomHandler.isHidden(prevItem.children[0]) ? this.findPrevItem(prevItem) : prevItem.children[0];
+            return DomHandler.hasClass(prevItem.children[0], 'ui-state-disabled') || DomHandler.isHidden(prevItem.children[0]) ? this.findPrevItem(prevItem) : prevItem.children[0];
         else
             return null;
     }
@@ -787,7 +761,7 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
             }
         }
         else {
-            this.valuesAsString = this.placeholder || this.defaultLabel;
+            this.valuesAsString = this.defaultLabel;
         }
     }
 
@@ -855,6 +829,8 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
                 if (this.isOutsideClicked(event)) {
                     this.hide();
                 }
+
+                this.cd.markForCheck();
             });
         }
     }
@@ -899,7 +875,7 @@ export class MultiSelect implements OnInit,AfterViewInit,AfterContentInit,AfterV
 }
 
 @NgModule({
-    imports: [CommonModule,SharedModule,ScrollingModule,TooltipModule,RippleModule],
+    imports: [CommonModule,SharedModule,ScrollingModule, TooltipModule],
     exports: [MultiSelect,SharedModule,ScrollingModule],
     declarations: [MultiSelect,MultiSelectItem]
 })

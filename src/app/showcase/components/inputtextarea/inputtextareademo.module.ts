@@ -4,17 +4,15 @@ import {InputTextareaDemo} from './inputtextareademo';
 import {InputTextareaDemoRoutingModule} from './inputtextareademo-routing.module';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {TabViewModule} from 'primeng/tabview';
-import {AppInputStyleSwitchModule} from '../../app.inputstyleswitch.component';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		InputTextareaDemoRoutingModule,
         InputTextareaModule,
-		TabViewModule,
-		AppInputStyleSwitchModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		InputTextareaDemo

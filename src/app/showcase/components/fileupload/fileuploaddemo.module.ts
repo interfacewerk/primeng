@@ -6,7 +6,7 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {ToastModule} from 'primeng/toast';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -16,7 +16,7 @@ import {AppCodeModule} from '../../app.code.component';
         ToastModule,
         ButtonModule,
         TabViewModule,
-        AppCodeModule
+        CodeHighlighterModule
 	],
 	declarations: [
 		FileUploadDemo

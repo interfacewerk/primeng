@@ -6,7 +6,7 @@ import {DeferModule} from 'primeng/defer';
 import {TableModule} from 'primeng/table';
 import {ToastModule} from 'primeng/toast';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -16,7 +16,7 @@ import {AppCodeModule} from '../../app.code.component';
         ToastModule,
         TabViewModule,
         TableModule,
-        AppCodeModule
+        CodeHighlighterModule
 	],
 	declarations: [
 		DeferDemo

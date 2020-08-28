@@ -1,11 +1,10 @@
-import {NgModule,AfterViewInit,Component,EventEmitter,Input,NgZone,OnDestroy,Output,ElementRef,ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
+import {NgModule,AfterViewInit,Component,EventEmitter,Input,NgZone,OnDestroy,Output,ElementRef,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'p-captcha',
     template: `<div></div>`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Captcha implements AfterViewInit,OnDestroy {
 
@@ -29,7 +28,7 @@ export class Captcha implements AfterViewInit,OnDestroy {
     
     private _instance: any = null;
 
-    constructor(public el: ElementRef, public _zone: NgZone, public cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef, public _zone: NgZone) {}
     
     ngAfterViewInit() {
         if ((<any>window).grecaptcha) {
@@ -67,7 +66,6 @@ export class Captcha implements AfterViewInit,OnDestroy {
             return;
         
         (<any>window).grecaptcha.reset(this._instance);
-        this.cd.markForCheck();
     }
     
     getResponse(): String {

@@ -1,27 +1,27 @@
 :host ::ng-deep .custom-galleria {
-    &.p-galleria {
+    &.ui-galleria {
         &.fullscreen {
             display: flex;
             flex-direction: column;
 
-            .p-galleria-content {
+            .ui-galleria-content {
                 flex-grow: 1;
                 justify-content: center;
             }
         }
 
-        .p-galleria-content {
+        .ui-galleria-content {
             position: relative;
         }
 
-        .p-galleria-thumbnail-wrapper {
+        .ui-galleria-thumbnail-wrapper {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
         }
 
-        .p-galleria-thumbnail-items-container {
+        .ui-galleria-thumbnail-items-container {
             width: 100%;
         }
 

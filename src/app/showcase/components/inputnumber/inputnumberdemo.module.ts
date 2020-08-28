@@ -4,9 +4,8 @@ import {FormsModule} from '@angular/forms';
 import {InputNumberDemo} from './inputnumberdemo';
 import {InputNumberDemoRoutingModule} from './inputnumberdemo-routing.module';
 import {TabViewModule} from 'primeng/tabview';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {AppInputStyleSwitchModule} from '../../app.inputstyleswitch.component';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
+import { InputNumberModule } from 'src/app/components/public_api';
 
 @NgModule({
 	imports: [
@@ -14,9 +13,8 @@ import {AppCodeModule} from '../../app.code.component';
         FormsModule,
 		InputNumberDemoRoutingModule,
         InputNumberModule,
-		TabViewModule,
-		AppInputStyleSwitchModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		InputNumberDemo

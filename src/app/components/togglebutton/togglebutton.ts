@@ -1,6 +1,5 @@
-import {NgModule,Component,Input,Output,EventEmitter,forwardRef,ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
+import {NgModule,Component,Input,Output,EventEmitter,forwardRef,AfterViewInit,ViewChild,ElementRef,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RippleModule} from 'primeng/ripple';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 
 export const TOGGLEBUTTON_VALUE_ACCESSOR: any = {
@@ -12,23 +11,28 @@ export const TOGGLEBUTTON_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-toggleButton',
     template: `
-        <div [ngClass]="{'p-button p-togglebutton p-component': true, 'p-button-icon-only': (onIcon && offIcon && !hasOnLabel && !hasOffLabel),'p-highlight': checked,'p-disabled':disabled}" 
-                        [ngStyle]="style" [class]="styleClass" (click)="toggle($event)" (keydown.enter)="toggle($event)"
-                        [attr.tabindex]="disabled ? null : '0'" role="checkbox" [attr.aria-checked]="checked" pRipple>
-            <span *ngIf="onIcon||offIcon" [class]="checked ? this.onIcon : this.offIcon" 
-                [ngClass]="{'p-button-icon': true, 'p-button-icon-left': (iconPos === 'left'), 'p-button-icon-right': (iconPos === 'right')}"></span>
-            <span class="p-button-label">{{checked ? hasOnLabel ? onLabel : '' : hasOffLabel ? offLabel : ''}}</span>
+        <div [ngClass]="{'ui-button ui-togglebutton ui-widget ui-state-default ui-corner-all': true, 'ui-button-text-only': (!onIcon && !offIcon), 
+                'ui-button-text-icon-left': (onIcon && offIcon && hasOnLabel && hasOffLabel && iconPos === 'left'), 
+                'ui-button-text-icon-right': (onIcon && offIcon && hasOnLabel && hasOffLabel && iconPos === 'right'),'ui-button-icon-only': (onIcon && offIcon && !hasOnLabel && !hasOffLabel),
+                'ui-state-active': checked,'ui-state-focus':focus,'ui-state-disabled':disabled}" [ngStyle]="style" [class]="styleClass" 
+                (click)="toggle($event)" (keydown.enter)="toggle($event)">
+            <div class="ui-helper-hidden-accessible">
+                <input #checkbox type="checkbox" [attr.id]="inputId" [checked]="checked" (focus)="onFocus()" (blur)="onBlur()" [attr.tabindex]="tabindex"
+                    role="button" [attr.aria-pressed]="checked" [attr.aria-labelledby]="ariaLabelledBy" [disabled]="disabled">
+            </div>
+            <span *ngIf="onIcon||offIcon" class="ui-button-icon-left" [class]="checked ? this.onIcon : this.offIcon" [ngClass]="{'ui-button-icon-left': (iconPos === 'left'), 
+            'ui-button-icon-right': (iconPos === 'right')}"></span>
+            <span class="ui-button-text ui-unselectable-text">{{checked ? hasOnLabel ? onLabel : 'ui-btn' : hasOffLabel ? offLabel : 'ui-btn'}}</span>
         </div>
     `,
     providers: [TOGGLEBUTTON_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ['../button/button.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
-export class ToggleButton implements ControlValueAccessor {
+export class ToggleButton implements ControlValueAccessor,AfterViewInit {
 
-    @Input() onLabel: string;
+    @Input() onLabel: string = 'Yes';
 
-    @Input() offLabel: string;
+    @Input() offLabel: string = 'No';
 
     @Input() onIcon: string;
 
@@ -49,14 +53,24 @@ export class ToggleButton implements ControlValueAccessor {
     @Input() iconPos: string = 'left';
 
     @Output() onChange: EventEmitter<any> = new EventEmitter();
-           
+    
+    @ViewChild('checkbox') checkboxViewChild: ElementRef;
+    
+    checkbox: HTMLInputElement;
+    
     checked: boolean = false;
+
+    focus: boolean = false;
     
     onModelChange: Function = () => {};
     
     onModelTouched: Function = () => {};
     
-    constructor(public cd: ChangeDetectorRef) { }
+    ngAfterViewInit() {
+        if (this.checkboxViewChild){
+            this.checkbox = <HTMLInputElement> this.checkboxViewChild.nativeElement;
+        }
+    }
     
     toggle(event: Event) {
         if (!this.disabled) {
@@ -67,18 +81,23 @@ export class ToggleButton implements ControlValueAccessor {
                 originalEvent: event,
                 checked: this.checked
             });
-
-            this.cd.markForCheck();
+            if (this.checkbox) {
+                this.checkbox.focus();
+            }
         }
+    }
+
+    onFocus() {
+        this.focus = true;
     }
     
     onBlur() {
+        this.focus = false;
         this.onModelTouched();
     }
     
     writeValue(value: any) : void {
         this.checked = value;
-        this.cd.markForCheck();
     }
     
     registerOnChange(fn: Function): void {
@@ -103,7 +122,7 @@ export class ToggleButton implements ControlValueAccessor {
 }
 
 @NgModule({
-    imports: [CommonModule,RippleModule],
+    imports: [CommonModule],
     exports: [ToggleButton],
     declarations: [ToggleButton]
 })

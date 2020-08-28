@@ -1,4 +1,4 @@
-import { Component, NgModule, Type, ComponentFactoryResolver, ViewChild, OnDestroy, ComponentRef, AfterViewInit, ChangeDetectorRef, Renderer2, NgZone, ElementRef, ChangeDetectionStrategy, ViewRef, ViewEncapsulation } from '@angular/core';
+import { Component, NgModule, Type, ComponentFactoryResolver, ViewChild, OnDestroy, ComponentRef, AfterViewInit, ChangeDetectorRef, Renderer2, NgZone, ElementRef, ChangeDetectionStrategy, ViewRef } from '@angular/core';
 import { trigger,style,transition,animate,AnimationEvent, animation, useAnimation } from '@angular/animations';
 import { DynamicDialogContent } from './dynamicdialogcontent';
 import { DynamicDialogConfig } from './dynamicdialog-config';
@@ -18,23 +18,23 @@ const hideAnimation = animation([
 @Component({
 	selector: 'p-dynamicDialog',
 	template: `
-        <div #mask [ngClass]="{'p-dialog-mask':true, 'p-component-overlay p-dialog-mask-scrollblocker': config.modal !== false}">
-            <div [ngClass]="{'p-dialog p-dynamic-dialog p-component':true, 'p-dialog-rtl': config.rtl}" [ngStyle]="config.style" [class]="config.styleClass"
+        <div #mask [ngClass]="{'ui-dialog-mask ui-dialog-visible':true, 'ui-widget-overlay ui-dialog-mask-scrollblocker': config.modal !== false}">
+            <div [ngClass]="{'ui-dialog ui-dynamicdialog ui-widget ui-widget-content ui-corner-all ui-shadow':true, 'ui-dialog-rtl': config.rtl}" [ngStyle]="config.style" [class]="config.styleClass"
                 [@animation]="{value: 'visible', params: {transform: transformOptions, transition: config.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)'}}"
                 (@animation.start)="onAnimationStart($event)" (@animation.done)="onAnimationEnd($event)" role="dialog" *ngIf="visible"
                 [style.width]="config.width" [style.height]="config.height">
-                <div class="p-dialog-header" *ngIf="config.showHeader === false ? false: true">
-                    <span class="p-dialog-title">{{config.header}}</span>
-                    <div class="p-dialog-header-icons">
-                        <button [ngClass]="'p-dialog-header-icon p-dialog-header-maximize p-link'" type="button" (click)="close()" (keydown.enter)="close()" *ngIf="config.closable !== false">
-                            <span class="p-dialog-header-close-icon pi pi-times"></span>
-                        </button>
+                <div class="ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-corner-top" *ngIf="config.showHeader === false ? false: true">
+                    <span class="ui-dialog-title">{{config.header}}</span>
+                    <div class="ui-dialog-titlebar-icons">
+                        <a [ngClass]="'ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all'" tabindex="0" role="button" (click)="close()" (keydown.enter)="close()" *ngIf="config.closable !== false">
+                            <span class="pi pi-times"></span>
+                        </a>
                     </div>
                 </div>
-                <div class="p-dialog-content" [ngStyle]="config.contentStyle">
+                <div class="ui-dialog-content ui-widget-content" [ngStyle]="config.contentStyle">
                     <ng-template pDynamicDialogContent></ng-template>
                 </div>
-                <div class="p-dialog-footer" *ngIf="config.footer">
+                <div class="ui-dialog-footer ui-widget-content" *ngIf="config.footer">
                     {{config.footer}}
                 </div>
             </div>
@@ -50,9 +50,7 @@ const hideAnimation = animation([
             ])
         ])
     ],
-    changeDetection: ChangeDetectionStrategy.Default,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../dialog/dialog.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class DynamicDialogComponent implements AfterViewInit, OnDestroy {
 
@@ -142,7 +140,6 @@ export class DynamicDialogComponent implements AfterViewInit, OnDestroy {
 
 	close() {
         this.visible = false;
-        this.cd.markForCheck();
 	}
 
     enableModality() {
@@ -155,7 +152,7 @@ export class DynamicDialogComponent implements AfterViewInit, OnDestroy {
         }
 
         if (this.config.modal !== false) {
-            DomHandler.addClass(document.body, 'p-overflow-hidden');
+            DomHandler.addClass(document.body, 'ui-overflow-hidden');
         }
     }
 
@@ -166,7 +163,7 @@ export class DynamicDialogComponent implements AfterViewInit, OnDestroy {
             }
 
             if (this.config.modal !== false) {
-                DomHandler.removeClass(document.body, 'p-overflow-hidden');
+                DomHandler.removeClass(document.body, 'ui-overflow-hidden');
             }
 
             if (!(this.cd as ViewRef).destroyed) {
@@ -206,7 +203,7 @@ export class DynamicDialogComponent implements AfterViewInit, OnDestroy {
     }
 
     focus() {
-        let focusable = DomHandler.findSingle(this.container, '[autofocus]');
+        let focusable = DomHandler.findSingle(this.container, 'a');
         if (focusable) {
             this.zone.runOutsideAngular(() => {
                 setTimeout(() => focusable.focus(), 5);

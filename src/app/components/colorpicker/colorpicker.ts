@@ -1,4 +1,4 @@
-import { NgModule, Component, ElementRef, Input, Output, OnDestroy, EventEmitter, forwardRef, Renderer2, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { NgModule, Component, ElementRef, Input, Output, OnDestroy, EventEmitter, forwardRef, Renderer2, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, transition, animate, AnimationEvent } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { DomHandler } from 'primeng/dom';
@@ -13,20 +13,20 @@ export const COLORPICKER_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-colorPicker',
     template: `
-        <div [ngStyle]="style" [class]="styleClass" [ngClass]="{'p-colorpicker p-component':true,'p-colorpicker-overlay':!inline,'p-colorpicker-dragging':colorDragging||hueDragging}">
-            <input #input type="text" *ngIf="!inline" class="p-colorpicker-preview p-inputtext" readonly="readonly" [ngClass]="{'p-disabled': disabled}"
+        <div [ngStyle]="style" [class]="styleClass" [ngClass]="{'ui-colorpicker ui-widget':true,'ui-colorpicker-overlay':!inline,'ui-colorpicker-dragging':colorDragging||hueDragging}">
+            <input #input type="text" *ngIf="!inline" class="ui-colorpicker-preview ui-inputtext ui-state-default ui-corner-all" readonly="readonly" [ngClass]="{'ui-state-disabled': disabled}"
                 (focus)="onInputFocus()" (click)="onInputClick()" (keydown)="onInputKeydown($event)" [attr.id]="inputId" [attr.tabindex]="tabindex" [disabled]="disabled"
                 [style.backgroundColor]="inputBgColor">
-            <div *ngIf="inline || overlayVisible" [ngClass]="{'p-colorpicker-panel': true, 'p-colorpicker-overlay-panel':!inline, 'p-disabled': disabled}" (click)="onPanelClick()"
+            <div *ngIf="inline || overlayVisible" [ngClass]="{'ui-colorpicker-panel ui-corner-all': true, 'ui-colorpicker-overlay-panel ui-shadow':!inline, 'ui-state-disabled': disabled}" (click)="onPanelClick()"
                 [@overlayAnimation]="{value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}" [@.disabled]="inline === true" (@overlayAnimation.start)="onOverlayAnimationStart($event)">
-                <div class="p-colorpicker-content">
-                    <div #colorSelector class="p-colorpicker-color-selector" (mousedown)="onColorMousedown($event)">
-                        <div class="p-colorpicker-color">
-                            <div #colorHandle class="p-colorpicker-color-handle"></div>
+                <div class="ui-colorpicker-content">
+                    <div #colorSelector class="ui-colorpicker-color-selector" (mousedown)="onColorMousedown($event)">
+                        <div class="ui-colorpicker-color">
+                            <div #colorHandle class="ui-colorpicker-color-handle"></div>
                         </div>
                     </div>
-                    <div #hue class="p-colorpicker-hue" (mousedown)="onHueMousedown($event)">
-                        <div #hueHandle class="p-colorpicker-hue-handle"></div>
+                    <div #hue class="ui-colorpicker-hue" (mousedown)="onHueMousedown($event)">
+                        <div #hueHandle class="ui-colorpicker-hue-handle"></div>
                     </div>
                 </div>
             </div>
@@ -34,19 +34,20 @@ export const COLORPICKER_VALUE_ACCESSOR: any = {
     `,
     animations: [
         trigger('overlayAnimation', [
-            transition(':enter', [
-                style({opacity: 0, transform: 'scaleY(0.8)'}),
-                animate('{{showTransitionParams}}')
-              ]),
-              transition(':leave', [
-                animate('{{hideTransitionParams}}', style({ opacity: 0 }))
-              ])
+            state('void', style({
+                transform: 'translateY(5%)',
+                opacity: 0
+            })),
+            state('visible', style({
+                transform: 'translateY(0)',
+                opacity: 1
+            })),
+            transition('void => visible', animate('{{showTransitionParams}}')),
+            transition('visible => void', animate('{{hideTransitionParams}}'))
         ])
     ],
     providers: [COLORPICKER_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./colorpicker.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class ColorPicker implements ControlValueAccessor, OnDestroy {
 
@@ -70,9 +71,9 @@ export class ColorPicker implements ControlValueAccessor, OnDestroy {
     
     @Input() baseZIndex: number = 0;
 
-    @Input() showTransitionOptions: string = '.12s cubic-bezier(0, 0, 0.2, 1)';
+    @Input() showTransitionOptions: string = '225ms ease-out';
 
-    @Input() hideTransitionOptions: string = '.1s linear';
+    @Input() hideTransitionOptions: string = '195ms ease-in';
     
     @Output() onChange: EventEmitter<any> = new EventEmitter();
     
@@ -234,7 +235,6 @@ export class ColorPicker implements ControlValueAccessor, OnDestroy {
         
         this.updateColorSelector();
         this.updateUI();
-        this.cd.markForCheck();
     }
     
     updateColorSelector() {

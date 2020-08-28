@@ -5,9 +5,11 @@ import {DomHandler} from 'primeng/dom';
 @Directive({
     selector: '[pPassword]',
     host: {
-        '[class.p-inputtext]': 'true',
-        '[class.p-component]': 'true',
-        '[class.p-filled]': 'filled'
+        '[class.ui-inputtext]': 'true',
+        '[class.ui-corner-all]': 'true',
+        '[class.ui-state-default]': 'true',
+        '[class.ui-widget]': 'true',
+        '[class.ui-state-filled]': 'filled'
     }
 })
 export class Password implements OnDestroy,DoCheck {
@@ -40,6 +42,7 @@ export class Password implements OnDestroy,DoCheck {
         this.updateFilledState();
     }
     
+    //To trigger change detection to manage ui-state-filled for material labels when there is no value binding
     @HostListener('input', ['$event']) 
     onInput(e) {
         this.updateFilledState();
@@ -51,11 +54,11 @@ export class Password implements OnDestroy,DoCheck {
 
     createPanel() {
         this.panel = document.createElement('div');
-        this.panel.className = 'p-password-panel p-component p-password-panel-overlay p-connected-overlay';
+        this.panel.className = 'ui-password-panel ui-widget ui-state-highlight ui-corner-all';
         this.meter = document.createElement('div');
-        this.meter.className = 'p-password-meter';
+        this.meter.className = 'ui-password-meter';
         this.info = document.createElement('div');
-        this.info.className = 'p-password-info';
+        this.info.className = 'ui-password-info';
         this.info.textContent = this.promptLabel;
         this.panel.appendChild(this.meter);
         this.panel.appendChild(this.info);
@@ -63,30 +66,29 @@ export class Password implements OnDestroy,DoCheck {
         document.body.appendChild(this.panel);
     }
         
-    @HostListener('focus') 
-    onFocus() {
+    @HostListener('focus', ['$event']) 
+    onFocus(e) {
         if (this.feedback) {
             if (!this.panel) {
                 this.createPanel();
             }
     
             this.panel.style.zIndex = String(++DomHandler.zindex);
-            this.panel.style.display = 'block';
             this.zone.runOutsideAngular(() => {
-                
                 setTimeout(() => {
-                    DomHandler.addClass(this.panel, 'p-connected-overlay-visible');
+                    DomHandler.addClass(this.panel, 'ui-password-panel-visible');
+                    DomHandler.removeClass(this.panel, 'ui-password-panel-hidden');
                 }, 1);
+                DomHandler.absolutePosition(this.panel, this.el.nativeElement);
             });
-            DomHandler.absolutePosition(this.panel, this.el.nativeElement);
         }
     }
     
-    @HostListener('blur') 
-    onBlur() {   
+    @HostListener('blur', ['$event']) 
+    onBlur(e) {   
         if (this.feedback) {
-            DomHandler.addClass(this.panel, 'p-connected-overlay-hidden');
-            DomHandler.removeClass(this.panel, 'p-connected-overlay-visible');
+            DomHandler.addClass(this.panel, 'ui-password-panel-hidden');
+            DomHandler.removeClass(this.panel, 'ui-password-panel-visible');
 
             this.zone.runOutsideAngular(() => {
                 setTimeout(() => {
@@ -131,7 +133,7 @@ export class Password implements OnDestroy,DoCheck {
     
     testStrength(str: string) {
         let grade: number = 0;
-        let val: RegExpMatchArray;
+        let val;
 
         val = str.match('[0-9]');
         grade += this.normalize(val ? val.length : 1/4, 1) * 25;

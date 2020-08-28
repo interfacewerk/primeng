@@ -1,18 +1,79 @@
 import {NgModule,Component,ElementRef,OnDestroy,Input,Output,EventEmitter,AfterContentInit,
-        ContentChildren,QueryList,TemplateRef,EmbeddedViewRef,ViewContainerRef,ChangeDetectorRef,ChangeDetectionStrategy, ViewEncapsulation, ViewChild, AfterViewChecked} from '@angular/core';
+        ContentChildren,QueryList,TemplateRef,EmbeddedViewRef,ViewContainerRef,ChangeDetectorRef,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TooltipModule} from 'primeng/tooltip';
-import {RippleModule} from 'primeng/ripple';
 import {SharedModule,PrimeTemplate} from 'primeng/api';
 import {BlockableUI} from 'primeng/api';
-import {DomHandler} from 'primeng/dom';
 
 let idx: number = 0;
 
 @Component({
+    selector: '[p-tabViewNav]',
+    host:{
+        '[class.ui-tabview-nav]': 'true',
+        '[class.ui-helper-reset]': 'true',
+        '[class.ui-helper-clearfix]': 'true',
+        '[class.ui-widget-header]': 'true',
+        '[class.ui-corner-all]': 'true'
+    },
+    template: `
+        <ng-template ngFor let-tab [ngForOf]="tabs">
+            <li [class]="getDefaultHeaderClass(tab)" [ngStyle]="tab.headerStyle" role="presentation" [attr.tabindex]="tab.disabled ? -1 : 0"
+                [ngClass]="{'ui-tabview-selected ui-state-active': tab.selected, 'ui-state-disabled': tab.disabled}"
+                (click)="clickTab($event,tab)" *ngIf="!tab.closed" tabindex="0" (keydown.enter)="clickTab($event,tab)">
+                <a [attr.id]="tab.id + '-label'" role="tab" [attr.aria-selected]="tab.selected" [attr.aria-controls]="tab.id" [pTooltip]="tab.tooltip" [tooltipPosition]="tab.tooltipPosition"
+                    [attr.aria-selected]="tab.selected" [positionStyle]="tab.tooltipPositionStyle" [tooltipStyleClass]="tab.tooltipStyleClass">
+                    <ng-container *ngIf="!tab.headerTemplate" >
+                        <span class="ui-tabview-left-icon" [ngClass]="tab.leftIcon" *ngIf="tab.leftIcon"></span>
+                        <span class="ui-tabview-title">{{tab.header}}</span>
+                        <span class="ui-tabview-right-icon" [ngClass]="tab.rightIcon" *ngIf="tab.rightIcon"></span>
+                    </ng-container>
+                    <ng-container *ngIf="tab.headerTemplate">
+                        <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
+                    </ng-container>
+                </a>
+                <span *ngIf="tab.closable" class="ui-tabview-close pi pi-times" (click)="clickClose($event,tab)"></span>
+            </li>
+        </ng-template>
+    `,
+})
+export class TabViewNav {
+    
+    @Input() tabs: TabPanel[];
+
+    @Input() orientation: string = 'top';
+
+    @Output() onTabClick: EventEmitter<any> = new EventEmitter();
+    
+    @Output() onTabCloseClick: EventEmitter<any> = new EventEmitter();
+    
+    getDefaultHeaderClass(tab:TabPanel) {
+        let styleClass = 'ui-state-default ui-corner-' + this.orientation;
+        if (tab.headerStyleClass) {
+            styleClass = styleClass + " " + tab.headerStyleClass;
+        }
+        return styleClass;
+    }
+    
+    clickTab(event, tab: TabPanel) {
+        this.onTabClick.emit({
+            originalEvent: event,
+            tab: tab
+        })
+    }
+    
+    clickClose(event, tab: TabPanel) {
+        this.onTabCloseClick.emit({
+            originalEvent: event,
+            tab: tab
+        })
+    }
+}
+
+@Component({
     selector: 'p-tabPanel',
     template: `
-        <div [attr.id]="id" class="p-tabview-panel" [hidden]="!selected"
+        <div [attr.id]="id" class="ui-tabview-panel ui-widget-content" [ngClass]="{'ui-helper-hidden': !selected}"
             role="tabpanel" [attr.aria-hidden]="!selected" [attr.aria-labelledby]="id + '-label'" *ngIf="!closed">
             <ng-content></ng-content>
             <ng-container *ngIf="contentTemplate && (cache ? loaded : selected)">
@@ -49,7 +110,7 @@ export class TabPanel implements AfterContentInit,OnDestroy {
 
     @ContentChildren(PrimeTemplate) templates: QueryList<any>;
     
-    constructor(public viewContainer: ViewContainerRef, public cd: ChangeDetectorRef) {}
+    constructor(public viewContainer: ViewContainerRef, private cd: ChangeDetectorRef) {}
     
     closed: boolean;
     
@@ -59,7 +120,7 @@ export class TabPanel implements AfterContentInit,OnDestroy {
     
     loaded: boolean;
     
-    id: string = `p-tabpanel-${idx++}`;
+    id: string = `ui-tabpanel-${idx++}`;
     
     contentTemplate: TemplateRef<any>;
 
@@ -105,35 +166,19 @@ export class TabPanel implements AfterContentInit,OnDestroy {
 @Component({
     selector: 'p-tabView',
     template: `
-        <div [ngClass]="'p-tabview p-component'" [ngStyle]="style" [class]="styleClass">
-            <ul #navbar class="p-tabview-nav" role="tablist">
-                <ng-template ngFor let-tab [ngForOf]="tabs">
-                    <li role="presentation" [ngClass]="{'p-highlight': tab.selected, 'p-disabled': tab.disabled}" [ngStyle]="tab.headerStyle" [class]="tab.headerStyleClass" *ngIf="!tab.closed">
-                        <a role="tab" class="p-tabview-nav-link" [attr.id]="tab.id + '-label'" [attr.aria-selected]="tab.selected" [attr.aria-controls]="tab.id" [pTooltip]="tab.tooltip" [tooltipPosition]="tab.tooltipPosition"
-                            [attr.aria-selected]="tab.selected" [positionStyle]="tab.tooltipPositionStyle" [tooltipStyleClass]="tab.tooltipStyleClass"
-                            (click)="open($event,tab)" (keydown.enter)="open($event,tab)" pRipple [attr.tabindex]="tab.disabled ? null : '0'">
-                            <ng-container *ngIf="!tab.headerTemplate">
-                                <span class="p-tabview-left-icon" [ngClass]="tab.leftIcon" *ngIf="tab.leftIcon"></span>
-                                <span class="p-tabview-title">{{tab.header}}</span>
-                                <span class="p-tabview-right-icon" [ngClass]="tab.rightIcon" *ngIf="tab.rightIcon"></span>
-                            </ng-container>
-                            <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
-                            <span *ngIf="tab.closable" class="p-tabview-close pi pi-times" (click)="close($event,tab)"></span>
-                        </a>
-                    </li>
-                </ng-template>
-                <li #inkbar class="p-tabview-ink-bar"></li>
-            </ul>
-            <div class="p-tabview-panels">
+        <div [ngClass]="'ui-tabview ui-widget ui-widget-content ui-corner-all ui-tabview-' + orientation" [ngStyle]="style" [class]="styleClass">
+            <ul p-tabViewNav role="tablist" *ngIf="orientation!='bottom'" [tabs]="tabs" [orientation]="orientation"
+                (onTabClick)="open($event.originalEvent, $event.tab)" (onTabCloseClick)="close($event.originalEvent, $event.tab)"></ul>
+            <div class="ui-tabview-panels">
                 <ng-content></ng-content>
             </div>
+            <ul p-tabViewNav role="tablist" *ngIf="orientation=='bottom'" [tabs]="tabs" [orientation]="orientation"
+                (onTabClick)="open($event.originalEvent, $event.tab)" (onTabCloseClick)="close($event.originalEvent, $event.tab)"></ul>
         </div>
     `,
-   changeDetection: ChangeDetectionStrategy.OnPush,
-   encapsulation: ViewEncapsulation.None,
-   styleUrls: ['./tabview.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
-export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
+export class TabView implements AfterContentInit,BlockableUI {
 
     @Input() orientation: string = 'top';
     
@@ -142,10 +187,6 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
     @Input() styleClass: string;
     
     @Input() controlClose: boolean;
-
-    @ViewChild('navbar') navbar: ElementRef;
-
-    @ViewChild('inkbar') inkbar: ElementRef;
     
     @ContentChildren(TabPanel) tabPanels: QueryList<TabPanel>;
 
@@ -163,9 +204,7 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
     
     preventActiveIndexPropagation: boolean;
 
-    tabChanged: boolean;
-
-    constructor(public el: ElementRef, public cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef) {}
       
     ngAfterContentInit() {
         this.initTabs();
@@ -173,13 +212,6 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
         this.tabPanels.changes.subscribe(_ => {
             this.initTabs();
         });
-    }
-
-    ngAfterViewChecked() {
-        if (this.tabChanged) {
-            this.updateInkBar();
-            this.tabChanged = false;
-        }
     }
     
     initTabs(): void {
@@ -190,8 +222,6 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
                 this.tabs[this.activeIndex].selected = true;
             else
                 this.tabs[0].selected = true;
-
-            this.tabChanged = true;
         }
     }
     
@@ -209,7 +239,6 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
                 selectedTab.selected = false
             }
             
-            this.tabChanged = true;
             tab.selected = true;
             let selectedTabIndex = this.findTabIndex(tab);
             this.preventActiveIndexPropagation = true;
@@ -248,7 +277,6 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
             return;
         }
         if (tab.selected) {
-            this.tabChanged = true;
             tab.selected = false;
             for(let i = 0; i < this.tabs.length; i++) {
                 let tabPanel = this.tabs[i];
@@ -302,18 +330,12 @@ export class TabView implements AfterContentInit,AfterViewChecked,BlockableUI {
             this.tabs[this._activeIndex].selected = true;
         }
     }
-
-    updateInkBar() {
-        let tabHeader = DomHandler.findSingle(this.navbar.nativeElement, 'li.p-highlight');
-        this.inkbar.nativeElement.style.width = DomHandler.getWidth(tabHeader) + 'px';
-        this.inkbar.nativeElement.style.left =  DomHandler.getOffset(tabHeader).left - DomHandler.getOffset(this.navbar.nativeElement).left + 'px';
-    }
 }
 
 
 @NgModule({
-    imports: [CommonModule,SharedModule,TooltipModule,RippleModule],
-    exports: [TabView,TabPanel,SharedModule],
-    declarations: [TabView,TabPanel]
+    imports: [CommonModule,SharedModule,TooltipModule],
+    exports: [TabView,TabPanel,TabViewNav,SharedModule],
+    declarations: [TabView,TabPanel,TabViewNav]
 })
 export class TabViewModule { }

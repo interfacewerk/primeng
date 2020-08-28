@@ -165,11 +165,11 @@ export class Tooltip implements AfterViewInit, OnDestroy {
         this.container = document.createElement('div');
 
         let tooltipArrow = document.createElement('div');
-        tooltipArrow.className = 'p-tooltip-arrow';
+        tooltipArrow.className = 'ui-tooltip-arrow';
         this.container.appendChild(tooltipArrow);
 
         this.tooltipText = document.createElement('div');
-        this.tooltipText.className = 'p-tooltip-text';
+        this.tooltipText.className = 'ui-tooltip-text ui-shadow ui-corner-all';
 
         this.updateText();
 
@@ -337,7 +337,7 @@ export class Tooltip implements AfterViewInit, OnDestroy {
         this.container.style.left = -999 + 'px';
         this.container.style.top = -999 + 'px';
 
-        let defaultClassName = 'p-tooltip p-component p-tooltip-' + position;
+        let defaultClassName = 'ui-tooltip ui-widget ui-tooltip-' + position;
         this.container.className = this.tooltipStyleClass ? defaultClassName + ' ' + this.tooltipStyleClass : defaultClassName;
     }
 

@@ -6,7 +6,7 @@ import {MenubarModule} from 'primeng/menubar';
 import {InputTextModule} from 'primeng/inputtext';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
-import { AppCodeModule } from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -15,8 +15,8 @@ import { AppCodeModule } from '../../app.code.component';
         MenubarModule,
         InputTextModule,
         ButtonModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		MenubarDemo

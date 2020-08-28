@@ -1,8 +1,7 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-    templateUrl: './sliderdemo.html',
-    styleUrls: ['./sliderdemo.scss']
+    templateUrl: './sliderdemo.html'
 })
 export class SliderDemo {
 
@@ -13,6 +12,8 @@ export class SliderDemo {
     val3: number;
 
     val4: number;
+
+    val5: number;
 
     rangeValues: number[] = [20,80];
 }

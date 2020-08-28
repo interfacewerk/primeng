@@ -1,7 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {AppConfigService} from '../../../service/appconfigservice';
-import {AppConfig} from '../../../domain/appconfig';
+import {Component} from '@angular/core';
 
 @Component({
     templateUrl: './radarchartdemo.html'
@@ -10,15 +7,7 @@ export class RadarChartDemo {
 
     data: any;
 
-    chartOptions: any;
-    
-    subscription: Subscription;
-
-    config: AppConfig;
-
-    constructor(private configService: AppConfigService) {}
-
-    ngOnInit() {
+    constructor() {
         this.data = {
             labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
             datasets: [
@@ -44,46 +33,5 @@ export class RadarChartDemo {
                 }
             ]
         };
-
-        this.config = this.configService.config;
-        this.updateChartOptions();
-        this.subscription = this.configService.configUpdate$.subscribe(config => {
-            this.config = config;
-            this.updateChartOptions();
-        });
-    }
-
-    updateChartOptions() {
-        this.chartOptions = this.config && this.config.dark ? this.getDarkTheme() : this.getLightTheme();
-    }
-
-    getLightTheme() {
-        return {
-            legend: {
-                labels: {
-                    fontColor: '#495057'
-                }
-            },
-            scale: {
-                gridLines: {
-                    color: '#ebedef'
-                }
-            }
-        }
-    }
-
-    getDarkTheme() {
-        return {
-            legend: {
-                labels: {
-                    fontColor: '#ebedef'
-                }
-            },
-            scale: {
-                gridLines: {
-                    color: 'rgba(255,255,255,0.2)'
-                }
-            }
-        }
     }
 }

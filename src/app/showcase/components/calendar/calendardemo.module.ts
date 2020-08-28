@@ -5,8 +5,7 @@ import {CalendarDemo} from './calendardemo';
 import {CalendarDemoRoutingModule} from './calendardemo-routing.module';
 import {CalendarModule} from 'primeng/calendar';
 import {TabViewModule} from 'primeng/tabview';
-import {AppInputStyleSwitchModule} from '../../app.inputstyleswitch.component';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -14,9 +13,8 @@ import {AppCodeModule} from '../../app.code.component';
         FormsModule,
 		CalendarDemoRoutingModule,
         CalendarModule,
-		TabViewModule,
-		AppInputStyleSwitchModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		CalendarDemo

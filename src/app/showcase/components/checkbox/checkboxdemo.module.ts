@@ -5,8 +5,7 @@ import {CheckboxDemo} from './checkboxdemo';
 import {CheckboxDemoRoutingModule} from './checkboxdemo-routing.module';
 import {CheckboxModule} from 'primeng/checkbox';
 import {TabViewModule} from 'primeng/tabview';
-import { AppInputStyleSwitchModule } from '../../app.inputstyleswitch.component';
-import { AppCodeModule } from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -14,9 +13,8 @@ import { AppCodeModule } from '../../app.code.component';
         FormsModule,
 		CheckboxDemoRoutingModule,
         CheckboxModule,
-		AppInputStyleSwitchModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		CheckboxDemo

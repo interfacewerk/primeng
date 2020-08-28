@@ -1,38 +1,39 @@
-import { NgModule, Component, ElementRef, Input, Renderer2, OnDestroy,ChangeDetectorRef, ChangeDetectionStrategy, ViewEncapsulation, AfterContentInit, ContentChildren, QueryList, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { NgModule, Component, ElementRef, Input, Renderer2, OnDestroy,ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomHandler } from 'primeng/dom';
-import { MenuItem, PrimeTemplate } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
-import { RippleModule } from 'primeng/ripple';  
 
 @Component({
     selector: 'p-menubarSub',
     template: `
-        <ul [ngClass]="{'p-submenu-list': !root, 'p-menubar-root-list': root}">
+        <ul [ngClass]="{'ui-menubar-root-list':root, 'ui-widget-content ui-corner-all ui-submenu-list ui-shadow':!root}"
+            (click)="listClick($event)">
             <ng-template ngFor let-child [ngForOf]="(root ? item : item.items)">
-                <li *ngIf="child.separator" class="p-menu-separator" [ngClass]="{'p-hidden': child.visible === false}">
-                <li *ngIf="!child.separator" #listItem [ngClass]="{'p-menuitem':true, 'p-menuitem-active': child === activeItem, 'p-hidden': child.visible === false}" (mouseenter)="onItemMouseEnter($event,child)">
-                    <a *ngIf="!child.routerLink" [attr.href]="child.url" [attr.data-automationid]="child.automationId" [attr.target]="child.target" [attr.title]="child.title" [attr.id]="child.id" (click)="onItemClick($event, child)"
-                         [ngClass]="{'p-menuitem-link':true,'p-disabled':child.disabled}" [ngStyle]="child.style" [class]="child.styleClass" 
-                         [attr.tabindex]="child.disabled ? null : '0'" [attr.aria-haspopup]="item.items != null" [attr.aria-expanded]="item === activeItem" pRipple>
-                        <span class="p-menuitem-icon" *ngIf="child.icon" [ngClass]="child.icon"></span>
-                        <span class="p-menuitem-text">{{child.label}}</span>
-                        <span class="p-submenu-icon pi" *ngIf="child.items" [ngClass]="{'pi-angle-down':root,'pi-angle-right':!root}"></span>
+                <li *ngIf="child.separator" class="ui-menu-separator ui-widget-content" [ngClass]="{'ui-helper-hidden': child.visible === false}">
+                <li *ngIf="!child.separator" #listItem [ngClass]="{'ui-menuitem ui-corner-all':true,
+                        'ui-menu-parent':child.items,'ui-menuitem-active':listItem==activeItem,'ui-helper-hidden': child.visible === false}"
+                        (mouseenter)="onItemMouseEnter($event,listItem,child)" (click)="onItemMenuClick($event, listItem, child)">
+                    <a *ngIf="!child.routerLink" [attr.href]="child.url" [attr.data-automationid]="child.automationId" [attr.target]="child.target" [attr.title]="child.title" [attr.id]="child.id" (click)="itemClick($event, child)"
+                         [ngClass]="{'ui-menuitem-link ui-corner-all':true,'ui-state-disabled':child.disabled}" [ngStyle]="child.style" [class]="child.styleClass" 
+                         [attr.tabindex]="child.disabled ? null : '0'" [attr.aria-haspopup]="item.items != null" [attr.aria-expanded]="item === activeItem">
+                        <span class="ui-menuitem-icon" *ngIf="child.icon" [ngClass]="child.icon"></span>
+                        <span class="ui-menuitem-text">{{child.label}}</span>
+                        <span class="ui-submenu-icon pi pi-fw" *ngIf="child.items" [ngClass]="{'pi-caret-down':root,'pi-caret-right':!root}"></span>
                     </a>
-                    <a *ngIf="child.routerLink" [routerLink]="child.routerLink" [attr.data-automationid]="child.automationId" [queryParams]="child.queryParams" [routerLinkActive]="'p-menuitem-link-active'" [routerLinkActiveOptions]="child.routerLinkActiveOptions||{exact:false}"
+                    <a *ngIf="child.routerLink" [routerLink]="child.routerLink" [attr.data-automationid]="child.automationId" [queryParams]="child.queryParams" [routerLinkActive]="'ui-menuitem-link-active'" [routerLinkActiveOptions]="child.routerLinkActiveOptions||{exact:false}"
                         [attr.target]="child.target" [attr.title]="child.title" [attr.id]="child.id" [attr.tabindex]="child.disabled ? null : '0'" role="menuitem"
-                        (click)="onItemClick($event, child)" [ngClass]="{'p-menuitem-link':true,'p-disabled':child.disabled}" [ngStyle]="child.style" [class]="child.styleClass"
-                        [fragment]="child.fragment" [queryParamsHandling]="child.queryParamsHandling" [preserveFragment]="child.preserveFragment" [skipLocationChange]="child.skipLocationChange" [replaceUrl]="child.replaceUrl" [state]="child.state" pRipple>
-                        <span class="p-menuitem-icon" *ngIf="child.icon" [ngClass]="child.icon"></span>
-                        <span class="p-menuitem-text">{{child.label}}</span>
-                        <span class="p-submenu-icon pi" *ngIf="child.items" [ngClass]="{'pi-angle-down':root,'pi-angle-right':!root}"></span>
+                        (click)="itemClick($event, child)" [ngClass]="{'ui-menuitem-link ui-corner-all':true,'ui-state-disabled':child.disabled}" [ngStyle]="child.style" [class]="child.styleClass"
+                        [fragment]="child.fragment" [queryParamsHandling]="child.queryParamsHandling" [preserveFragment]="child.preserveFragment" [skipLocationChange]="child.skipLocationChange" [replaceUrl]="child.replaceUrl" [state]="child.state">
+                        <span class="ui-menuitem-icon" *ngIf="child.icon" [ngClass]="child.icon"></span>
+                        <span class="ui-menuitem-text">{{child.label}}</span>
+                        <span class="ui-submenu-icon pi pi-fw" *ngIf="child.items" [ngClass]="{'pi-caret-down':root,'pi-caret-right':!root}"></span>
                     </a>
-                    <p-menubarSub [parentActive]="child === activeItem" [item]="child" *ngIf="child.items" [mobileActive]="mobileActive" [autoDisplay]="true" (leafClick)="onLeafClick()"></p-menubarSub>
+                    <p-menubarSub class="ui-submenu" [parentActive]="listItem==activeItem" [item]="child" *ngIf="child.items" [autoDisplay]="true"></p-menubarSub>
                 </li>
             </ng-template>
         </ul>
-    `,
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class MenubarSub implements OnDestroy {
 
@@ -45,8 +46,6 @@ export class MenubarSub implements OnDestroy {
     @Input() autoZIndex: boolean = true;
 
     @Input() baseZIndex: number = 0;
-
-    @Input() mobileActive: boolean;
 
     @Input() get parentActive():boolean 
     {
@@ -61,43 +60,100 @@ export class MenubarSub implements OnDestroy {
         }
     }
 
-    @Output() leafClick: EventEmitter<any> = new EventEmitter();
-
-    _parentActive: boolean;
+    _parentActive:boolean;
 
     documentClickListener: any;
 
+    menuClick: boolean;
   
     menuHoverActive: boolean = false;
 
     activeItem: any;
 
-    constructor(public el: ElementRef, public renderer: Renderer2, private cd: ChangeDetectorRef) { }
+    activeMenu: any;
 
-    onItemMouseEnter(event, item) {
-        if (item.disabled || this.mobileActive) {
-            event.preventDefault();
-            return;
-        }
+    constructor(public renderer: Renderer2, private cd: ChangeDetectorRef) { }
 
-        if (this.root) {
-            if (this.activeItem) {
-                this.activeItem = item;
+    onItemMenuClick(event: Event, item: HTMLLIElement, menuitem: MenuItem) {
+            this.menuClick = true;
+
+        if (!this.autoDisplay) {
+            if (menuitem.disabled) {
+                return;
             }
+            
+            this.activeItem = this.activeMenu ? (this.activeMenu.isEqualNode(item) ? null : item) : item;
+            let nextElement = <HTMLLIElement>item.children[0].nextElementSibling;
+            if (nextElement) {
+                let sublist = <HTMLUListElement>nextElement.children[0];
+                if (this.autoZIndex) {
+                    sublist.style.zIndex = String(this.baseZIndex + (++DomHandler.zindex));
+                }
+
+                if (this.root) {
+                    sublist.style.top = DomHandler.getOuterHeight(item.children[0]) + 'px';
+                    sublist.style.left = '0px'
+                }
+                else {
+                    sublist.style.top = '0px';
+                    sublist.style.left = DomHandler.getOuterWidth(item.children[0]) + 'px';
+                }
+            }
+
+            this.menuHoverActive = this.activeMenu ? (!this.activeMenu.isEqualNode(item)) : true;
+            this.activeMenu = this.activeMenu ? (this.activeMenu.isEqualNode(item) ? null: item) : item;
+            this.bindEventListener();
         }
-        else {
-            this.activeItem = item;
+    }
+
+    bindEventListener() {
+        if (!this.documentClickListener) {
+            this.documentClickListener = this.renderer.listen('document', 'click',(event) => {
+                if (!this.menuClick) {
+                    this.activeItem = null;
+                    this.menuHoverActive = false;
+                    this.activeMenu = false;
+                }
+                this.menuClick = false;
+            });
+        }
+    }
+
+    onItemMouseEnter(event: Event, item: HTMLLIElement, menuitem: MenuItem) {
+        if (this.autoDisplay || (!this.autoDisplay && this.root && this.menuHoverActive)) {
+            if (menuitem.disabled) {
+                return;
+            }
+
+            if ((this.activeItem && !this.activeItem.isEqualNode(item) || !this.activeItem)) {
+                this.activeItem = item;
+                let nextElement = <HTMLLIElement>item.children[0].nextElementSibling;
+                if (nextElement) {
+                    let sublist = <HTMLUListElement>nextElement.children[0];
+                    sublist.style.zIndex = String(++DomHandler.zindex);
+
+                    if (this.root) {
+                        sublist.style.top = DomHandler.getOuterHeight(item.children[0]) + 'px';
+                        sublist.style.left = '0px'
+                    }
+                    else {
+                        sublist.style.top = '0px';
+                        sublist.style.left = DomHandler.getOuterWidth(item.children[0]) + 'px';
+                    }
+                }
+                this.activeMenu = item;
+            }
         }
     }
 
 
-    onItemClick(event, item) {
+    itemClick(event, item: MenuItem)  {
         if (item.disabled) {
             event.preventDefault();
             return;
         }
 
-        if (!item.url && !item.to) {
+        if (!item.url) {
             event.preventDefault();
         }
 
@@ -108,83 +164,39 @@ export class MenubarSub implements OnDestroy {
             });
         }
 
-        if (item.items) {
-            if (this.activeItem && item === this.activeItem)
-                this.activeItem = null;
-            else {
-               this.activeItem = item;
-                if (this.root) {
-                    this.bindDocumentClickListener();
-                }
-            }
-        }
-
-        if (!item.items) {
-            this.onLeafClick();
-        }
-    }
-
-    onLeafClick() {
         this.activeItem = null;
-        if (this.root) {
-            this.unbindDocumentClickListener();
-        }
-
-        this.leafClick.emit();
     }
 
-    bindDocumentClickListener() {
-        if (!this.documentClickListener) {
-            this.documentClickListener = (event) => {
-                if (this.el && !this.el.nativeElement.contains(event.target)) {
-                    this.activeItem = null;
-                    this.cd.markForCheck();
-                    this.unbindDocumentClickListener();
-                }
-            };
-
-            document.addEventListener('click', this.documentClickListener);
-        }
-    }
-
-    unbindDocumentClickListener() {
-        if (this.documentClickListener) {
-            document.removeEventListener('click', this.documentClickListener);
-            this.documentClickListener = null;
+    listClick(event) {
+        if (this.autoDisplay) {
+            this.activeItem = null;
         }
     }
 
     ngOnDestroy() {
-        this.unbindDocumentClickListener();
+      if (this.documentClickListener) {
+        this.documentClickListener();
+        this.documentClickListener = null;
+      }
+
     }
 }
 
 @Component({
     selector: 'p-menubar',
     template: `
-        <div [ngClass]="{'p-menubar p-component':true, 'p-menubar-mobile-active': mobileActive}" [class]="styleClass" [ngStyle]="style">
-            <div class="p-menubar-start" *ngIf="startTemplate">
-                <ng-container *ngTemplateOutlet="startTemplate"></ng-container>
+        <div [ngClass]="{'ui-menubar ui-widget ui-widget-content ui-corner-all':true}" [class]="styleClass" [ngStyle]="style">
+            <p-menubarSub [item]="model" root="root" [baseZIndex]="baseZIndex" [autoZIndex]="autoZIndex">
+                <ng-content></ng-content>
+            </p-menubarSub>
+            <div class="ui-menubar-custom">
+                <ng-content></ng-content>
             </div>
-            <a #menubutton tabindex="0" class="p-menubar-button" (click)="toggle($event)">
-                <i class="pi pi-bars"></i>
-            </a>
-            <p-menubarSub #rootmenu [item]="model" root="root" [baseZIndex]="baseZIndex" (leafClick)="onLeafClick()" [autoZIndex]="autoZIndex" [mobileActive]="mobileActive"></p-menubarSub>
-            <div class="p-menubar-end" *ngIf="endTemplate; else legacy">
-                <ng-container *ngTemplateOutlet="endTemplate"></ng-container>
-            </div>
-            <ng-template #legacy>
-                <div class="p-menubar-end">
-                    <ng-content></ng-content>
-                </div>
-            </ng-template>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./menubar.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
-export class Menubar implements AfterContentInit, OnDestroy {
+export class Menubar {
 
     @Input() model: MenuItem[];
 
@@ -196,86 +208,21 @@ export class Menubar implements AfterContentInit, OnDestroy {
 
     @Input() baseZIndex: number = 0;
 
-    @ContentChildren(PrimeTemplate) templates: QueryList<any>;
-
     private _autoDisplay: boolean;
 
     @Input() get autoDisplay(): boolean {
         return this._autoDisplay;
     }
-    set autoDisplay(_autoDisplay: boolean) {
+    set utc(_utc: boolean) {
         console.log("AutoDisplay property is deprecated and functionality is not available.");
     }
 
-    @ViewChild('menubutton') menubutton: ElementRef;
-
-    @ViewChild('rootmenu') rootmenu: MenubarSub;
-
-    startTemplate: TemplateRef<any>;
-
-    endTemplate: TemplateRef<any>;
-
-    mobileActive: boolean;
-
-    outsideClickListener: any;
-
-    constructor(public el: ElementRef, public renderer: Renderer2, public cd: ChangeDetectorRef) { }
-
-    ngAfterContentInit() {
-        this.templates.forEach((item) => {
-            switch(item.getType()) {
-                case 'start':
-                    this.startTemplate = item.template;
-                break;
-
-                case 'end':
-                    this.endTemplate = item.template;
-                break;
-            }
-        });
-    }
-
-    toggle(event) {
-        this.mobileActive = !this.mobileActive;
-        let rootmenu = DomHandler.findSingle(this.el.nativeElement,".p-menubar-root-list")
-        rootmenu.style.zIndex = String(DomHandler.generateZIndex());
-        this.bindOutsideClickListener();
-        event.preventDefault();
-    }
-
-    bindOutsideClickListener() {
-        if (!this.outsideClickListener) {
-            this.outsideClickListener = (event) => {
-                if (this.mobileActive && this.rootmenu.el.nativeElement !== event.target && !this.rootmenu.el.nativeElement.contains(event.target)
-                    && this.menubutton.nativeElement !== event.target && !this.menubutton.nativeElement.contains(event.target)) {
-                    this.mobileActive = false;
-                    this.cd.markForCheck();
-                }
-            };
-            document.addEventListener('click', this.outsideClickListener);
-        }
-    }
-
-    onLeafClick() {
-        this.mobileActive = false;
-        this.unbindOutsideClickListener();
-    }
-
-    unbindOutsideClickListener() {
-        if (this.outsideClickListener) {
-            document.removeEventListener('click', this.outsideClickListener);
-            this.outsideClickListener = null;
-        }
-    }
-
-    ngOnDestroy() {
-        this.unbindOutsideClickListener();
-    }
+    constructor(public el: ElementRef, public renderer: Renderer2) { }
 }
 
 @NgModule({
-    imports: [CommonModule,RouterModule,RippleModule],
-    exports: [Menubar,RouterModule],
-    declarations: [Menubar,MenubarSub]
+    imports: [CommonModule, RouterModule],
+    exports: [Menubar, RouterModule],
+    declarations: [Menubar, MenubarSub]
 })
 export class MenubarModule { }

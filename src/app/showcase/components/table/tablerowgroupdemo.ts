@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Customer } from '../../domain/customer';
-import { CustomerService } from '../../service/customerservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
     templateUrl: './tablerowgroupdemo.html'
 })
 export class TableRowGroupDemo implements OnInit {
 
-    customers: Customer[];
+    cars: Car[];
 
     rowGroupMetadata: any;
 
-    constructor(private customerService: CustomerService) { }
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.customerService.getCustomersMedium().then(data => {
-            this.customers = data;
+        this.carService.getCarsMedium().then(cars => {
+            this.cars = cars;
             this.updateRowGroupMetaData();
         });
     }
@@ -26,22 +26,20 @@ export class TableRowGroupDemo implements OnInit {
 
     updateRowGroupMetaData() {
         this.rowGroupMetadata = {};
-
-        if (this.customers) {
-            for (let i = 0; i < this.customers.length; i++) {
-                let rowData = this.customers[i];
-                let representativeName = rowData.representative.name;
-                
+        if (this.cars) {
+            for (let i = 0; i < this.cars.length; i++) {
+                let rowData = this.cars[i];
+                let brand = rowData.brand;
                 if (i == 0) {
-                    this.rowGroupMetadata[representativeName] = { index: 0, size: 1 };
+                    this.rowGroupMetadata[brand] = { index: 0, size: 1 };
                 }
                 else {
-                    let previousRowData = this.customers[i - 1];
-                    let previousRowGroup = previousRowData.representative.name;
-                    if (representativeName === previousRowGroup)
-                        this.rowGroupMetadata[representativeName].size++;
+                    let previousRowData = this.cars[i - 1];
+                    let previousRowGroup = previousRowData.brand;
+                    if (brand === previousRowGroup)
+                        this.rowGroupMetadata[brand].size++;
                     else
-                        this.rowGroupMetadata[representativeName] = { index: i, size: 1 };
+                        this.rowGroupMetadata[brand] = { index: i, size: 1 };
                 }
             }
         }

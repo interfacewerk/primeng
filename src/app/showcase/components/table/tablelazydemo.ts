@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Customer } from '../../domain/customer';
-import { CustomerService } from '../../service/customerservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 import { LazyLoadEvent } from 'primeng/api';
 import { FilterMetadata } from 'primeng/api';
 
@@ -9,9 +9,9 @@ import { FilterMetadata } from 'primeng/api';
 })
 export class TableLazyDemo implements OnInit {
 
-    datasource: Customer[];
+    datasource: Car[];
 
-    customers: Customer[];
+    cars: Car[];
 
     totalRecords: number;
 
@@ -19,19 +19,26 @@ export class TableLazyDemo implements OnInit {
 
     loading: boolean;
 
-    constructor(private customerService: CustomerService) { }
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
         //datasource imitation
-        this.customerService.getCustomersLarge().then(data => {
-            this.datasource = data;
-            this.totalRecords = data.length;
+        this.carService.getCarsLarge().then(cars => {
+            this.datasource = cars;
+            this.totalRecords = this.datasource.length;
         });
+
+        this.cols = [
+            { field: 'vin', header: 'Vin' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
+        ];
 
         this.loading = true;
     }
 
-    loadCustomers(event: LazyLoadEvent) {  
+    loadCarsLazy(event: LazyLoadEvent) {  
         this.loading = true;
 
         //in a real application, make a remote request to load data using state metadata from event
@@ -44,10 +51,9 @@ export class TableLazyDemo implements OnInit {
         //imitate db connection over a network
         setTimeout(() => {
             if (this.datasource) {
-                this.customers = this.datasource.slice(event.first, (event.first + event.rows));
+                this.cars = this.datasource.slice(event.first, (event.first + event.rows));
                 this.loading = false;
             }
         }, 1000);
     }
-    
 }

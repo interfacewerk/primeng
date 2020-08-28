@@ -7,10 +7,10 @@ import { TreeTableModule } from 'primeng/treetable';
 import { TreeTablePageDemo } from './treetablepagedemo';
 import { TreeTableSortDemo } from './treetablesortdemo';
 import { TreeTableSelectionDemo } from './treetableselectiondemo';
+import { TreeTableSectionsDemo } from './treetablesectionsdemo';
 import { TreeTableStyleDemo } from './treetablestyledemo';
 import { TreeTableLazyDemo } from './treetablelazydemo';
 import { TreeTableColGroupDemo } from './treetablecolgroupdemo';
-import { TreeTableTemplatingDemo } from './treetabletemplatingdemo';
 import { TreeTableScrollDemo } from './treetablescrolldemo';
 import { TreeTableFlexScrollDemo } from './treetableflexscrolldemo';
 import { TreeTableColToggleDemo } from './treetablecoltoggledemo';
@@ -27,7 +27,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputTextModule } from 'primeng/inputtext';
 import { ContextMenuModule } from 'primeng/contextmenu';
-import { AppCodeModule } from '../../app.code.component';
+import { CodeHighlighterModule } from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -42,14 +42,14 @@ import { AppCodeModule } from '../../app.code.component';
         MultiSelectModule,
         InputTextModule,
         ContextMenuModule,
-        AppCodeModule
+        CodeHighlighterModule
 	],
 	declarations: [
         TreeTableDemo,
         TreeTablePageDemo,
         TreeTableSortDemo,
         TreeTableSelectionDemo,
-        TreeTableTemplatingDemo,
+        TreeTableSectionsDemo,
         TreeTableStyleDemo,
         TreeTableLazyDemo,
         TreeTableColGroupDemo,

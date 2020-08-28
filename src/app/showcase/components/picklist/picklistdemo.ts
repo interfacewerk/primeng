@@ -1,21 +1,20 @@
 import {Component} from '@angular/core';
 import {Car} from '../../components/domain/car';
-import {ProductService} from '../../service/productservice';
+import {CarService} from '../../service/carservice';
 
 @Component({
-    templateUrl: './picklistdemo.html',
-    styleUrls: ['./picklistdemo.scss']
+    templateUrl: './picklistdemo.html'
 })
 export class PickListDemo {
 
-    sourceProducts: Car[];
+    sourceCars: Car[];
     
-    targetProducts: Car[];
+    targetCars: Car[];
     
-    constructor(private carService: ProductService) { }
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.carService.getProductsSmall().then(products => this.sourceProducts = products);
-        this.targetProducts = [];
+        this.carService.getCarsSmall().then(cars => this.sourceCars = cars);
+        this.targetCars = [];
     }
 }

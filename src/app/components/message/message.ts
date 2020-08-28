@@ -1,27 +1,24 @@
-import {NgModule,Component,Input,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,Input,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'p-message',
     template: `
-        <div aria-live="polite" class="p-inline-message p-component p-inline-message" *ngIf="severity"
-        [ngClass]="{'p-inline-message-info': (severity === 'info'),
-                'p-inline-message-warn': (severity === 'warn'),
-                'p-inline-message-error': (severity === 'error'),
-                'p-inline-message-success': (severity === 'success'),
-                'p-inline-message-icon-only': this.text == null}">
-            <span class="p-inline-message-icon" [ngClass]="icon"></span>
+        <div aria-live="polite" class="ui-message ui-widget ui-corner-all" *ngIf="severity"
+        [ngClass]="{'ui-message-info': (severity === 'info'),
+                'ui-message-warn': (severity === 'warn'),
+                'ui-message-error': (severity === 'error'),
+                'ui-message-success': (severity === 'success')}">
+            <span class="ui-message-icon" [ngClass]="icon"></span>
             <div *ngIf="!escape; else escapeOut">
-                <span *ngIf="!escape" class="p-inline-message-text" [innerHTML]="text"></span>
+                <span *ngIf="!escape" class="ui-message-text" [innerHTML]="text"></span>
             </div>
             <ng-template #escapeOut>
-                <span *ngIf="escape" class="p-inline-message-text">{{text}}</span>
+                <span *ngIf="escape" class="ui-message-text">{{text}}</span>
             </ng-template>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./message.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class UIMessage {
 
@@ -45,7 +42,7 @@ export class UIMessage {
                 break;
 
                 case 'error':
-                    icon = 'pi pi-times-circle';
+                    icon = 'pi pi-times';
                 break;
 
                 case 'warn':

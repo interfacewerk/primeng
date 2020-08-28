@@ -6,8 +6,7 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {ButtonModule} from 'primeng/button';
 import {TableModule} from 'primeng/table';
 import {TabViewModule} from 'primeng/tabview';
-import {ToastModule} from 'primeng/toast';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -16,9 +15,8 @@ import {AppCodeModule} from '../../app.code.component';
         OverlayPanelModule,
         ButtonModule,
         TableModule,
-		TabViewModule,
-		AppCodeModule,
-		ToastModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		OverlayPanelDemo

@@ -1,30 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../domain/product';
-import { ProductService } from '../../service/productservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
     templateUrl: './tableexportdemo.html'
 })
 export class TableExportDemo implements OnInit {
 
-    products: Product[];
+    cars: Car[];
 
-    selectedProducts: Product[];
-
-    constructor(private productService: ProductService) { }
+    selectedCars: Car[];
 
     cols: any[];
 
     exportColumns: any[];
 
+    constructor(private carService: CarService) { }
+
     ngOnInit() {
-        this.productService.getProductsSmall().then(data => this.products = data);
+        this.carService.getCarsSmall().then(cars => this.cars = cars);
 
         this.cols = [
-            { field: 'code', header: 'Code' },
-            { field: 'name', header: 'Name' },
-            { field: 'category', header: 'Category' },
-            { field: 'quantity', header: 'Quantity' }
+            { field: 'vin', header: 'Vin' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
         ];
 
         this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
@@ -34,18 +34,18 @@ export class TableExportDemo implements OnInit {
         import("jspdf").then(jsPDF => {
             import("jspdf-autotable").then(x => {
                 const doc = new jsPDF.default(0,0);
-                doc.autoTable(this.exportColumns, this.products);
-                doc.save('products.pdf');
+                doc.autoTable(this.exportColumns, this.cars);
+                doc.save('primengTable.pdf');
             })
         })
     }
 
     exportExcel() {
         import("xlsx").then(xlsx => {
-            const worksheet = xlsx.utils.json_to_sheet(this.products);
+            const worksheet = xlsx.utils.json_to_sheet(this.getCars());
             const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-            this.saveAsExcelFile(excelBuffer, "products");
+            this.saveAsExcelFile(excelBuffer, "primengTable");
         });
     }
 
@@ -58,5 +58,14 @@ export class TableExportDemo implements OnInit {
             });
             FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
         });
+    }
+
+    getCars() {
+        let cars = [];
+        for(let car of this.cars) {
+            car.year = car.year.toString();
+            cars.push(car);
+        }
+        return cars;
     }
 }

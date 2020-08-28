@@ -1,19 +1,19 @@
-import {NgModule,Directive,ElementRef,HostListener,Input,Output,DoCheck,EventEmitter,Optional, AfterViewInit, AfterContentInit, OnInit, OnDestroy, AfterViewChecked} from '@angular/core';
-import {NgModel, NgControl} from '@angular/forms';
+import {NgModule,Directive,ElementRef,HostListener,Input,Output,DoCheck,EventEmitter,Optional} from '@angular/core';
+import {NgModel} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import { Subscription } from 'rxjs';
 
 @Directive({
     selector: '[pInputTextarea]',
     host: {
-        '[class.p-inputtextarea]': 'true',
-        '[class.p-inputtext]': 'true',
-        '[class.p-component]': 'true',
-        '[class.p-filled]': 'filled',
-        '[class.p-inputtextarea-resizable]': 'autoResize'
+        '[class.ui-inputtext]': 'true',
+        '[class.ui-corner-all]': 'true',
+        '[class.ui-inputtextarea-resizable]': 'autoResize',
+        '[class.ui-state-default]': 'true',
+        '[class.ui-widget]': 'true',
+        '[class.ui-state-filled]': 'filled'
     }
 })
-export class InputTextarea implements OnInit, AfterViewInit, OnDestroy  {
+export class InputTextarea implements DoCheck {
     
     @Input() autoResize: boolean;
     
@@ -23,34 +23,23 @@ export class InputTextarea implements OnInit, AfterViewInit, OnDestroy  {
 
     cachedScrollHeight:number;
 
-    ngModelSubscription: Subscription;
-
-    ngControlSubscription: Subscription;
-
-    constructor(public el: ElementRef, @Optional() public ngModel: NgModel, @Optional() public control : NgControl) {}
+    constructor(public el: ElementRef, @Optional() public ngModel: NgModel) {}
         
-    ngOnInit() {
-        if (this.ngModel) {
-            this.ngModelSubscription = this.ngModel.valueChanges.subscribe(() =>{
-                this.updateState();
-            })
-        }
-
-        if (this.control) {
-            this.ngControlSubscription = this.control.valueChanges.subscribe(() => {
-                this.updateState();
-            });
-        }
-    }
-
-    ngAfterViewInit() {
-        if (this.autoResize)
+    ngDoCheck() {
+        this.updateFilledState();
+        
+        if (this.autoResize) {
             this.resize();
+        }
     }
-
+    
+    //To trigger change detection to manage ui-state-filled for material labels when there is no value binding
     @HostListener('input', ['$event'])
     onInput(e) {
-        this.updateState();
+        this.updateFilledState();
+        if (this.autoResize) {
+            this.resize(e);
+        }
     }
     
     updateFilledState() {
@@ -84,24 +73,6 @@ export class InputTextarea implements OnInit, AfterViewInit, OnDestroy  {
         }
 
         this.onResize.emit(event||{});
-    }
-
-    updateState() {
-        this.updateFilledState();
-            
-        if (this.autoResize) {
-            this.resize();
-        }
-    }
-
-    ngOnDestroy() {
-        if (this.ngModelSubscription) {
-            this.ngModelSubscription.unsubscribe();
-        }
-
-        if (this.ngControlSubscription) {
-            this.ngControlSubscription.unsubscribe();
-        }
     }
 }
 

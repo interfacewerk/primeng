@@ -4,15 +4,15 @@ import {FieldsetDemo} from './fieldsetdemo';
 import {FieldsetDemoRoutingModule} from './fieldsetdemo-routing.module';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TabViewModule} from 'primeng/tabview';
-import { AppCodeModule } from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		FieldsetDemoRoutingModule,
         FieldsetModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		FieldsetDemo

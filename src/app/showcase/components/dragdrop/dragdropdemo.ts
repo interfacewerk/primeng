@@ -1,47 +1,64 @@
-import { Component } from '@angular/core';
-import { ProductService } from '../../service/productservice';
-import { Product } from '../../domain/product';
+import {Component} from '@angular/core';
+import {Car} from '../../components/domain/car';
+import {CarService} from '../../service/carservice';
 
 @Component({
     templateUrl: './dragdropdemo.html',
-    styleUrls: ['./dragdropdemo.scss']
+    styles: [`
+        :host ::ng-deep .drag-column {
+            padding-right: .5em;
+        }
+
+        :host ::ng-deep .drop-column {
+            border: 1px solid #c8c8c8;
+            background-color: #ffffff;
+        }
+
+        .p-grid li {
+            list-style-type: none;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #c8c8c8;
+            background-color: #ffffff;
+        }
+    `]
 })
 export class DragDropDemo {
     
-    availableProducts: Product[];
+    availableCars: Car[];
     
-    selectedProducts: Product[];
+    selectedCars: Car[];
     
-    draggedProduct: Product;
+    draggedCar: Car;
     
-    constructor(private productService: ProductService) { }
+    constructor(private carService: CarService) { }
     
     ngOnInit() {
-        this.selectedProducts = [];
-        this.productService.getProductsSmall().then(products => this.availableProducts = products);
+        this.selectedCars = [];
+        this.carService.getCarsSmall().then(cars => this.availableCars = cars);
     }
     
-    dragStart(product: Product) {
-        this.draggedProduct = product;
+    dragStart(event,car: Car) {
+        this.draggedCar = car;
     }
     
-    drop() {
-        if (this.draggedProduct) {
-            let draggedProductIndex = this.findIndex(this.draggedProduct);
-            this.selectedProducts = [...this.selectedProducts, this.draggedProduct];
-            this.availableProducts = this.availableProducts.filter((val,i) => i!=draggedProductIndex);
-            this.draggedProduct = null;
+    drop(event) {
+        if (this.draggedCar) {
+            let draggedCarIndex = this.findIndex(this.draggedCar);
+            this.selectedCars = [...this.selectedCars, this.draggedCar];
+            this.availableCars = this.availableCars.filter((val,i) => i!=draggedCarIndex);
+            this.draggedCar = null;
         }
     }
     
-    dragEnd() {
-        this.draggedProduct = null;
+    dragEnd(event) {
+        this.draggedCar = null;
     }
     
-    findIndex(product: Product) {
+    findIndex(car: Car) {
         let index = -1;
-        for(let i = 0; i < this.availableProducts.length; i++) {
-            if (product.id === this.availableProducts[i].id) {
+        for(let i = 0; i < this.availableCars.length; i++) {
+            if (car.vin === this.availableCars[i].vin) {
                 index = i;
                 break;
             }

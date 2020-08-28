@@ -1,28 +1,26 @@
-import {NgModule,Component,ElementRef,OnDestroy,Input,Output,EventEmitter,Renderer2,ViewChild,Inject,forwardRef,ChangeDetectorRef,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,ElementRef,OnDestroy,Input,Output,EventEmitter,Renderer2,ViewChild,Inject,forwardRef,ChangeDetectorRef,ChangeDetectionStrategy} from '@angular/core';
 import {trigger,state,style,transition,animate,AnimationEvent} from '@angular/animations';
 import {CommonModule} from '@angular/common';
 import {DomHandler} from 'primeng/dom';
 import {MenuItem} from 'primeng/api';
 import {RouterModule} from '@angular/router';
-import {RippleModule} from 'primeng/ripple';  
 
 @Component({
     selector: '[pMenuItemContent]',
     template: `
-        <a *ngIf="!item.routerLink" [attr.href]="item.url||null" class="p-menuitem-link" [attr.tabindex]="item.disabled ? null : '0'" [attr.data-automationid]="item.automationId" [attr.target]="item.target" [attr.title]="item.title" [attr.id]="item.id"
-            [ngClass]="{'p-disabled':item.disabled}" (click)="menu.itemClick($event, item)" role="menuitem">
-            <span class="p-menuitem-icon" *ngIf="item.icon" [ngClass]="item.icon"></span>
-            <span class="p-menuitem-text">{{item.label}}</span>
+        <a *ngIf="!item.routerLink" [attr.href]="item.url||null" class="ui-menuitem-link ui-corner-all" [attr.tabindex]="item.disabled ? null : '0'" [attr.data-automationid]="item.automationId" [attr.target]="item.target" [attr.title]="item.title" [attr.id]="item.id"
+            [ngClass]="{'ui-state-disabled':item.disabled}" (click)="menu.itemClick($event, item)" role="menuitem">
+            <span class="ui-menuitem-icon" *ngIf="item.icon" [ngClass]="item.icon"></span>
+            <span class="ui-menuitem-text">{{item.label}}</span>
         </a>
-        <a *ngIf="item.routerLink" [routerLink]="item.routerLink" [attr.data-automationid]="item.automationId" [queryParams]="item.queryParams" [routerLinkActive]="'p-menuitem-link-active'"
-            [routerLinkActiveOptions]="item.routerLinkActiveOptions||{exact:false}" class="p-menuitem-link" [attr.target]="item.target" [attr.id]="item.id" [attr.tabindex]="item.disabled ? null : '0'" 
-            [attr.title]="item.title" [ngClass]="{'p-disabled':item.disabled}" (click)="menu.itemClick($event, item)" role="menuitem" pRipple
+        <a *ngIf="item.routerLink" [routerLink]="item.routerLink" [attr.data-automationid]="item.automationId" [queryParams]="item.queryParams" [routerLinkActive]="'ui-menuitem-link-active'"
+            [routerLinkActiveOptions]="item.routerLinkActiveOptions||{exact:false}" class="ui-menuitem-link ui-corner-all" [attr.target]="item.target" [attr.id]="item.id" [attr.tabindex]="item.disabled ? null : '0'" 
+            [attr.title]="item.title" [ngClass]="{'ui-state-disabled':item.disabled}" (click)="menu.itemClick($event, item)" role="menuitem"
             [fragment]="item.fragment" [queryParamsHandling]="item.queryParamsHandling" [preserveFragment]="item.preserveFragment" [skipLocationChange]="item.skipLocationChange" [replaceUrl]="item.replaceUrl" [state]="item.state">
-            <span class="p-menuitem-icon" *ngIf="item.icon" [ngClass]="item.icon"></span>
-            <span class="p-menuitem-text">{{item.label}}</span>
+            <span class="ui-menuitem-icon" *ngIf="item.icon" [ngClass]="item.icon"></span>
+            <span class="ui-menuitem-text">{{item.label}}</span>
         </a>
-    `,
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class MenuItemContent {
 
@@ -38,39 +36,40 @@ export class MenuItemContent {
 @Component({
     selector: 'p-menu',
     template: `
-        <div #container [ngClass]="{'p-menu p-component': true, 'p-menu-overlay': popup}"
+        <div #container [ngClass]="{'ui-menu ui-widget ui-widget-content ui-corner-all': true, 'ui-menu-dynamic ui-shadow': popup}"
             [class]="styleClass" [ngStyle]="style" (click)="preventDocumentDefault=true" *ngIf="!popup || visible"
             [@overlayAnimation]="{value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}" [@.disabled]="popup !== true" (@overlayAnimation.start)="onOverlayAnimationStart($event)">
-            <ul class="p-menu-list p-reset">
+            <ul>
                 <ng-template ngFor let-submenu [ngForOf]="model" *ngIf="hasSubMenu()">
-                    <li class="p-menu-separator" *ngIf="submenu.separator" [ngClass]="{'p-hidden': submenu.visible === false}"></li>
-                    <li class="p-submenu-header" [attr.data-automationid]="submenu.automationId" *ngIf="!submenu.separator" [ngClass]="{'p-hidden': submenu.visible === false}">{{submenu.label}}</li>
+                    <li class="ui-menu-separator ui-widget-content" *ngIf="submenu.separator" [ngClass]="{'ui-helper-hidden': submenu.visible === false}"></li>
+                    <li class="ui-submenu-header ui-widget-header ui-corner-all" [attr.data-automationid]="submenu.automationId" *ngIf="!submenu.separator" [ngClass]="{'ui-helper-hidden': submenu.visible === false}">{{submenu.label}}</li>
                     <ng-template ngFor let-item [ngForOf]="submenu.items">
-                        <li class="p-menu-separator" *ngIf="item.separator" [ngClass]="{'p-hidden': (item.visible === false || submenu.visible === false)}"></li>
-                        <li class="p-menuitem" *ngIf="!item.separator" [pMenuItemContent]="item" [ngClass]="{'p-hidden': (item.visible === false || submenu.visible === false)}" [ngStyle]="item.style" [class]="item.styleClass"></li>
+                        <li class="ui-menu-separator ui-widget-content" *ngIf="item.separator" [ngClass]="{'ui-helper-hidden': (item.visible === false || submenu.visible === false)}"></li>
+                        <li class="ui-menuitem ui-widget ui-corner-all" *ngIf="!item.separator" [pMenuItemContent]="item" [ngClass]="{'ui-helper-hidden': (item.visible === false || submenu.visible === false)}" [ngStyle]="item.style" [class]="item.styleClass"></li>
                     </ng-template>
                 </ng-template>
                 <ng-template ngFor let-item [ngForOf]="model" *ngIf="!hasSubMenu()">
-                    <li class="p-menu-separator" *ngIf="item.separator" [ngClass]="{'p-hidden': item.visible === false}"></li>
-                    <li class="p-menuitem" *ngIf="!item.separator" [pMenuItemContent]="item" [ngClass]="{'p-hidden': item.visible === false}" [ngStyle]="item.style" [class]="item.styleClass"></li>
+                    <li class="ui-menu-separator ui-widget-content" *ngIf="item.separator" [ngClass]="{'ui-helper-hidden': item.visible === false}"></li>
+                    <li class="ui-menuitem ui-widget ui-corner-all" *ngIf="!item.separator" [pMenuItemContent]="item" [ngClass]="{'ui-helper-hidden': item.visible === false}" [ngStyle]="item.style" [class]="item.styleClass"></li>
                 </ng-template>
             </ul>
         </div>
     `,
     animations: [
         trigger('overlayAnimation', [
-            transition(':enter', [
-                style({opacity: 0, transform: 'scaleY(0.8)'}),
-                animate('{{showTransitionParams}}')
-              ]),
-              transition(':leave', [
-                animate('{{hideTransitionParams}}', style({ opacity: 0 }))
-              ])
+            state('void', style({
+                transform: 'translateY(5%)',
+                opacity: 0
+            })),
+            state('visible', style({
+                transform: 'translateY(0)',
+                opacity: 1
+            })),
+            transition('void => visible', animate('{{showTransitionParams}}')),
+            transition('visible => void', animate('{{hideTransitionParams}}'))
         ])
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./menu.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Menu implements OnDestroy {
 
@@ -87,10 +86,10 @@ export class Menu implements OnDestroy {
     @Input() autoZIndex: boolean = true;
     
     @Input() baseZIndex: number = 0;
+    
+    @Input() showTransitionOptions: string = '225ms ease-out';
 
-    @Input() showTransitionOptions: string = '.12s cubic-bezier(0, 0, 0.2, 1)';
-
-    @Input() hideTransitionOptions: string = '.1s linear';
+    @Input() hideTransitionOptions: string = '195ms ease-in';
 
     @ViewChild('container') containerViewChild: ElementRef;
 
@@ -109,10 +108,8 @@ export class Menu implements OnDestroy {
     target: any;
 
     visible: boolean;
-
-    relativeAlign: boolean;
     
-    constructor(public el: ElementRef, public renderer: Renderer2, private cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef, public renderer: Renderer2,private cd: ChangeDetectorRef) {}
 
     toggle(event) {
         if (this.visible)
@@ -125,10 +122,8 @@ export class Menu implements OnDestroy {
 
     show(event) {
         this.target = event.currentTarget;
-        this.relativeAlign = event.relativeAlign;
         this.visible = true;
         this.preventDocumentDefault = true;
-        this.cd.markForCheck();
     }
 
     onOverlayAnimationStart(event: AnimationEvent) {
@@ -139,7 +134,7 @@ export class Menu implements OnDestroy {
                     this.moveOnTop();
                     this.onShow.emit({});
                     this.appendOverlay();
-                    this.alignOverlay();
+                    DomHandler.absolutePosition(this.container, this.target);
                     this.bindDocumentClickListener();
                     this.bindDocumentResizeListener();
                 }
@@ -150,13 +145,6 @@ export class Menu implements OnDestroy {
                 this.onHide.emit({});
             break;
         }
-    }
-
-    alignOverlay() {
-        if (this.relativeAlign)
-            DomHandler.relativePosition(this.container, this.target);
-        else
-            DomHandler.absolutePosition(this.container, this.target);
     }
 
     appendOverlay() {
@@ -182,8 +170,7 @@ export class Menu implements OnDestroy {
     
     hide() {
         this.visible = false;
-        this.relativeAlign = false;
-        this.cd.markForCheck();
+        this.cd.detectChanges();
     }
 
     onWindowResize() {
@@ -270,7 +257,7 @@ export class Menu implements OnDestroy {
 }
 
 @NgModule({
-    imports: [CommonModule,RouterModule,RippleModule],
+    imports: [CommonModule,RouterModule],
     exports: [Menu,RouterModule],
     declarations: [Menu,MenuItemContent]
 })

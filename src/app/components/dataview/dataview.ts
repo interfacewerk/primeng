@@ -1,4 +1,4 @@
-import {NgModule,Component,ElementRef,OnInit,AfterContentInit,Input,Output,EventEmitter,ContentChild,ContentChildren,QueryList,TemplateRef,OnChanges,SimpleChanges,ChangeDetectionStrategy,ChangeDetectorRef, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,ElementRef,OnInit,AfterContentInit,Input,Output,EventEmitter,ContentChild,ContentChildren,QueryList,TemplateRef,OnChanges,SimpleChanges,ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ObjectUtils} from 'primeng/utils';
 import {Header,Footer,PrimeTemplate,SharedModule} from 'primeng/api';
@@ -9,43 +9,36 @@ import {FilterUtils} from 'primeng/utils';
 @Component({
     selector: 'p-dataView',
     template: `
-        <div [ngClass]="{'p-dataview p-component': true, 'p-dataview-list': (layout === 'list'), 'p-dataview-grid': (layout === 'grid')}" [ngStyle]="style" [class]="styleClass">
-            <div class="p-dataview-loading" *ngIf="loading">
-                <div class="p-dataview-loading-overlay p-component-overlay">
-                    <i [class]="'p-dataview-loading-icon pi-spin ' + loadingIcon"></i>
-                </div>
+        <div [ngClass]="{'ui-dataview ui-widget': true, 'ui-dataview-list': (layout === 'list'), 'ui-dataview-grid': (layout === 'grid')}" [ngStyle]="style" [class]="styleClass">
+            <div class="ui-dataview-loading ui-widget-overlay" *ngIf="loading"></div>
+            <div class="ui-dataview-loading-content" *ngIf="loading">
+                <i [class]="'ui-dataview-loading-icon pi-spin ' + loadingIcon"></i>
             </div>
-            <div class="p-dataview-header" *ngIf="header || headerTemplate">
+            <div class="ui-dataview-header ui-widget-header ui-corner-top">
                 <ng-content select="p-header"></ng-content>
-                <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
             </div>
             <p-paginator [rows]="rows" [first]="first" [totalRecords]="totalRecords" [pageLinkSize]="pageLinks" [alwaysShow]="alwaysShowPaginator"
-                (onPageChange)="paginate($event)" styleClass="p-paginator-top" [rowsPerPageOptions]="rowsPerPageOptions" *ngIf="paginator && (paginatorPosition === 'top' || paginatorPosition =='both')"
+                (onPageChange)="paginate($event)" styleClass="ui-paginator-top" [rowsPerPageOptions]="rowsPerPageOptions" *ngIf="paginator && (paginatorPosition === 'top' || paginatorPosition =='both')"
                 [dropdownAppendTo]="paginatorDropdownAppendTo" [dropdownScrollHeight]="paginatorDropdownScrollHeight" [templateLeft]="paginatorLeftTemplate" [templateRight]="paginatorRightTemplate"
                 [currentPageReportTemplate]="currentPageReportTemplate" [showCurrentPageReport]="showCurrentPageReport"></p-paginator>
-            <div class="p-dataview-content">
-                <div class="p-grid p-nogutter">
+            <div class="ui-dataview-content ui-widget-content">
+                <div class="p-grid">
                     <ng-template ngFor let-rowData let-rowIndex="index" [ngForOf]="paginator ? ((filteredValue||value) | slice:(lazy ? 0 : first):((lazy ? 0 : first) + rows)) : (filteredValue||value)" [ngForTrackBy]="trackBy">
                         <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: rowData, rowIndex: rowIndex}"></ng-container>
                     </ng-template>
-                    <div *ngIf="isEmpty()" class="p-col">
-                        <div class="p-dataview-emptymessage">{{emptyMessage}}</div>
-                    </div>
+                    <div *ngIf="isEmpty()" class="p-col-12 ui-dataview-emptymessage">{{emptyMessage}}</div>
                 </div>
             </div>
             <p-paginator [rows]="rows" [first]="first" [totalRecords]="totalRecords" [pageLinkSize]="pageLinks" [alwaysShow]="alwaysShowPaginator"
-                (onPageChange)="paginate($event)" styleClass="p-paginator-bottom" [rowsPerPageOptions]="rowsPerPageOptions" *ngIf="paginator && (paginatorPosition === 'bottom' || paginatorPosition =='both')"
+                (onPageChange)="paginate($event)" styleClass="ui-paginator-bottom" [rowsPerPageOptions]="rowsPerPageOptions" *ngIf="paginator && (paginatorPosition === 'bottom' || paginatorPosition =='both')"
                 [dropdownAppendTo]="paginatorDropdownAppendTo" [dropdownScrollHeight]="paginatorDropdownScrollHeight" [templateLeft]="paginatorLeftTemplate" [templateRight]="paginatorRightTemplate"
                 [currentPageReportTemplate]="currentPageReportTemplate" [showCurrentPageReport]="showCurrentPageReport"></p-paginator>
-            <div class="p-dataview-footer" *ngIf="footer || footerTemplate">
+            <div class="ui-dataview-footer ui-widget-header ui-corner-bottom" *ngIf="footer">
                 <ng-content select="p-footer"></ng-content>
-                <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
             </div>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./dataview.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
 
@@ -121,10 +114,6 @@ export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
 
     itemTemplate: TemplateRef<any>;
 
-    headerTemplate: TemplateRef<any>;
-
-    footerTemplate: TemplateRef<any>;
-
     paginatorLeftTemplate: TemplateRef<any>;
 
     paginatorRightTemplate: TemplateRef<any>;
@@ -135,7 +124,7 @@ export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
 
     initialized: boolean;
 
-    constructor(public el: ElementRef, public cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef) {}
 
     ngOnInit() {
         if (this.lazy) {
@@ -180,14 +169,6 @@ export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
                 case 'paginatorright':
                     this.paginatorRightTemplate = item.template;
                 break;
-
-                case 'header':
-                    this.headerTemplate = item.template;
-                break;
-
-                case 'footer':
-                    this.footerTemplate = item.template;
-                break;
             }
         });
 
@@ -212,8 +193,6 @@ export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
             layout: this.layout
         });
         this.updateItemTemplate();
-
-        this.cd.markForCheck();
     }
 
     updateTotalRecords() {
@@ -304,8 +283,6 @@ export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
                 this.first = 0;
                 this.totalRecords = this.filteredValue ? this.filteredValue.length : this.value ? this.value.length : 0;
             }
-
-            this.cd.markForCheck();
         }
     }
 
@@ -317,15 +294,18 @@ export class DataView implements OnInit,AfterContentInit,BlockableUI,OnChanges {
 @Component({
     selector: 'p-dataViewLayoutOptions',
     template: `
-        <div [ngClass]="'p-dataview-layout-options p-selectbutton p-buttonset'" [ngStyle]="style" [class]="styleClass">
-            <button type="button" class="p-button p-button-icon-only" [ngClass]="{'p-highlight': dv.layout === 'list'}" (click)="changeLayout($event, 'list')" (keydown.enter)="changeLayout($event, 'list')">
-                <i class="pi pi-bars"></i>
-            </button><button type="button" class="p-button p-button-icon-only" [ngClass]="{'p-highlight': dv.layout === 'grid'}" (click)="changeLayout($event, 'grid')" (keydown.enter)="changeLayout($event, 'grid')">
-                <i class="pi pi-th-large"></i>
-            </button>
+        <div [ngClass]="'ui-dataview-layout-options ui-selectbutton ui-buttonset'" [ngStyle]="style" [class]="styleClass">
+            <a tabindex="0" class="ui-button ui-button-icon-only ui-state-default" (click)="changeLayout($event, 'list')" (keydown.enter)="changeLayout($event, 'list')"
+                [ngClass]="{'ui-state-active': dv.layout === 'list'}">
+                <i class="pi pi-bars ui-button-icon-left"></i>
+                <span class="ui-button-text ui-clickable">ui-btn</span>
+            </a><a tabindex="0" class="ui-button ui-button-icon-only ui-state-default" (click)="changeLayout($event, 'grid')" (keydown.enter)="changeLayout($event, 'grid')"
+                [ngClass]="{'ui-state-active': dv.layout === 'grid'}">
+                <i class="pi pi-th-large ui-button-icon-left"></i>
+                <span class="ui-button-text ui-clickable">ui-btn</span>
+            </a>
         </div>
-    `,
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class DataViewLayoutOptions  {
 

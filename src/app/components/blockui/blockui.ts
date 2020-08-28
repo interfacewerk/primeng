@@ -1,19 +1,15 @@
-import {NgModule,Component,Input,AfterViewInit,OnDestroy,ElementRef,ViewChild,ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef, ContentChildren, QueryList, TemplateRef} from '@angular/core';
+import {NgModule,Component,Input,AfterViewInit,OnDestroy,ElementRef,ViewChild,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DomHandler} from 'primeng/dom';
-import {PrimeTemplate} from 'primeng/api';
 
 @Component({
     selector: 'p-blockUI',
     template: `
-        <div #mask [class]="styleClass" [ngClass]="{'p-blockui-document':!target, 'p-blockui p-component-overlay': true}" [ngStyle]="{display: blocked ? 'flex' : 'none'}">
+        <div #mask [class]="styleClass" [ngClass]="{'ui-blockui-document':!target, 'ui-blockui ui-widget-overlay': true}" [ngStyle]="{display: blocked ? 'block' : 'none'}">
             <ng-content></ng-content>
-            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./blockui.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class BlockUI implements AfterViewInit,OnDestroy {
 
@@ -25,15 +21,11 @@ export class BlockUI implements AfterViewInit,OnDestroy {
     
     @Input() styleClass: string;
     
-    @ContentChildren(PrimeTemplate) templates: QueryList<any>;
-
     @ViewChild('mask') mask: ElementRef;
     
     _blocked: boolean;
-
-    contentTemplate: TemplateRef<any>;
         
-    constructor(public el: ElementRef, public cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef) {}
     
     @Input() get blocked(): boolean {
         return this._blocked;
@@ -55,25 +47,13 @@ export class BlockUI implements AfterViewInit,OnDestroy {
             throw 'Target of BlockUI must implement BlockableUI interface';
         }
     }
-
-    ngAfterContentInit() {
-        this.templates.forEach((item) => {
-            switch(item.getType()) {
-                case 'content':
-                    this.contentTemplate = item.template;
-                break;
-                
-                default:
-                    this.contentTemplate = item.template;
-                break;
-            }
-        });
-    }
         
     block() {
         if (this.target) {
             this.target.getBlockableElement().appendChild(this.mask.nativeElement);
-            this.target.getBlockableElement().style.position = 'relative';
+            let style = this.target.style||{};
+            style.position = 'relative';
+            this.target.style = style;
         }
         else {
             document.body.appendChild(this.mask.nativeElement);

@@ -1,5 +1,5 @@
 
-import {NgModule,Component,ChangeDetectionStrategy, Input, ElementRef, ViewChild, OnInit, EventEmitter, Output, forwardRef, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
+import {NgModule,Component,ChangeDetectionStrategy, Input, ElementRef, ViewChild, OnInit, EventEmitter, Output, forwardRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -13,37 +13,30 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-inputNumber',
     template: `
-        <span [ngClass]="{'p-inputnumber p-component': true,'p-inputnumber-buttons-stacked': this.showButtons && this.buttonLayout === 'stacked',
-                'p-inputnumber-buttons-horizontal': this.showButtons && this.buttonLayout === 'horizontal', 'p-inputnumber-buttons-vertical': this.showButtons && this.buttonLayout === 'vertical'}" 
-                [ngStyle]="style" [class]="styleClass">
-            <input #input [ngClass]="'p-inputnumber-input'" [ngStyle]="inputStyle" [class]="inputStyleClass" pInputText [value]="formattedValue()" [attr.placeholder]="placeholder" [attr.title]="title" [attr.id]="inputId"
+        <span [ngClass]="{'ui-inputnumber ui-widget': true, 'ui-inputwrapper-filled': this.filled(), 'ui-inputwrapper-focus': this.focused,
+                'ui-inputnumber-buttons-stacked': this.showButtons && this.buttonLayout === 'stacked', 'ui-inputnumber-buttons-horizontal': this.showButtons && this.buttonLayout === 'horizontal',
+                'ui-inputnumber-buttons-vertical': this.showButtons && this.buttonLayout === 'vertical'}">
+            <input #input class="ui-inputnumber-input" pInputText [value]="formattedValue()" [attr.placeholder]="placeholder" [attr.title]="title" [attr.id]="inputId"
                 [attr.size]="size" [attr.name]="name" [attr.autocomplete]="autocomplete" [attr.maxlength]="maxlength" [attr.tabindex]="tabindex" [attr.aria-label]="ariaLabel"
                 [attr.aria-required]="ariaRequired" [disabled]="disabled" [attr.required]="required" [attr.aria-valumin]="min" [attr.aria-valuemax]="max"
                 (input)="onInput($event)" (keydown)="onInputKeyDown($event)" (keypress)="onInputKeyPress($event)" (paste)="onPaste($event)" (click)="onInputClick()"
                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-            <span class="p-inputnumber-button-group" *ngIf="showButtons && buttonLayout === 'stacked'">
-                <button type="button" pButton [ngClass]="{'p-inputnumber-button p-inputnumber-button-up': true}" [class]="incrementButtonClass" [icon]="incrementButtonIcon" [disabled]="disabled"
+            <span class="ui-inputnumber-button-group" *ngIf="showButtons && buttonLayout === 'stacked'">
+                <button type="button" pButton [ngClass]="{'ui-inputnumber-button ui-inputnumber-button-up': true}" [class]="incrementButtonClass" [icon]="incrementButtonIcon" [disabled]="disabled"
                     (mousedown)="this.onUpButtonMouseDown($event)" (mouseup)="onUpButtonMouseUp()" (mouseleave)="onUpButtonMouseLeave()" (keydown)="onUpButtonKeyDown($event)" (keyup)="onUpButtonKeyUp()"></button>
-                <button type="button" pButton [ngClass]="{'p-inputnumber-button p-inputnumber-button-down': true}" [class]="decrementButtonClass" [icon]="decrementButtonIcon" [disabled]="disabled"
+                <button type="button" pButton [ngClass]="{'ui-inputnumber-button ui-inputnumber-button-down': true}" [class]="decrementButtonClass" [icon]="decrementButtonIcon" [disabled]="disabled"
                     (mousedown)="this.onDownButtonMouseDown($event)" (mouseup)="onDownButtonMouseUp()" (mouseleave)="onDownButtonMouseLeave()" (keydown)="onDownButtonKeyDown($event)" (keyup)="onDownButtonKeyUp()"></button>
             </span>
-            <button type="button" pButton [ngClass]="{'p-inputnumber-button p-inputnumber-button-up': true}" [class]="incrementButtonClass" [icon]="incrementButtonIcon" *ngIf="showButtons && buttonLayout !== 'stacked'" [disabled]="disabled"
+            <button type="button" pButton [ngClass]="{'ui-inputnumber-button ui-inputnumber-button-up': true}" [class]="incrementButtonClass" [icon]="incrementButtonIcon" *ngIf="showButtons && buttonLayout !== 'stacked'" [disabled]="disabled"
                 (mousedown)="this.onUpButtonMouseDown($event)" (mouseup)="onUpButtonMouseUp()" (mouseleave)="onUpButtonMouseLeave()" (keydown)="onUpButtonKeyDown($event)" (keyup)="onUpButtonKeyUp()"></button>
-            <button type="button" pButton [ngClass]="{'p-inputnumber-button p-inputnumber-button-down': true}" [class]="decrementButtonClass" [icon]="decrementButtonIcon" *ngIf="showButtons && buttonLayout !== 'stacked'" [disabled]="disabled"
+            <button type="button" pButton [ngClass]="{'ui-inputnumber-button ui-inputnumber-button-down': true}" [class]="decrementButtonClass" [icon]="decrementButtonIcon" *ngIf="showButtons && buttonLayout !== 'stacked'" [disabled]="disabled"
                 (mousedown)="this.onDownButtonMouseDown($event)" (mouseup)="onDownButtonMouseUp()" (mouseleave)="onDownButtonMouseLeave()" (keydown)="onDownButtonKeyDown($event)" (keyup)="onDownButtonKeyUp()"></button>
         </span>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [INPUTNUMBER_VALUE_ACCESSOR],
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./inputnumber.css'],
-    host: {
-        '[class.p-inputwrapper-filled]': 'filled',
-        '[class.p-inputwrapper-focus]': 'focused'
-    }
+    changeDetection: ChangeDetectionStrategy.Default,
+    providers: [INPUTNUMBER_VALUE_ACCESSOR]
 })
 export class InputNumber implements OnInit,ControlValueAccessor {
-    
     @Input() showButtons: boolean = false;
 
     @Input() format: boolean = true;
@@ -69,8 +62,6 @@ export class InputNumber implements OnInit,ControlValueAccessor {
     @Input() inputId: string;
 
     @Input() styleClass: string;
-
-    @Input() style: any;
 
     @Input() placeholder: string;
 
@@ -104,17 +95,13 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 
     @Input() decrementButtonClass: string;
 
-    @Input() incrementButtonIcon: string = 'pi pi-angle-up';
+    @Input() incrementButtonIcon: string = 'pi pi-chevron-up';
 
-    @Input() decrementButtonIcon: string = 'pi pi-angle-down';
+    @Input() decrementButtonIcon: string = 'pi pi-chevron-down';
 
     @Input() mode: string = "decimal";
 
     @Input() step: number = 1;
-
-    @Input() inputStyle: any;
-
-    @Input() inputStyleClass: string;
 
     @ViewChild('input') input: ElementRef;
 
@@ -154,7 +141,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 
     _index: any;
 
-    constructor(public el: ElementRef, private cd: ChangeDetectorRef) { }
+    constructor(public el: ElementRef) {}
 
     ngOnInit() {
         this.numberFormat = new Intl.NumberFormat(this.locale, this.getOptions());
@@ -606,7 +593,6 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 
     writeValue(value: any) : void {
         this.value = value;
-        this.cd.markForCheck();
     }
 
     registerOnChange(fn: Function): void {
@@ -657,7 +643,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
         return new RegExp(`[]`,'g');
     }
 
-    get filled() {
+    filled() {
         return (this.value != null && this.value.toString().length > 0)
     }
 

@@ -1,26 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { Customer } from '../../domain/customer';
-import { CustomerService } from '../../service/customerservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
-    templateUrl: './tablestatedemo.html',
-    styleUrls: ['./tabledemo.scss']
+    templateUrl: './tablestatedemo.html'
 })
 export class TableStateDemo implements OnInit {
 
-    customers1: Customer[];
+    cars1: Car[];
 
-    customers2: Customer[];
+    cars2: Car[];
 
-    selectedCustomer1: Customer;
+    cols: any[];
 
-    selectedCustomer2: Customer;
+    selectedCar1: Car;
 
-    constructor(private customerService: CustomerService) { }
+    selectedCar2: Car;
+
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.customerService.getCustomersMedium().then(data => this.customers1 = data);
-        this.customerService.getCustomersMedium().then(data => this.customers2 = data);
+        this.carService.getCarsMedium().then(cars => this.cars1 = cars);
+        this.carService.getCarsMedium().then(cars => this.cars2 = cars);
+
+        this.cols = [
+            { field: 'vin', header: 'Vin' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
+        ];
     }
-    
 }

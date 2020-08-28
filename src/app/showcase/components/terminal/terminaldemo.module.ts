@@ -4,7 +4,7 @@ import {TerminalDemo} from './terminaldemo';
 import {TerminalDemoRoutingModule} from './terminaldemo-routing.module';
 import {TerminalModule} from 'primeng/terminal';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -12,8 +12,7 @@ import {AppCodeModule} from '../../app.code.component';
 		TerminalDemoRoutingModule,
         TerminalModule,
         TabViewModule,
-        TabViewModule,
-        AppCodeModule
+        CodeHighlighterModule
 	],
 	declarations: [
 		TerminalDemo

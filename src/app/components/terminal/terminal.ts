@@ -1,4 +1,4 @@
-import {NgModule,Component,AfterViewInit,AfterViewChecked,OnDestroy,Input,ElementRef,ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
+import {NgModule,Component,AfterViewInit,AfterViewChecked,OnDestroy,Input,ElementRef,ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {DomHandler} from 'primeng/dom';
@@ -8,24 +8,22 @@ import {Subscription}   from 'rxjs';
 @Component({
     selector: 'p-terminal',
     template: `
-        <div [ngClass]="'p-terminal p-component'" [ngStyle]="style" [class]="styleClass" (click)="focus(in)">
+        <div [ngClass]="'ui-terminal ui-widget ui-widget-content ui-corner-all'" [ngStyle]="style" [class]="styleClass" (click)="focus(in)">
             <div *ngIf="welcomeMessage">{{welcomeMessage}}</div>
-            <div class="p-terminal-content">
+            <div class="ui-terminal-content">
                 <div *ngFor="let command of commands">
-                    <span class="p-terminal-prompt">{{prompt}}</span>
-                    <span class="p-terminal-command">{{command.text}}</span>
-                    <div class="p-terminal-response">{{command.response}}</div>
+                    <span>{{prompt}}</span>
+                    <span class="ui-terminal-command">{{command.text}}</span>
+                    <div>{{command.response}}</div>
                 </div>
             </div>
-            <div class="p-terminal-prompt-container">
-                <span class="p-terminal-content-prompt">{{prompt}}</span>
-                <input #in type="text" [(ngModel)]="command" class="p-terminal-input" autocomplete="off" (keydown)="handleCommand($event)" autofocus>
+            <div>
+                <span class="ui-terminal-content-prompt">{{prompt}}</span>
+                <input #in type="text" [(ngModel)]="command" class="ui-terminal-input" autocomplete="off" (keydown)="handleCommand($event)" autofocus>
             </div>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./terminal.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Terminal implements AfterViewInit,AfterViewChecked,OnDestroy {
 
@@ -47,7 +45,7 @@ export class Terminal implements AfterViewInit,AfterViewChecked,OnDestroy {
     
     subscription: Subscription;
     
-    constructor(public el: ElementRef, public terminalService: TerminalService, public cd: ChangeDetectorRef) {
+    constructor(public el: ElementRef, public terminalService: TerminalService) {
         this.subscription = terminalService.responseHandler.subscribe(response => {
             this.commands[this.commands.length - 1].response = response;
             this.commandProcessed = true;
@@ -55,7 +53,7 @@ export class Terminal implements AfterViewInit,AfterViewChecked,OnDestroy {
     }
     
     ngAfterViewInit() {
-        this.container = DomHandler.find(this.el.nativeElement, '.p-terminal')[0];
+        this.container = DomHandler.find(this.el.nativeElement, '.ui-terminal')[0];
     }
     
     ngAfterViewChecked() {

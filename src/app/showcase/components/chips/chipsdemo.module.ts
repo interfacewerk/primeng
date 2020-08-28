@@ -6,8 +6,7 @@ import {ChipsDemoRoutingModule} from './chipsdemo-routing.module';
 import {ChipsModule} from 'primeng/chips';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
-import {AppInputStyleSwitchModule} from '../../app.inputstyleswitch.component';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -16,9 +15,8 @@ import {AppCodeModule} from '../../app.code.component';
 		ChipsDemoRoutingModule,
         ChipsModule,
         ButtonModule,
-		TabViewModule,
-		AppInputStyleSwitchModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		ChipsDemo

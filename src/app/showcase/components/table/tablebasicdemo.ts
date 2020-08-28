@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../domain/product';
-import { ProductService } from '../../service/productservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
-    templateUrl: './tablebasicdemo.html'
+    templateUrl: './tablebasicdemo.html',
 })
 export class TableBasicDemo implements OnInit {
 
-    products: Product[];
+    cars: Car[];
 
-    constructor(private productService: ProductService) { }
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.productService.getProductsSmall().then(data => this.products = data);
+        this.carService.getCarsSmall().then(cars => this.cars = cars);
     }
 }

@@ -30,8 +30,8 @@ describe('Menubar', () => {
 	it('should created by default', () => {
 		fixture.detectChanges();
 
-		const menuEl = fixture.debugElement.query(By.css('.p-menubar'));
-		const subMenuEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
+		const menuEl = fixture.debugElement.query(By.css('.ui-menubar'));
+		const subMenuEl = fixture.debugElement.query(By.css('.ui-menubar-root-list'));
 		expect(menuEl).toBeTruthy();
 		expect(subMenuEl).toBeTruthy();
 	});
@@ -41,7 +41,7 @@ describe('Menubar', () => {
 		menubar.styleClass = "Primeng ROCKS!";
 		fixture.detectChanges();
 
-		const menuEl = fixture.debugElement.query(By.css('.p-menubar'));
+		const menuEl = fixture.debugElement.query(By.css('.ui-menubar'));
 		expect(menuEl.nativeElement.className).toContain("Primeng ROCKS!");
 		expect(menuEl.nativeElement.style.height).toContain("300px");
 	});
@@ -51,7 +51,7 @@ describe('Menubar', () => {
 		menubar.baseZIndex = 20;
 		fixture.detectChanges();
 
-		const subMenu = fixture.debugElement.query(By.css('.p-menubar-root-list')).componentInstance as MenubarSub;
+		const subMenu = fixture.debugElement.query(By.css('.ui-menubar-root-list')).componentInstance as MenubarSub;
 		expect(subMenu.baseZIndex).toEqual(20);
 		expect(subMenu.autoZIndex).toEqual(false);
 		expect(subMenu.autoDisplay).toBeUndefined();
@@ -85,16 +85,16 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const menuEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
+		const menuEl = fixture.debugElement.query(By.css('.ui-menubar-root-list'));
 		expect(menuEl.children.length).toEqual(menubar.model.length);
-		const parentMenuEls = menuEl.queryAll(By.css('.p-menu-parent'));
+		const parentMenuEls = menuEl.queryAll(By.css('.ui-menu-parent'));
 		let i = 0;
 		for (let parentMenu of parentMenuEls) {
 			if (menubar.model[i].label) {
-				expect(parentMenu.query(By.css('.p-menuitem-text')).nativeElement.textContent).toEqual(menubar.model[i].label)
+				expect(parentMenu.query(By.css('.ui-menuitem-text')).nativeElement.textContent).toEqual(menubar.model[i].label)
 			}
 			if (menubar.model[i].icon) {
-				expect(parentMenu.query(By.css('.p-menuitem-icon')).nativeElement.className).toContain(menubar.model[i].icon)
+				expect(parentMenu.query(By.css('.ui-menuitem-icon')).nativeElement.className).toContain(menubar.model[i].icon)
 			}
 			i++;
 		}
@@ -125,14 +125,16 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
-		const secondParentEl = parentEl.queryAll(By.css('.p-menuitem-link'))[1];
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
+		const secondParentEl = parentEls[1];
 		firstParentEl.nativeElement.dispatchEvent(new Event('click'));
 		fixture.detectChanges();
 
-		expect(firstParentEl.parent.nativeElement.className).toContain('p-menuitem-active');
-		expect(secondParentEl.parent.nativeElement.className).not.toContain('p-menuitem-active');
+		expect(firstParentEl.componentInstance.activeMenu.textContent).toEqual(firstParentEl.nativeElement.textContent);
+		expect(firstParentEl.componentInstance.activeItem).toBeTruthy();
+		expect(firstParentEl.nativeElement.className).toContain('ui-menuitem-active');
+		expect(secondParentEl.nativeElement.className).not.toContain('ui-menuitem-active');
 	});
 
 	it('should call onItemMouseLeave and not close firstParentMenu', fakeAsync(() => {
@@ -160,15 +162,18 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
+		const secondParentEl = parentEls[1];
 		firstParentEl.nativeElement.dispatchEvent(new Event('click'));
 		fixture.detectChanges();
 
 		firstParentEl.nativeElement.dispatchEvent(new Event('mouseleave'));
 		fixture.detectChanges();
 
-		expect(firstParentEl.parent.nativeElement.className).toContain('p-menuitem-active');
+		expect(firstParentEl.componentInstance.activeItem).not.toEqual(null);
+		expect(secondParentEl.componentInstance.activeItem).not.toEqual(null);
+		expect(firstParentEl.nativeElement.className).toContain('ui-menuitem-active');
 	}));
 
 	it('should call itemClick', () => {
@@ -196,20 +201,22 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
-		const secondParentEl = parentEl.queryAll(By.css('.p-menuitem-link'))[1];
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
+		const secondParentEl = parentEls[1];
+		const onItemMenuClickSpy = spyOn(firstParentEl.componentInstance, 'onItemMenuClick').and.callThrough();
 		firstParentEl.nativeElement.dispatchEvent(new Event('click'));
 		fixture.detectChanges();
 
-		const firstSubmenuList = fixture.debugElement.query(By.css('.p-submenu-list'));
-		const firstSubItem = firstSubmenuList.query(By.css('.p-menuitem-link'));
+		const firstSubmenuList = firstParentEl.query(By.css('ul'));
+		const firstSubItem = firstSubmenuList.children[0];
 		firstSubItem.nativeElement.click();
 		fixture.detectChanges();
 
+		expect(onItemMenuClickSpy).toHaveBeenCalled();
 		expect(firstParentEl.componentInstance.activeItem).toEqual(null);
 		expect(secondParentEl.componentInstance.activeItem).toEqual(null);
-		expect(firstParentEl.parent.nativeElement.className).not.toContain('p-menuitem-active');
+		expect(firstParentEl.nativeElement.className).not.toContain('ui-menuitem-active');
 	});
 
 	it('should call onItemMouseEnter and not show firstParentMenu', () => {
@@ -237,15 +244,15 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
 		const onItemMouseEnterSpy = spyOn(firstParentEl.componentInstance, 'onItemMouseEnter').and.callThrough();
 		firstParentEl.nativeElement.dispatchEvent(new Event('mouseenter'));
 		fixture.detectChanges();
 
 		expect(firstParentEl.componentInstance.activeItem).toBeFalsy();
 		expect(onItemMouseEnterSpy).toHaveBeenCalled();
-		expect(firstParentEl.parent.nativeElement.className).not.toContain('p-menuitem-active');
+		expect(firstParentEl.nativeElement.className).not.toContain('ui-menuitem-active');
 	});
 
 	it('should call onItemMouseLeave and not close firstParentMenu', fakeAsync(() => {
@@ -273,8 +280,8 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
 		firstParentEl.nativeElement.click();
 		fixture.detectChanges();
 
@@ -282,7 +289,8 @@ describe('Menubar', () => {
 		tick(300);
 		fixture.detectChanges();
 
-		expect(firstParentEl.parent.nativeElement.className).toContain('p-menuitem-active');
+		expect(firstParentEl.componentInstance.activeItem).toBeTruthy();
+		expect(firstParentEl.nativeElement.className).toContain('ui-menuitem-active');
 	}));
 
 	it('should call itemClick and bindEventListener', () => {
@@ -310,19 +318,24 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
-		const bindEventListenerSpy = spyOn(firstParentEl.componentInstance, 'bindDocumentClickListener').and.callThrough();
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
+		const secondParentEl = parentEls[1];
+		const onItemMenuClickSpy = spyOn(firstParentEl.componentInstance, 'onItemMenuClick').and.callThrough();
+		const bindEventListenerSpy = spyOn(firstParentEl.componentInstance, 'bindEventListener').and.callThrough();
 		firstParentEl.nativeElement.click();
 		fixture.detectChanges();
 
-		const firstSubmenuList = fixture.debugElement.query(By.css('.p-submenu-list'));
+		const firstSubmenuList = firstParentEl.query(By.css('ul'));
 		const firstSubItem = firstSubmenuList.children[0];
 		firstSubItem.nativeElement.dispatchEvent(new Event('mouseenter'));
 		fixture.detectChanges();
 
+		expect(onItemMenuClickSpy).toHaveBeenCalled();
 		expect(bindEventListenerSpy).toHaveBeenCalled();
-		expect(firstParentEl.parent.nativeElement.className).toContain('p-menuitem-active');
+		expect(firstParentEl.componentInstance.activeItem).toBeTruthy();
+		expect(secondParentEl.componentInstance.activeItem).toBeTruthy();
+		expect(firstParentEl.nativeElement.className).toContain('ui-menuitem-active');
 	});
 
 	it('should show router items', () => {
@@ -351,12 +364,13 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
 		firstParentEl.nativeElement.dispatchEvent(new Event('click'));
 		fixture.detectChanges();
 
-		expect(firstParentEl.componentInstance.activeItem.label).toEqual(firstParentEl.nativeElement.textContent);
+		expect(firstParentEl.componentInstance.activeMenu.textContent).toEqual(firstParentEl.nativeElement.textContent);
+		expect(firstParentEl.componentInstance.activeItem).toBeTruthy();
 	});
 
 	it('should call itemClick', () => {
@@ -385,14 +399,14 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
 		firstParentEl.nativeElement.dispatchEvent(new Event('mouseenter'));
 		fixture.detectChanges();
 
-		const firstSubmenuList = fixture.debugElement.query(By.css('.p-submenu-list'));
+		const firstSubmenuList = firstParentEl.query(By.css('ul'));
 		const firstSubItem = firstSubmenuList.children[0].query(By.css('a'));
-		const itemClickSpy = spyOn(firstSubItem.componentInstance, 'onItemClick').and.callThrough();
+		const itemClickSpy = spyOn(firstSubItem.componentInstance, 'itemClick').and.callThrough();
 		firstSubItem.nativeElement.click();
 		fixture.detectChanges();
 
@@ -426,13 +440,14 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
 		firstParentEl.nativeElement.dispatchEvent(new Event('mouseenter'));
 		fixture.detectChanges();
 
-		expect(firstParentEl.nativeElement.className).toContain("Primeng ROCKS!");
-		expect(firstParentEl.nativeElement.style.height).toContain("300px");
+		const firstItem = firstParentEl.query(By.css('a'));
+		expect(firstItem.nativeElement.className).toContain("Primeng ROCKS!");
+		expect(firstItem.nativeElement.style.height).toContain("300px");
 	});
 
 	it('should change item disable', () => {
@@ -461,11 +476,12 @@ describe('Menubar', () => {
 		];
 		fixture.detectChanges();
 
-		const parentEl = fixture.debugElement.query(By.css('.p-menubar-root-list'));
-		const firstParentEl = parentEl.query(By.css('.p-menuitem-link'));
+		const parentEls = fixture.debugElement.query(By.css('.ui-menubar-root-list')).children;
+		const firstParentEl = parentEls[0];
 		firstParentEl.nativeElement.dispatchEvent(new Event('mouseenter'));
 		fixture.detectChanges();
 
-		expect(firstParentEl.nativeElement.className).toContain('p-disabled');
+		const firstItem = firstParentEl.query(By.css('a'));
+		expect(firstItem.nativeElement.className).toContain('ui-state-disabled');
 	});
 });

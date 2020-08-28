@@ -25,7 +25,7 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
 */
-import {NgModule,Component,ElementRef,OnInit,OnDestroy,Input,forwardRef,Output,EventEmitter,ViewChild,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,ElementRef,OnInit,OnDestroy,Input,forwardRef,Output,EventEmitter,ViewChild,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DomHandler} from 'primeng/dom';
 import {InputTextModule} from 'primeng/inputtext';
@@ -39,17 +39,16 @@ export const INPUTMASK_VALUE_ACCESSOR: any = {
 
 @Component({
     selector: 'p-inputMask',
-    template: `<input #input pInputText class="p-inputmask" [attr.id]="inputId" [attr.type]="type" [attr.name]="name" [ngStyle]="style" [ngClass]="styleClass" [attr.placeholder]="placeholder" [attr.title]="title"
+    template: `<input #input pInputText [attr.id]="inputId" [attr.type]="type" [attr.name]="name" [ngStyle]="style" [ngClass]="styleClass" [attr.placeholder]="placeholder" [attr.title]="title"
         [attr.size]="size" [attr.autocomplete]="autocomplete" [attr.maxlength]="maxlength" [attr.tabindex]="tabindex" [attr.aria-label]="ariaLabel" [attr.aria-required]="ariaRequired" [disabled]="disabled" [readonly]="readonly" [attr.required]="required"
         (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (keydown)="onKeyDown($event)" (keypress)="onKeyPress($event)" [attr.autofocus]="autoFocus"
         (input)="onInputChange($event)" (paste)="handleInputChange($event)">`,
     host: {
-        '[class.p-inputwrapper-filled]': 'filled',
-        '[class.p-inputwrapper-focus]': 'focused'
+        '[class.ui-inputwrapper-filled]': 'filled',
+        '[class.ui-inputwrapper-focus]': 'focused'
     },
     providers: [INPUTMASK_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class InputMask implements OnInit,OnDestroy,ControlValueAccessor {
 

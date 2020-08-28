@@ -17,7 +17,7 @@ import {ButtonModule} from 'primeng/button';
 import {DialogModule} from 'primeng/dialog';
 import {ContextMenuModule} from 'primeng/contextmenu';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -30,7 +30,7 @@ import {AppCodeModule} from '../../app.code.component';
         DialogModule,
         ContextMenuModule,
         TabViewModule,
-        AppCodeModule
+        CodeHighlighterModule
 	],
 	declarations: [
         TreeDemo,

@@ -10,7 +10,7 @@ import {CalendarModule} from 'primeng/calendar';
 import {CheckboxModule} from 'primeng/checkbox';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
-import { AppCodeModule } from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -24,7 +24,7 @@ import { AppCodeModule } from '../../app.code.component';
         CheckboxModule,
         ButtonModule,
         TabViewModule,
-        AppCodeModule
+        CodeHighlighterModule
 	],
 	declarations: [
 		FullCalendarDemo

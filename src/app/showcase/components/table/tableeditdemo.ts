@@ -1,55 +1,60 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../domain/product';
-import { ProductService } from '../../service/productservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 import { SelectItem } from 'primeng/api';
-import { MessageService } from 'primeng/api';
+import {MessageService} from 'primeng/api';
 
 @Component({
     templateUrl: './tableeditdemo.html',
-    providers: [MessageService],
-    styles: [`
-        :host ::ng-deep .p-cell-editing {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-        }
-    `]
+    providers: [MessageService]
 })
 export class TableEditDemo implements OnInit {
 
-    products1: Product[];
+    cars1: Car[];
 
-    products2: Product[];
+    cars2: Car[];
 
-    statuses: SelectItem[];
+    brands: SelectItem[];
 
-    clonedProducts: { [s: string]: Product; } = {};
+    clonedCars: { [s: string]: Car; } = {};
 
-    constructor(private productService: ProductService, private messageService: MessageService) { }
+    constructor(private carService: CarService, private messageService: MessageService) { }
 
     ngOnInit() {
-        this.productService.getProductsSmall().then(data => this.products1 = data);
-        this.productService.getProductsSmall().then(data => this.products2 = data);
+        this.carService.getCarsSmall().then(cars => this.cars1 = cars);
+        this.carService.getCarsSmall().then(cars => this.cars2 = cars);
 
-        this.statuses = [{label: 'In Stock', value: 'INSTOCK'},{label: 'Low Stock', value: 'LOWSTOCK'},{label: 'Out of Stock', value: 'OUTOFSTOCK'}]
+        this.brands = [
+            {label: 'Audi', value: 'Audi'},
+            {label: 'BMW', value: 'BMW'},
+            {label: 'Fiat', value: 'Fiat'},
+            {label: 'Ford', value: 'Ford'},
+            {label: 'Honda', value: 'Honda'},
+            {label: 'Jaguar', value: 'Jaguar'},
+            {label: 'Mercedes', value: 'Mercedes'},
+            {label: 'Renault', value: 'Renault'},
+            {label: 'VW', value: 'VW'},
+            {label: 'Volvo', value: 'Volvo'}
+        ];
     }
 
-    onRowEditInit(product: Product) {
-        this.clonedProducts[product.id] = {...product};
+    onRowEditInit(car: Car) {
+        this.clonedCars[car.vin] = {...car};
     }
 
-    onRowEditSave(product: Product) {
-        if (product.price > 0) {
-            delete this.clonedProducts[product.id];
-            this.messageService.add({severity:'success', summary: 'Success', detail:'Product is updated'});
+    onRowEditSave(car: Car) {
+        if (car.year > 0) {
+            delete this.clonedCars[car.vin];
+            this.messageService.add({severity:'success', summary: 'Success', detail:'Car is updated'});
         }  
         else {
-            this.messageService.add({severity:'error', summary: 'Error', detail:'Invalid Price'});
+            this.messageService.add({severity:'error', summary: 'Error', detail:'Year is required'});
         }
     }
 
-    onRowEditCancel(product: Product, index: number) {
-        this.products2[index] = this.clonedProducts[product.id];
-        delete this.products2[product.id];
+    onRowEditCancel(car: Car, index: number) {
+        this.cars2[index] = this.clonedCars[car.vin];
+        delete this.clonedCars[car.vin];
     }
 
 }

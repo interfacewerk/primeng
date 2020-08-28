@@ -1,22 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { Customer } from '../../domain/customer';
-import { CustomerService } from '../../service/customerservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
-    templateUrl: './tablepagedemo.html'
+    templateUrl: './tablepagedemo.html',
+    styles: [`
+        :host ::ng-deep .ui-paginator-current {
+            float: left;
+        }
+    `]
 })
 export class TablePageDemo implements OnInit {
 
-    customers: Customer[];
+    cars: Car[] = [];
+
+    cols: any[];
 
     first = 0;
 
     rows = 10;
 
-    constructor(private customerService: CustomerService) { }
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.customerService.getCustomersLarge().then(customers => this.customers = customers);
+        this.carService.getCarsMedium().then(cars => this.cars = cars);
+
+        this.cols = [
+            { field: 'vin', header: 'Vin' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
+        ];
     }
 
     next() {
@@ -32,11 +46,10 @@ export class TablePageDemo implements OnInit {
     }
 
     isLastPage(): boolean {
-        return this.customers ? this.first === (this.customers.length - this.rows): true;
+        return this.first === (this.cars.length - this.rows);
     }
 
     isFirstPage(): boolean {
-        return this.customers ? this.first === 0 : true;
+        return this.first === 0;
     }
-    
 }

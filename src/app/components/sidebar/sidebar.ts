@@ -1,25 +1,20 @@
-import {NgModule,Component,AfterViewInit,AfterViewChecked,OnDestroy,Input,Output,EventEmitter,ViewChild,ElementRef,Renderer2,ChangeDetectionStrategy, ViewEncapsulation, ContentChildren, QueryList, AfterContentInit, TemplateRef, ChangeDetectorRef} from '@angular/core';
+import {NgModule,Component,AfterViewInit,AfterViewChecked,OnDestroy,Input,Output,EventEmitter,ViewChild,ElementRef,Renderer2,ChangeDetectionStrategy} from '@angular/core';
 import {trigger, state, style, transition, animate} from '@angular/animations';
 import {CommonModule} from '@angular/common';
-import {RippleModule} from 'primeng/ripple';
 import {DomHandler} from 'primeng/dom';
-import {PrimeTemplate} from 'primeng/api';
 
 @Component({
     selector: 'p-sidebar',
     template: `
-        <div #container [ngClass]="{'p-sidebar':true, 'p-sidebar-active': visible, 
-            'p-sidebar-left': (position === 'left'), 'p-sidebar-right': (position === 'right'),
-            'p-sidebar-top': (position === 'top'), 'p-sidebar-bottom': (position === 'bottom'), 
-            'p-sidebar-full': fullScreen}"
+        <div #container [ngClass]="{'ui-sidebar ui-widget ui-widget-content ui-shadow':true, 'ui-sidebar-active': visible, 
+            'ui-sidebar-left': (position === 'left'), 'ui-sidebar-right': (position === 'right'),
+            'ui-sidebar-top': (position === 'top'), 'ui-sidebar-bottom': (position === 'bottom'), 
+            'ui-sidebar-full': fullScreen}"
             [@panelState]="visible ? 'visible' : 'hidden'" (@panelState.start)="onAnimationStart($event)" [ngStyle]="style" [class]="styleClass"  role="complementary" [attr.aria-modal]="modal">
-            <div class="p-sidebar-content">
-                <button type="button" class="p-sidebar-close p-link" *ngIf="showCloseIcon" (click)="close($event)" (keydown.enter)="close($event)" [attr.aria-label]="ariaCloseLabel" pRipple>
-                    <span class="p-sidebar-close-icon pi pi-times"></span>
-                </button>
-                <ng-content></ng-content>
-                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-            </div>
+            <a [ngClass]="{'ui-sidebar-close ui-corner-all':true}" *ngIf="showCloseIcon" tabindex="0" role="button" (click)="close($event)" (keydown.enter)="close($event)" [attr.aria-label]="ariaCloseLabel">
+                <span class="pi pi-times"></span>
+            </a>
+            <ng-content></ng-content>
         </div>
     `,
     animations: [
@@ -34,11 +29,9 @@ import {PrimeTemplate} from 'primeng/api';
             transition('hidden => visible', animate('300ms ease-out'))
         ])
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./sidebar.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
-export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy {
+export class Sidebar implements AfterViewInit, AfterViewChecked, OnDestroy {
 
     @Input() position: string = 'left';
 
@@ -68,8 +61,6 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
 
     @ViewChild('container') containerViewChild: ElementRef;
 
-    @ContentChildren(PrimeTemplate) templates: QueryList<any>;
-
     @Output() onShow: EventEmitter<any> = new EventEmitter();
 
     @Output() onHide: EventEmitter<any> = new EventEmitter();
@@ -90,9 +81,7 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
 
     executePostDisplayActions: boolean;
 
-    contentTemplate: TemplateRef<any>;
-
-    constructor(public el: ElementRef, public renderer: Renderer2, public cd: ChangeDetectorRef) {}
+    constructor(public el: ElementRef, public renderer: Renderer2) {}
 
     ngAfterViewInit() {
         this.initialized = true;
@@ -107,20 +96,6 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
         if (this.visible) {
             this.show();
         }
-    }
-
-    ngAfterContentInit() {
-        this.templates.forEach((item) => {
-            switch(item.getType()) {
-                case 'content':
-                    this.contentTemplate = item.template;
-                break;
-
-                default:
-                    this.contentTemplate = item.template;
-                break;
-            }
-        });
     }
 
     @Input() get visible(): boolean {
@@ -179,7 +154,7 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
         if (!this.mask) {
             this.mask = document.createElement('div');
             this.mask.style.zIndex = String(parseInt(this.containerViewChild.nativeElement.style.zIndex) - 1);
-            DomHandler.addMultipleClasses(this.mask, 'p-component-overlay p-sidebar-mask');
+            DomHandler.addMultipleClasses(this.mask, 'ui-widget-overlay ui-sidebar-mask');
             
             if (this.dismissible){
                 this.maskClickListener = this.renderer.listen(this.mask, 'click', (event: any) => {
@@ -191,7 +166,7 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
 
             document.body.appendChild(this.mask);
             if (this.blockScroll) {
-                DomHandler.addClass(document.body, 'p-overflow-hidden');
+                DomHandler.addClass(document.body, 'ui-overflow-hidden');
             }
         }
     }
@@ -201,7 +176,7 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
             this.unbindMaskClickListener();
             document.body.removeChild(this.mask);
             if (this.blockScroll) {
-                DomHandler.removeClass(document.body, 'p-overflow-hidden');
+                DomHandler.removeClass(document.body, 'ui-overflow-hidden');
             }
             this.mask = null;
         }
@@ -266,7 +241,7 @@ export class Sidebar implements AfterViewInit, AfterContentInit, AfterViewChecke
 }
 
 @NgModule({
-    imports: [CommonModule,RippleModule],
+    imports: [CommonModule],
     exports: [Sidebar],
     declarations: [Sidebar]
 })

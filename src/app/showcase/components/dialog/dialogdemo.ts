@@ -2,7 +2,17 @@ import {Component} from '@angular/core';
 
 @Component({
     templateUrl: './dialogdemo.html',
-    styleUrls: ['./dialogdemo.scss']
+    styles: [`
+        :host ::ng-deep .ui-button {
+            margin: .5em .5em .5em 0;
+            width: 140px;
+        }
+        @media screen and (max-width: 40em) {
+            :host ::ng-deep .ui-dialog {
+                width: 75vw !important;
+            }
+        }
+    `]
 })
 export class DialogDemo {
 

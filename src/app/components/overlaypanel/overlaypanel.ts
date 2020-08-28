@@ -1,33 +1,33 @@
 import {NgModule,Component,Input,Output,OnDestroy,EventEmitter,Renderer2,ElementRef,ChangeDetectorRef,NgZone,
-        ContentChildren,TemplateRef,AfterContentInit,QueryList,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+        ContentChildren,TemplateRef,AfterContentInit,QueryList,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DomHandler} from 'primeng/dom';
 import {PrimeTemplate} from 'primeng/api';
-import {RippleModule} from 'primeng/ripple';
 import {trigger,state,style,transition,animate,AnimationEvent} from '@angular/animations';
 
 @Component({
     selector: 'p-overlayPanel',
     template: `
-        <div *ngIf="render" [ngClass]="'p-overlaypanel p-component'" [ngStyle]="style" [class]="styleClass" (click)="onContainerClick()"
+        <div *ngIf="render" [ngClass]="'ui-overlaypanel ui-widget ui-widget-content ui-corner-all ui-shadow'" [ngStyle]="style" [class]="styleClass" (click)="onContainerClick()"
             [@animation]="{value: (overlayVisible ? 'open': 'close'), params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}" 
                 (@animation.start)="onAnimationStart($event)" (@animation.done)="onAnimationEnd($event)">
-            <div class="p-overlaypanel-content">
+            <div class="ui-overlaypanel-content">
                 <ng-content></ng-content>
                 <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
             </div>
-            <button *ngIf="showCloseIcon" type="button" class="p-overlaypanel-close p-link" (click)="onCloseClick($event)" (keydown.enter)="hide()" [attr.aria-label]="ariaCloseLabel" pRipple>
-                <span class="p-overlaypanel-close-icon pi pi-times"></span>
-            </button>
+            <a tabindex="0" *ngIf="showCloseIcon" class="ui-overlaypanel-close ui-state-default" (click)="onCloseClick($event)" (keydown.enter)="hide()" [attr.aria-label]="ariaCloseLabel">
+                <span class="ui-overlaypanel-close-icon pi pi-times"></span>
+            </a>
         </div>
     `,
     animations: [
         trigger('animation', [
             state('void', style({
-                transform: 'scaleY(0.8)',
+                transform: 'translateY(5%)',
                 opacity: 0
             })),
             state('close', style({
+                transform: 'translateY(5%)',
                 opacity: 0
             })),
             state('open', style({
@@ -35,12 +35,10 @@ import {trigger,state,style,transition,animate,AnimationEvent} from '@angular/an
                 opacity: 1
             })),
             transition('void => open', animate('{{showTransitionParams}}')),
-            transition('open => close', animate('{{hideTransitionParams}}')),
+            transition('open => close', animate('{{hideTransitionParams}}'))
         ])
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./overlaypanel.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class OverlayPanel implements AfterContentInit, OnDestroy {
 
@@ -59,12 +57,10 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
     @Input() ariaCloseLabel: string;
     
     @Input() baseZIndex: number = 0;
-
-    @Input() focusOnShow: boolean = true;
     
-    @Input() showTransitionOptions: string = '.12s cubic-bezier(0, 0, 0.2, 1)';
+    @Input() showTransitionOptions: string = '225ms ease-out';
 
-    @Input() hideTransitionOptions: string = '.1s linear';
+    @Input() hideTransitionOptions: string = '195ms ease-in';
 
     @Output() onShow: EventEmitter<any> = new EventEmitter();
 
@@ -92,7 +88,7 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
 
     destroyCallback: Function;
 
-    constructor(public el: ElementRef, public renderer: Renderer2, public cd: ChangeDetectorRef, private zone: NgZone) {}
+    constructor(public el: ElementRef, public renderer: Renderer2, private cd: ChangeDetectorRef, private zone: NgZone) {}
         
     ngAfterContentInit() {
         this.templates.forEach((item) => {
@@ -105,8 +101,6 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
                     this.contentTemplate = item.template;
                 break;
             }
-
-            this.cd.markForCheck();
         });
     }
 
@@ -147,7 +141,7 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
                 };
             }
 
-            this.hide();
+            this.overlayVisible = false;
         }
         else {
             this.show(event, target);
@@ -158,7 +152,6 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
         this.target = target||event.currentTarget||event.target;
         this.overlayVisible = true;
         this.render = true;
-        this.cd.markForCheck();
     }
 
     hasTargetChanged(event, target) {
@@ -186,11 +179,11 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
         }
         DomHandler.absolutePosition(this.container, this.target);
         if (DomHandler.getOffset(this.container).top < DomHandler.getOffset(this.target).top) {
-            DomHandler.addClass(this.container, 'p-overlaypanel-flipped');
+            DomHandler.addClass(this.container, 'ui-overlaypanel-flipped');
         }
         if (Math.floor(DomHandler.getOffset(this.container).left) < Math.floor(DomHandler.getOffset(this.target).left) &&
             DomHandler.getOffset(this.container).left > 0) {
-            DomHandler.addClass(this.container, 'p-overlaypanel-shifted');
+            DomHandler.addClass(this.container, 'ui-overlaypanel-shifted');
         }
     }
 
@@ -202,10 +195,6 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
             this.align();
             this.bindDocumentClickListener();
             this.bindDocumentResizeListener();
-
-            if (this.focusOnShow) {
-                this.focus();
-            }
         }
     }
 
@@ -226,18 +215,8 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
         }
     }
 
-    focus() {
-        let focusable = DomHandler.findSingle(this.container, '[autofocus]');
-        if (focusable) {
-            this.zone.runOutsideAngular(() => {
-                setTimeout(() => focusable.focus(), 5);
-            });
-        }
-    }
-
     hide() {
         this.overlayVisible = false;
-        this.cd.markForCheck();
     }
 
     onCloseClick(event) {
@@ -278,7 +257,7 @@ export class OverlayPanel implements AfterContentInit, OnDestroy {
 }
 
 @NgModule({
-    imports: [CommonModule,RippleModule],
+    imports: [CommonModule],
     exports: [OverlayPanel],
     declarations: [OverlayPanel]
 })

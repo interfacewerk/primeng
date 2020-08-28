@@ -1,9 +1,8 @@
 import {NgModule,Component,ElementRef,OnDestroy,OnInit,Input,Output,EventEmitter,forwardRef,Renderer2,
-        ViewChild,ChangeDetectorRef,TemplateRef,ContentChildren,QueryList,NgZone,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+        ViewChild,ChangeDetectorRef,TemplateRef,ContentChildren,QueryList,NgZone,ChangeDetectionStrategy} from '@angular/core';
 import {trigger,state,style,transition,animate,AnimationEvent} from '@angular/animations';
 import {CommonModule} from '@angular/common';
 import {ButtonModule} from 'primeng/button';
-import {RippleModule} from 'primeng/ripple';  
 import {DomHandler} from 'primeng/dom';
 import {SharedModule,PrimeTemplate} from 'primeng/api';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
@@ -30,46 +29,45 @@ export interface LocaleSettings {
 @Component({
     selector: 'p-calendar',
     template:  `
-        <span [ngClass]="{'p-calendar':true, 'p-calendar-w-btn': showIcon, 'p-calendar-timeonly': timeOnly}" [ngStyle]="style" [class]="styleClass">
+        <span [ngClass]="{'ui-calendar':true, 'ui-calendar-w-btn': showIcon, 'ui-calendar-timeonly': timeOnly}" [ngStyle]="style" [class]="styleClass">
             <ng-template [ngIf]="!inline">
                 <input #inputfield type="text" [attr.id]="inputId" [attr.name]="name" [attr.required]="required" [attr.aria-required]="required" [value]="inputFieldValue" (focus)="onInputFocus($event)" (keydown)="onInputKeydown($event)" (click)="onInputClick()" (blur)="onInputBlur($event)"
                     [readonly]="readonlyInput" (input)="onUserInput($event)" [ngStyle]="inputStyle" [class]="inputStyleClass" [placeholder]="placeholder||''" [disabled]="disabled" [attr.tabindex]="tabindex"
-                    [ngClass]="'p-inputtext p-component'" autocomplete="off" [attr.aria-labelledby]="ariaLabelledBy"
-                    ><button type="button" [icon]="icon" pButton pRipple *ngIf="showIcon" (click)="onButtonClick($event,inputfield)" class="p-datepicker-trigger"
-                    [disabled]="disabled" tabindex="0"></button>
+                    [ngClass]="'ui-inputtext ui-widget ui-state-default ui-corner-all'" autocomplete="off" [attr.aria-labelledby]="ariaLabelledBy"
+                    ><button type="button" [icon]="icon" pButton *ngIf="showIcon" (click)="onButtonClick($event,inputfield)" class="ui-datepicker-trigger ui-calendar-button"
+                    [ngClass]="{'ui-state-disabled':disabled}" [disabled]="disabled" tabindex="0"></button>
             </ng-template>
-            <div #contentWrapper [class]="panelStyleClass" [ngStyle]="panelStyle" [ngClass]="{'p-datepicker p-component': true, 'p-datepicker-inline':inline,
-                'p-disabled':disabled,'p-datepicker-timeonly':timeOnly,'p-datepicker-multiple-month': this.numberOfMonths > 1, 'p-datepicker-monthpicker': (view === 'month'), 'p-datepicker-touch-ui': touchUI}"
+            <div #contentWrapper [class]="panelStyleClass" [ngStyle]="panelStyle" [ngClass]="{'ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all': true, 'ui-datepicker-inline':inline,'ui-shadow':!inline,
+                'ui-state-disabled':disabled,'ui-datepicker-timeonly':timeOnly,'ui-datepicker-multiple-month': this.numberOfMonths > 1, 'ui-datepicker-monthpicker': (view === 'month'), 'ui-datepicker-touch-ui': touchUI}"
                 [@overlayAnimation]="touchUI ? {value: 'visibleTouchUI', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}: 
                                             {value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}" 
                                             [@.disabled]="inline === true" (@overlayAnimation.start)="onOverlayAnimationStart($event)" (@overlayAnimation.done)="onOverlayAnimationDone($event)" *ngIf="inline || overlayVisible">
                 <ng-content select="p-header"></ng-content>
-                <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
                 <ng-container *ngIf="!timeOnly">
-                    <div class="p-datepicker-group" *ngFor="let month of months; let i = index;">
-                        <div class="p-datepicker-header">
-                            <button (keydown)="onContainerButtonKeydown($event)" class="p-datepicker-prev p-link" (click)="onPrevButtonClick($event)" (keydown.enter)="onPrevButtonClick($event)" *ngIf="i === 0" type="button" pRipple>
-                                <span class="p-datepicker-prev-icon pi pi-chevron-left"></span>
-                            </button>
-                            <div class="p-datepicker-title">
-                                <span class="p-datepicker-month" *ngIf="!monthNavigator && (view !== 'month')">{{locale.monthNames[month.month]}}</span>
-                                <select tabindex="0" class="p-datepicker-month" *ngIf="monthNavigator && (view !== 'month') && numberOfMonths === 1" (change)="onMonthDropdownChange($event.target.value)">
+                    <div class="ui-datepicker-group ui-widget-content" *ngFor="let month of months; let i = index;">
+                        <div class="ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all">
+                            <a class="ui-datepicker-prev ui-corner-all" (click)="onPrevButtonClick($event)" (keydown.enter)="onPrevButtonClick($event)" *ngIf="i === 0" tabindex="0" (keydown)="onInputKeydown($event)">
+                                <span class="ui-datepicker-prev-icon pi pi-chevron-left"></span>
+                            </a>
+                            <div class="ui-datepicker-title">
+                                <span class="ui-datepicker-month" *ngIf="!monthNavigator && (view !== 'month')">{{locale.monthNames[month.month]}}</span>
+                                <select tabindex="0" class="ui-datepicker-month" *ngIf="monthNavigator && (view !== 'month') && numberOfMonths === 1" (change)="onMonthDropdownChange($event.target.value)">
                                     <option [value]="i" *ngFor="let monthName of locale.monthNames;let i = index" [selected]="i === month.month">{{monthName}}</option>
                                 </select>
-                                <select tabindex="0" class="p-datepicker-year" *ngIf="yearNavigator && numberOfMonths === 1" (change)="onYearDropdownChange($event.target.value)">
+                                <select tabindex="0" class="ui-datepicker-year" *ngIf="yearNavigator && numberOfMonths === 1" (change)="onYearDropdownChange($event.target.value)">
                                     <option [value]="year" *ngFor="let year of yearOptions" [selected]="year === currentYear">{{year}}</option>
                                 </select>
-                                <span class="p-datepicker-year" *ngIf="!yearNavigator">{{view === 'month' ? currentYear : month.year}}</span>
+                                <span class="ui-datepicker-year" *ngIf="!yearNavigator">{{view === 'month' ? currentYear : month.year}}</span>
                             </div>
-                            <button (keydown)="onContainerButtonKeydown($event)" class="p-datepicker-next p-link" (click)="onNextButtonClick($event)" (keydown.enter)="onNextButtonClick($event)" *ngIf="numberOfMonths === 1 ? true : (i === numberOfMonths -1)" type="button" pRipple>
-                                <span class="p-datepicker-next-icon pi pi-chevron-right"></span>
-                            </button>
+                            <a class="ui-datepicker-next ui-corner-all" (click)="onNextButtonClick($event)" (keydown.enter)="onNextButtonClick($event)" *ngIf="numberOfMonths === 1 ? true : (i === numberOfMonths -1)" tabindex="0" (keydown)="onInputKeydown($event)">
+                                <span class="ui-datepicker-next-icon pi pi-chevron-right"></span>
+                            </a>
                         </div>
-                        <div class="p-datepicker-calendar-container" *ngIf="view ==='date'">
-                            <table class="p-datepicker-calendar">
+                        <div class="ui-datepicker-calendar-container" *ngIf="view ==='date'">
+                            <table class="ui-datepicker-calendar">
                                 <thead>
                                     <tr>
-                                        <th *ngIf="showWeek" class="p-datepicker-weekheader p-disabled">
+                                        <th *ngIf="showWeek" class="ui-datepicker-weekheader">
                                             <span>{{locale['weekHeader']}}</span>
                                         </th>
                                         <th scope="col" *ngFor="let weekDay of weekDays;let begin = first; let end = last">
@@ -79,17 +77,22 @@ export interface LocaleSettings {
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let week of month.dates; let j = index;">
-                                        <td *ngIf="showWeek" class="p-datepicker-weeknumber">
+                                        <td *ngIf="showWeek" class="ui-datepicker-weeknumber ui-state-disabled">
                                             <span>
                                                 {{month.weekNumbers[j]}}
                                             </span>
                                         </td>
-                                        <td *ngFor="let date of week" [ngClass]="{'p-datepicker-other-month': date.otherMonth,'p-datepicker-today':date.today}">
+                                        <td *ngFor="let date of week" [ngClass]="{'ui-datepicker-other-month': date.otherMonth,
+                                            'ui-datepicker-current-day':isSelected(date),'ui-datepicker-today':date.today}">
                                             <ng-container *ngIf="date.otherMonth ? showOtherMonths : true">
-                                                <span [ngClass]="{'p-highlight':isSelected(date), 'p-disabled': !date.selectable}"
-                                                    (click)="onDateSelect($event,date)" draggable="false" (keydown)="onDateCellKeydown($event,date,i)" pRipple>
+                                                <a class="ui-state-default" *ngIf="date.selectable" [ngClass]="{'ui-state-active':isSelected(date), 'ui-state-highlight':date.today}"
+                                                    (click)="onDateSelect($event,date)" draggable="false" (keydown)="onDateCellKeydown($event,date,i)">
                                                     <ng-container *ngIf="!dateTemplate">{{date.day}}</ng-container>
                                                     <ng-container *ngTemplateOutlet="dateTemplate; context: {$implicit: date}"></ng-container>
+                                                </a>
+                                                <span class="ui-state-default ui-state-disabled" [ngClass]="{'ui-state-active':isSelected(date), 'ui-state-highlight':date.today}" *ngIf="!date.selectable">
+                                                    <ng-container *ngIf="!disabledDateTemplate">{{date.day}}</ng-container>
+                                                    <ng-container *ngTemplateOutlet="disabledDateTemplate; context: {$implicit: date}"></ng-container>
                                                 </span>
                                             </ng-container>
                                         </td>
@@ -98,76 +101,96 @@ export interface LocaleSettings {
                             </table>
                         </div>
                     </div>
-                    <div class="p-monthpicker" *ngIf="view === 'month'">
-                        <span *ngFor="let m of monthPickerValues; let i = index" (click)="onMonthSelect($event, i)" (keydown)="onMonthCellKeydown($event,i)" class="p-monthpicker-month" [ngClass]="{'p-highlight': isMonthSelected(i), 'p-disabled':!isSelectable(1, i, this.currentYear, false)}" pRipple>
+                    <div class="ui-monthpicker" *ngIf="view === 'month'">
+                        <a  *ngFor="let m of monthPickerValues; let i = index" (click)="onMonthSelect($event, i)" (keydown)="onMonthCellKeydown($event,i)" class="ui-monthpicker-month" [ngClass]="{'ui-state-active': isMonthSelected(i), 'ui-state-disabled':!isSelectable(1, i, this.currentYear, false)}">
                             {{m}}
-                        </span>
+                        </a>
                     </div>
                 </ng-container>
-                <div class="p-timepicker" *ngIf="showTime||timeOnly">
-                    <div class="p-hour-picker">
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="incrementHour($event)" (mousedown)="onTimePickerElementMouseDown($event, 0, 1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)" pRipple>
+                <div class="ui-timepicker ui-widget-header ui-corner-all" *ngIf="showTime||timeOnly">
+                    <div class="ui-hour-picker">
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="incrementHour($event)" (mousedown)="onTimePickerElementMouseDown($event, 0, 1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)">
                             <span class="pi pi-chevron-up"></span>
-                        </button>
+                        </a>
                         <span [ngStyle]="{'display': currentHour < 10 ? 'inline': 'none'}">0</span><span>{{currentHour}}</span>
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="decrementHour($event)" (mousedown)="onTimePickerElementMouseDown($event, 0, -1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)" pRipple>
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="decrementHour($event)" (mousedown)="onTimePickerElementMouseDown($event, 0, -1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)">
                             <span class="pi pi-chevron-down"></span>
-                        </button>
+                        </a>
                     </div>
-                    <div class="p-separator">
-                        <span>{{timeSeparator}}</span>
-                    </div>
-                    <div class="p-minute-picker">
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="incrementMinute($event)" (mousedown)="onTimePickerElementMouseDown($event, 1, 1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)" pRipple>
+                    <div class="ui-separator">
+                        <a>
                             <span class="pi pi-chevron-up"></span>
-                        </button>
+                        </a>
+                        <span>{{timeSeparator}}</span>
+                        <a>
+                            <span class="pi pi-chevron-down"></span>
+                        </a>
+                    </div>
+                    <div class="ui-minute-picker">
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="incrementMinute($event)" (mousedown)="onTimePickerElementMouseDown($event, 1, 1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)">
+                            <span class="pi pi-chevron-up"></span>
+                        </a>
                         <span [ngStyle]="{'display': currentMinute < 10 ? 'inline': 'none'}">0</span><span>{{currentMinute}}</span>
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="decrementMinute($event)" (mousedown)="onTimePickerElementMouseDown($event, 1, -1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)" pRipple>
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="decrementMinute($event)" (mousedown)="onTimePickerElementMouseDown($event, 1, -1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)">
                             <span class="pi pi-chevron-down"></span>
-                        </button>
+                        </a>
                     </div>
-                    <div class="p-separator" *ngIf="showSeconds">
+                    <div class="ui-separator" *ngIf="showSeconds">
+                        <a>
+                            <span class="pi pi-chevron-up"></span>
+                        </a>
                         <span>{{timeSeparator}}</span>
+                        <a>
+                            <span class="pi pi-chevron-down"></span>
+                        </a>
                     </div>
-                    <div class="p-second-picker" *ngIf="showSeconds">
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="incrementSecond($event)" (mousedown)="onTimePickerElementMouseDown($event, 2, 1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)" pRipple>
+                    <div class="ui-second-picker" *ngIf="showSeconds">
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="incrementSecond($event)" (mousedown)="onTimePickerElementMouseDown($event, 2, 1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)">
                             <span class="pi pi-chevron-up"></span>
-                        </button>
+                        </a>
                         <span [ngStyle]="{'display': currentSecond < 10 ? 'inline': 'none'}">0</span><span>{{currentSecond}}</span>
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="decrementSecond($event)" (mousedown)="onTimePickerElementMouseDown($event, 2, -1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)" pRipple>
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (keydown.enter)="decrementSecond($event)" (mousedown)="onTimePickerElementMouseDown($event, 2, -1)" (mouseup)="onTimePickerElementMouseUp($event)" (mouseout)="onTimePickerElementMouseOut($event)">
                             <span class="pi pi-chevron-down"></span>
-                        </button>
+                        </a>
                     </div>
-                    <div class="p-ampm-picker" *ngIf="hourFormat=='12'">
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (click)="toggleAMPM($event)" (keydown.enter)="toggleAMPM($event)" pRipple>
+                    <div class="ui-ampm-picker" *ngIf="hourFormat=='12'">
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (click)="toggleAMPM($event)" (keydown.enter)="toggleAMPM($event)">
                             <span class="pi pi-chevron-up"></span>
-                        </button>
+                        </a>
                         <span>{{pm ? 'PM' : 'AM'}}</span>
-                        <button class="p-link" type="button" (keydown)="onContainerButtonKeydown($event)" (click)="toggleAMPM($event)" (keydown.enter)="toggleAMPM($event)" pRipple>
+                        <a tabindex="0" (keydown)="onContainerButtonKeydown($event)" (click)="toggleAMPM($event)" (keydown.enter)="toggleAMPM($event)">
                             <span class="pi pi-chevron-down"></span>
-                        </button>
+                        </a>
                     </div>
                 </div>
-                <div class="p-datepicker-buttonbar" *ngIf="showButtonBar">
-                    <button type="button" [label]="_locale.today" (keydown)="onContainerButtonKeydown($event)" (click)="onTodayButtonClick($event)" pButton pRipple [ngClass]="[todayButtonStyleClass]"></button>
-                    <button type="button" [label]="_locale.clear" (keydown)="onContainerButtonKeydown($event)" (click)="onClearButtonClick($event)" pButton pRipple [ngClass]="[clearButtonStyleClass]"></button>
+                <div class="ui-datepicker-buttonbar ui-widget-header" *ngIf="showButtonBar">
+                    <button type="button" tabindex="0" [label]="_locale.today" (keydown)="onContainerButtonKeydown($event)" (click)="onTodayButtonClick($event)" pButton [ngClass]="[todayButtonStyleClass]"></button>
+                    <button type="button" tabindex="0" [label]="_locale.clear" (keydown)="onContainerButtonKeydown($event)" (click)="onClearButtonClick($event)" pButton [ngClass]="[clearButtonStyleClass]"></button>
                 </div>
-                <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+                <ng-content select="p-footer"></ng-content>
             </div>
         </span>
     `,
     animations: [
         trigger('overlayAnimation', [
+            state('visible', style({
+                transform: 'translateY(0)',
+                opacity: 1
+            })),
             state('visibleTouchUI', style({
                 transform: 'translate(-50%,-50%)',
                 opacity: 1
             })),
             transition('void => visible', [
-                style({opacity: 0, transform: 'scaleY(0.8)'}),
-                animate('{{showTransitionParams}}', style({ opacity: 1, transform: '*' }))
+                style({transform: 'translateY(5%)', opacity: 0}),
+                animate('{{showTransitionParams}}')
             ]),
             transition('visible => void', [
-                animate('{{hideTransitionParams}}', style({ opacity: 0 }))
+                animate(('{{hideTransitionParams}}'), 
+                style({
+                    opacity: 0,
+                    transform: 'translateY(5%)'
+                }))
             ]),
             transition('void => visibleTouchUI', [
                 style({opacity: 0, transform: 'translate3d(-50%, -40%, 0) scale(0.9)'}),
@@ -183,13 +206,11 @@ export interface LocaleSettings {
         ])
     ],
     host: {
-        '[class.p-inputwrapper-filled]': 'filled',
-        '[class.p-inputwrapper-focus]': 'focus'
+        '[class.ui-inputwrapper-filled]': 'filled',
+        '[class.ui-inputwrapper-focus]': 'focus'
     },
     providers: [CALENDAR_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./calendar.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
     
@@ -265,9 +286,9 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
     
     @Input() showButtonBar: boolean;
     
-    @Input() todayButtonStyleClass: string = 'p-button-text';
+    @Input() todayButtonStyleClass: string = 'ui-button-secondary';
     
-    @Input() clearButtonStyleClass: string = 'p-button-text';
+    @Input() clearButtonStyleClass: string = 'ui-button-secondary';
     
     @Input() autoZIndex: boolean = true;
     
@@ -291,9 +312,9 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
 
     @Input() focusTrap: boolean = true;
 
-    @Input() showTransitionOptions: string = '.12s cubic-bezier(0, 0, 0.2, 1)';
+    @Input() showTransitionOptions: string = '225ms ease-out';
 
-    @Input() hideTransitionOptions: string = '.1s linear';
+    @Input() hideTransitionOptions: string = '195ms ease-in';
     
     @Output() onFocus: EventEmitter<any> = new EventEmitter();
     
@@ -415,10 +436,6 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
     preventDocumentListener: boolean;
     
     dateTemplate: TemplateRef<any>;
-
-    headerTemplate: TemplateRef<any>;
-
-    footerTemplate: TemplateRef<any>;
 
     disabledDateTemplate: TemplateRef<any>;
     
@@ -559,14 +576,6 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
 
                 case 'disabledDate':
                     this.disabledDateTemplate = item.template;
-                break;
-
-                case 'header':
-                    this.headerTemplate = item.template;
-                break;
-
-                case 'footer':
-                    this.footerTemplate = item.template;
                 break;
                 
                 default:
@@ -821,7 +830,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
     }
 
     onMonthSelect(event, index) {
-        if (!DomHandler.hasClass(event.target, 'p-disabled')) {
+        if (!DomHandler.hasClass(event.target, 'ui-state-disabled')) {
             this.onDateSelect(event, {year: this.currentYear, month: index, day: 1, selectable: true});
         }
     }
@@ -1261,7 +1270,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
                 let nextRow = cell.parentElement.nextElementSibling;
                 if (nextRow) {
                     let focusCell = nextRow.children[cellIndex].children[0];
-                    if (DomHandler.hasClass(focusCell, 'p-disabled')) {
+                    if (DomHandler.hasClass(focusCell, 'ui-state-disabled')) {
                         this.navigationState = {backward: false};
                         this.navForward(event);
                     }
@@ -1285,7 +1294,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
                 let prevRow = cell.parentElement.previousElementSibling;
                 if (prevRow) {
                     let focusCell = prevRow.children[cellIndex].children[0];
-                    if (DomHandler.hasClass(focusCell, 'p-disabled')) {
+                    if (DomHandler.hasClass(focusCell, 'ui-state-disabled')) {
                         this.navigationState = {backward: true};
                         this.navBackward(event);
                     }
@@ -1308,7 +1317,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
                 let prevCell = cell.previousElementSibling;
                 if (prevCell) {
                     let focusCell = prevCell.children[0];
-                    if (DomHandler.hasClass(focusCell, 'p-disabled') || DomHandler.hasClass(focusCell.parentElement, 'p-datepicker-weeknumber')) {
+                    if (DomHandler.hasClass(focusCell, 'ui-state-disabled') || DomHandler.hasClass(focusCell.parentElement, 'ui-datepicker-weeknumber')) {
                         this.navigateToMonth(true, groupIndex);
                     }
                     else {
@@ -1329,7 +1338,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
                 let nextCell = cell.nextElementSibling;
                 if (nextCell) {
                     let focusCell = nextCell.children[0];
-                    if (DomHandler.hasClass(focusCell, 'p-disabled')) {
+                    if (DomHandler.hasClass(focusCell, 'ui-state-disabled')) {
                         this.navigateToMonth(false, groupIndex);
                     }
                     else {
@@ -1450,7 +1459,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
             }
             else {
                 let prevMonthContainer = this.contentViewChild.nativeElement.children[groupIndex - 1];
-                let cells = DomHandler.find(prevMonthContainer, '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)');
+                let cells = DomHandler.find(prevMonthContainer, '.ui-datepicker-calendar td a');
                 let focusCell = cells[cells.length - 1];
                 focusCell.tabIndex = '0';
                 focusCell.focus();
@@ -1463,7 +1472,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
             }
             else {
                 let nextMonthContainer = this.contentViewChild.nativeElement.children[groupIndex + 1];
-                let focusCell = DomHandler.findSingle(nextMonthContainer, '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)');
+                let focusCell = DomHandler.findSingle(nextMonthContainer, '.ui-datepicker-calendar td a');
                 focusCell.tabIndex = '0';
                 focusCell.focus();
             }
@@ -1477,17 +1486,17 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
                 this.initFocusableCell();
 
                 if (this.navigationState.backward)
-                    DomHandler.findSingle(this.contentViewChild.nativeElement, '.p-datepicker-prev').focus();
+                    DomHandler.findSingle(this.contentViewChild.nativeElement, '.ui-datepicker-prev').focus();
                 else
-                    DomHandler.findSingle(this.contentViewChild.nativeElement, '.p-datepicker-next').focus();
+                    DomHandler.findSingle(this.contentViewChild.nativeElement, '.ui-datepicker-next').focus();
             }
             else {
                 if (this.navigationState.backward) {
-                    let cells = DomHandler.find(this.contentViewChild.nativeElement, '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)');
+                    let cells = DomHandler.find(this.contentViewChild.nativeElement, '.ui-datepicker-calendar td a');
                     cell = cells[cells.length - 1];
                 }
                 else {
-                    cell = DomHandler.findSingle(this.contentViewChild.nativeElement, '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)');
+                    cell = DomHandler.findSingle(this.contentViewChild.nativeElement, '.ui-datepicker-calendar td a');
                 }
 
                 if (cell) {
@@ -1506,24 +1515,24 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
     initFocusableCell() {
         let cell;
         if (this.view === 'month') {
-            let cells = DomHandler.find(this.contentViewChild.nativeElement, '.p-monthpicker .p-monthpicker-month:not(.p-disabled)');
-            let selectedCell= DomHandler.findSingle(this.contentViewChild.nativeElement, '.p-monthpicker .p-monthpicker-month.p-highlight');
+            let cells = DomHandler.find(this.contentViewChild.nativeElement, '.ui-monthpicker .ui-monthpicker-month:not(.ui-state-disabled)');
+            let selectedCell= DomHandler.findSingle(this.contentViewChild.nativeElement, '.ui-monthpicker .ui-monthpicker-month.ui-state-highlight');
             cells.forEach(cell => cell.tabIndex = -1);
             cell = selectedCell || cells[0];
 
             if (cells.length === 0) {
-                let disabledCells = DomHandler.find(this.contentViewChild.nativeElement, '.p-monthpicker .p-monthpicker-month.p-disabled[tabindex = "0"]');
+                let disabledCells = DomHandler.find(this.contentViewChild.nativeElement, '.ui-monthpicker .ui-monthpicker-month.ui-state-disabled[tabindex = "0"]');
                 disabledCells.forEach(cell => cell.tabIndex = -1);
             }
         }
         else {
-            cell = DomHandler.findSingle(this.contentViewChild.nativeElement, 'span.p-highlight');
+            cell = DomHandler.findSingle(this.contentViewChild.nativeElement, 'a.ui-state-active');
             if (!cell) {
-                let todayCell = DomHandler.findSingle(this.contentViewChild.nativeElement, 'td.p-datepicker-today span:not(.p-disabled):not(.p-ink)');
+                let todayCell = DomHandler.findSingle(this.contentViewChild.nativeElement, 'td.ui-datepicker-today a:not(.ui-state-disabled)');
                 if (todayCell)
                     cell = todayCell;
                 else
-                    cell = DomHandler.findSingle(this.contentViewChild.nativeElement, '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)');
+                    cell = DomHandler.findSingle(this.contentViewChild.nativeElement, '.ui-datepicker-calendar td a');
             }
         }
 
@@ -1692,7 +1701,6 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
         this.clearTimePickerTimer();
         this.timePickerTimer = setTimeout(() => {
             this.repeat(event, 100, type, direction);
-            this.cd.markForCheck();
         }, i);
 
         switch(type) {
@@ -1970,8 +1978,6 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
         if (this.touchUI) {
             this.disableModality();
         }
-        
-        this.cd.markForCheck();
     }
 
     toggle() {
@@ -2051,14 +2057,14 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
         if (!this.mask) {
             this.mask = document.createElement('div');
             this.mask.style.zIndex = String(parseInt(element.style.zIndex) - 1);
-            let maskStyleClass = 'p-component-overlay p-datepicker-mask p-datepicker-mask-scrollblocker';
+            let maskStyleClass = 'ui-widget-overlay ui-datepicker-mask ui-datepicker-mask-scrollblocker';
             DomHandler.addMultipleClasses(this.mask, maskStyleClass);
             
 			this.maskClickListener = this.renderer.listen(this.mask, 'click', (event: any) => {
                 this.disableModality();
             });
             document.body.appendChild(this.mask);
-            DomHandler.addClass(document.body, 'p-overflow-hidden');
+            DomHandler.addClass(document.body, 'ui-overflow-hidden');
         }
     }
     
@@ -2069,14 +2075,14 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
             let hasBlockerMasks: boolean;
             for (let i = 0; i < bodyChildren.length; i++) {
                 let bodyChild = bodyChildren[i];
-                if (DomHandler.hasClass(bodyChild, 'p-datepicker-mask-scrollblocker')) {
+                if (DomHandler.hasClass(bodyChild, 'ui-datepicker-mask-scrollblocker')) {
                     hasBlockerMasks = true;
                     break;
                 }
             }
             
             if (!hasBlockerMasks) {
-                DomHandler.removeClass(document.body, 'p-overflow-hidden');
+                DomHandler.removeClass(document.body, 'ui-overflow-hidden');
             }
 
             this.unbindMaskClickListener();
@@ -2100,7 +2106,6 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
 
         this.updateInputfield();
         this.updateUI();
-        this.cd.markForCheck();
     }
     
     registerOnChange(fn: Function): void {
@@ -2503,8 +2508,8 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
     }
     
     isNavIconClicked(event: Event) {
-        return (DomHandler.hasClass(event.target, 'p-datepicker-prev') || DomHandler.hasClass(event.target, 'p-datepicker-prev-icon')
-                || DomHandler.hasClass(event.target, 'p-datepicker-next') || DomHandler.hasClass(event.target, 'p-datepicker-next-icon'));
+        return (DomHandler.hasClass(event.target, 'ui-datepicker-prev') || DomHandler.hasClass(event.target, 'ui-datepicker-prev-icon')
+                || DomHandler.hasClass(event.target, 'ui-datepicker-next') || DomHandler.hasClass(event.target, 'ui-datepicker-next-icon'));
     }
 
     onWindowResize() {
@@ -2529,7 +2534,7 @@ export class Calendar implements OnInit,OnDestroy,ControlValueAccessor {
 }
 
 @NgModule({
-    imports: [CommonModule,ButtonModule,SharedModule,RippleModule],
+    imports: [CommonModule,ButtonModule,SharedModule],
     exports: [Calendar,ButtonModule,SharedModule],
     declarations: [Calendar]
 })

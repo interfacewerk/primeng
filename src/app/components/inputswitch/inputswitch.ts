@@ -1,4 +1,4 @@
-import {NgModule,Component,Input,forwardRef,EventEmitter,Output,ChangeDetectorRef,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,Input,forwardRef,EventEmitter,Output,ChangeDetectorRef,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NG_VALUE_ACCESSOR,ControlValueAccessor} from '@angular/forms';
 
@@ -11,19 +11,17 @@ export const INPUTSWITCH_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-inputSwitch',
     template: `
-        <div [ngClass]="{'p-inputswitch p-component': true, 'p-inputswitch-checked': checked, 'p-disabled': disabled, 'p-focus': focused}" 
+        <div [ngClass]="{'ui-inputswitch ui-widget': true, 'ui-inputswitch-checked': checked, 'ui-state-disabled': disabled, 'ui-inputswitch-readonly': readonly, 'ui-inputswitch-focus': focused}" 
             [ngStyle]="style" [class]="styleClass" (click)="onClick($event, cb)">
-            <div class="p-hidden-accessible">
+            <div class="ui-helper-hidden-accessible">
                 <input #cb type="checkbox" [attr.id]="inputId" [attr.name]="name" [attr.tabindex]="tabindex" [checked]="checked" (change)="onInputChange($event)"
                     (focus)="onFocus($event)" (blur)="onBlur($event)" [disabled]="disabled" role="switch" [attr.aria-checked]="checked" [attr.aria-labelledby]="ariaLabelledBy"/>
             </div>
-            <span class="p-inputswitch-slider"></span>
+            <span class="ui-inputswitch-slider"></span>
         </div>
     `,
     providers: [INPUTSWITCH_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./inputswitch.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class InputSwitch implements ControlValueAccessor {
 

@@ -2,17 +2,17 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TabViewDemo} from './tabviewdemo';
 import {TabViewDemoRoutingModule} from './tabviewdemo-routing.module';
+import {ToastModule} from 'primeng/toast';
 import {TabViewModule} from 'primeng/tabview';
-import {ButtonModule} from 'primeng/button';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		TabViewDemoRoutingModule,
-		TabViewModule,
-		AppCodeModule,
-		ButtonModule
+        ToastModule,
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		TabViewDemo

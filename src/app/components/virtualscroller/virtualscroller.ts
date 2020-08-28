@@ -1,4 +1,4 @@
-import {NgModule,Component,ElementRef,AfterContentInit,Input,Output,ViewChild,EventEmitter,ContentChild,ContentChildren,QueryList,TemplateRef,ChangeDetectionStrategy,OnChanges,SimpleChanges, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
+import {NgModule,Component,ElementRef,AfterContentInit,Input,Output,ViewChild,EventEmitter,ContentChild,ContentChildren,QueryList,TemplateRef,ChangeDetectionStrategy,OnChanges,SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Header,Footer,PrimeTemplate,SharedModule} from 'primeng/api';
 import {ScrollingModule,CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
@@ -7,30 +7,27 @@ import {BlockableUI} from 'primeng/api';
 @Component({
     selector: 'p-virtualScroller',
     template:`
-        <div [ngClass]="'p-virtualscroller p-component'" [ngStyle]="style" [class]="styleClass">
-            <div class="p-virtualscroller-header" *ngIf="header || headerTemplate">
+        <div [ngClass]="'ui-virtualscroller ui-widget'" [ngStyle]="style" [class]="styleClass">
+            <div class="ui-virtualscroller-header ui-widget-header ui-corner-top" *ngIf="header">
                 <ng-content select="p-header"></ng-content>
-                <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
             </div>
-            <div #content class="p-virtualscroller-content">
-                <div class="p-virtualscroller-list">
+            <div #content class="ui-virtualscroller-content ui-widget-content">
+                <div class="ui-virtualscroller-list">
                     <cdk-virtual-scroll-viewport #viewport [ngStyle]="{'height': scrollHeight}" [itemSize]="itemSize" [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx" (scrolledIndexChange)="onScrollIndexChange($event)">
                         <ng-container *cdkVirtualFor="let item of value; trackBy: trackBy; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; ">
-                            <div [ngStyle]="{'height': itemSize + 'px'}" class="p-virtualscroller-item">
+                            <div [ngStyle]="{'height': itemSize + 'px'}" class="ui-virtualscroller-item">
                                 <ng-container *ngTemplateOutlet="item ? itemTemplate : loadingItemTemplate; context: {$implicit: item, index: i, count: c, first: f, last: l, even: e, odd: o}"></ng-container>
                             </div>
                         </ng-container>
                     </cdk-virtual-scroll-viewport>
                 </div>
             </div>
-            <div class="p-virtualscroller-footer" *ngIf="footer || footerTemplate">
+            <div class="ui-virtualscroller-footer ui-widget-header ui-corner-bottom" *ngIf="footer">
                 <ng-content select="p-footer"></ng-content>
-                <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
             </div>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.Default,
-    encapsulation: ViewEncapsulation.None
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class VirtualScroller implements AfterContentInit,BlockableUI,OnChanges {
 
@@ -65,10 +62,6 @@ export class VirtualScroller implements AfterContentInit,BlockableUI,OnChanges {
     @Output() onLazyLoad: EventEmitter<any> = new EventEmitter();
 
     itemTemplate: TemplateRef<any>;
-
-    headerTemplate: TemplateRef<any>;
-
-    footerTemplate: TemplateRef<any>;
 
     loadingItemTemplate: TemplateRef<any>;
 
@@ -117,14 +110,6 @@ export class VirtualScroller implements AfterContentInit,BlockableUI,OnChanges {
 
                 case 'loadingItem':
                     this.loadingItemTemplate = item.template;
-                break;
-
-                case 'header':
-                    this.headerTemplate = item.template;
-                break;
-
-                case 'footer':
-                    this.footerTemplate = item.template;
                 break;
                 
                 default:

@@ -4,7 +4,7 @@ import { TreeTableDemo } from './treetabledemo';
 import { TreeTablePageDemo } from './treetablepagedemo';
 import { TreeTableSortDemo } from './treetablesortdemo';
 import { TreeTableSelectionDemo } from './treetableselectiondemo';
-import { TreeTableTemplatingDemo } from './treetabletemplatingdemo';
+import { TreeTableSectionsDemo } from './treetablesectionsdemo';
 import { TreeTableStyleDemo } from './treetablestyledemo';
 import { TreeTableLazyDemo } from './treetablelazydemo';
 import { TreeTableColGroupDemo } from './treetablecolgroupdemo';
@@ -25,7 +25,7 @@ import { TreeTableFilterDemo } from './treetablefilterdemo';
             { path: 'page', component: TreeTablePageDemo },
 			{ path: 'sort', component: TreeTableSortDemo },
 			{ path: 'selection', component: TreeTableSelectionDemo },
-			{ path: 'templating', component: TreeTableTemplatingDemo },
+			{ path: 'sections', component: TreeTableSectionsDemo },
 			{ path: 'style', component: TreeTableStyleDemo },
 			{ path: 'lazy', component: TreeTableLazyDemo },
 			{ path: 'colgroup', component: TreeTableColGroupDemo },

@@ -4,15 +4,15 @@ import {PanelMenuDemo} from './panelmenudemo';
 import {PanelMenuDemoRoutingModule} from './panelmenudemo-routing.module';
 import {PanelMenuModule} from 'primeng/panelmenu';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		PanelMenuDemoRoutingModule,
         PanelMenuModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		PanelMenuDemo

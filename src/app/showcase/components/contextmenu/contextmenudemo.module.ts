@@ -4,15 +4,15 @@ import {ContextMenuDemo} from './contextmenudemo';
 import {ContextMenuDemoRoutingModule} from './contextmenudemo-routing.module';
 import {ContextMenuModule} from 'primeng/contextmenu';
 import {TabViewModule} from 'primeng/tabview';
-import { AppCodeModule } from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		ContextMenuDemoRoutingModule,
         ContextMenuModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		ContextMenuDemo

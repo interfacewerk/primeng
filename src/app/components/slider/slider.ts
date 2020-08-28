@@ -1,4 +1,4 @@
-import {NgModule, Component, ElementRef, OnDestroy, Input, Output, EventEmitter, forwardRef, Renderer2,NgZone,ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {NgModule, Component, ElementRef, OnDestroy, Input, Output, EventEmitter, forwardRef, Renderer2,NgZone,ChangeDetectorRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DomHandler} from 'primeng/dom';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
@@ -12,28 +12,26 @@ export const SLIDER_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-slider',
     template: `
-        <div [ngStyle]="style" [class]="styleClass" [ngClass]="{'p-slider p-component':true,'p-disabled':disabled,
-            'p-slider-horizontal':orientation == 'horizontal','p-slider-vertical':orientation == 'vertical','p-slider-animate':animate}"
+        <div [ngStyle]="style" [class]="styleClass" [ngClass]="{'ui-slider ui-widget ui-widget-content ui-corner-all':true,'ui-state-disabled':disabled,
+            'ui-slider-horizontal':orientation == 'horizontal','ui-slider-vertical':orientation == 'vertical','ui-slider-animate':animate}"
             (click)="onBarClick($event)">
-            <span *ngIf="range && orientation == 'horizontal'" class="p-slider-range" [ngStyle]="{'left':handleValues[0] + '%',width: (handleValues[1] - handleValues[0] + '%')}"></span>
-            <span *ngIf="range && orientation == 'vertical'" class="p-slider-range" [ngStyle]="{'bottom':handleValues[0] + '%',height: (handleValues[1] - handleValues[0] + '%')}"></span>
-            <span *ngIf="!range && orientation=='vertical'" class="p-slider-range" [ngStyle]="{'height': handleValue + '%'}"></span>
-            <span *ngIf="!range && orientation=='horizontal'" class="p-slider-range" [ngStyle]="{'width': handleValue + '%'}"></span>
-            <span #sliderHandle *ngIf="!range" [attr.tabindex]="tabindex" (keydown)="onHandleKeydown($event)" class="p-slider-handle" (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
+            <span *ngIf="range && orientation == 'horizontal'" class="ui-slider-range ui-widget-header ui-corner-all" [ngStyle]="{'left':handleValues[0] + '%',width: (handleValues[1] - handleValues[0] + '%')}"></span>
+            <span *ngIf="range && orientation == 'vertical'" class="ui-slider-range ui-widget-header ui-corner-all" [ngStyle]="{'bottom':handleValues[0] + '%',height: (handleValues[1] - handleValues[0] + '%')}"></span>
+            <span *ngIf="!range && orientation=='vertical'" class="ui-slider-range ui-slider-range-min ui-widget-header ui-corner-all" [ngStyle]="{'height': handleValue + '%'}"></span>
+            <span *ngIf="!range && orientation=='horizontal'" class="ui-slider-range ui-slider-range-min ui-widget-header ui-corner-all" [ngStyle]="{'width': handleValue + '%'}"></span>
+            <span #sliderHandle *ngIf="!range" [attr.tabindex]="tabindex" (keydown)="onHandleKeydown($event)" class="ui-slider-handle ui-state-default ui-corner-all ui-clickable" (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
                 [style.transition]="dragging ? 'none': null" [ngStyle]="{'left': orientation == 'horizontal' ? handleValue + '%' : null,'bottom': orientation == 'vertical' ? handleValue + '%' : null}"
                 [attr.aria-valuemin]="min" [attr.aria-valuenow]="value" [attr.aria-valuemax]="max" [attr.aria-labelledby]="ariaLabelledBy"></span>
-            <span #sliderHandleStart *ngIf="range" [attr.tabindex]="tabindex" (keydown)="onHandleKeydown($event,0)" (mousedown)="onMouseDown($event,0)" (touchstart)="onTouchStart($event,0)" (touchmove)="onTouchMove($event,0)" (touchend)="onTouchEnd($event)" [style.transition]="dragging ? 'none': null" class="p-slider-handle" 
-                [ngStyle]="{'left': rangeStartLeft, 'bottom': rangeStartBottom}" [ngClass]="{'p-slider-handle-active':handleIndex==0}"
+            <span #sliderHandleStart *ngIf="range" [attr.tabindex]="tabindex" (keydown)="onHandleKeydown($event,0)" (mousedown)="onMouseDown($event,0)" (touchstart)="onTouchStart($event,0)" (touchmove)="onTouchMove($event,0)" (touchend)="onTouchEnd($event)" [style.transition]="dragging ? 'none': null" class="ui-slider-handle ui-state-default ui-corner-all ui-clickable" 
+                [ngStyle]="{'left': rangeStartLeft, 'bottom': rangeStartBottom}" [ngClass]="{'ui-slider-handle-active':handleIndex==0}"
                 [attr.aria-valuemin]="min" [attr.aria-valuenow]="value ? value[0] : null" [attr.aria-valuemax]="max" [attr.aria-labelledby]="ariaLabelledBy"></span>
-            <span #sliderHandleEnd *ngIf="range" [attr.tabindex]="tabindex" (keydown)="onHandleKeydown($event,1)" (mousedown)="onMouseDown($event,1)" (touchstart)="onTouchStart($event,1)" (touchmove)="onTouchMove($event,1)" (touchend)="onTouchEnd($event)" [style.transition]="dragging ? 'none': null" class="p-slider-handle" 
-                [ngStyle]="{'left': rangeEndLeft, 'bottom': rangeEndBottom}" [ngClass]="{'p-slider-handle-active':handleIndex==1}"
+            <span #sliderHandleEnd *ngIf="range" [attr.tabindex]="tabindex" (keydown)="onHandleKeydown($event,1)" (mousedown)="onMouseDown($event,1)" (touchstart)="onTouchStart($event,1)" (touchmove)="onTouchMove($event,1)" (touchend)="onTouchEnd($event)" [style.transition]="dragging ? 'none': null" class="ui-slider-handle ui-state-default ui-corner-all ui-clickable" 
+                [ngStyle]="{'left': rangeEndLeft, 'bottom': rangeEndBottom}" [ngClass]="{'ui-slider-handle-active':handleIndex==1}"
                 [attr.aria-valuemin]="min" [attr.aria-valuenow]="value ? value[1] : null" [attr.aria-valuemax]="max" [attr.aria-labelledby]="ariaLabelledBy"></span>
         </div>
     `,
     providers: [SLIDER_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./slider.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Slider implements OnDestroy,ControlValueAccessor {
 
@@ -119,10 +117,6 @@ export class Slider implements OnDestroy,ControlValueAccessor {
         this.bindDragListeners();
         event.target.focus();
         event.preventDefault();
-
-        if (this.animate) {
-            DomHandler.removeClass(this.el.nativeElement.children[0], 'p-slider-animate');
-        }
     }
 
     onTouchStart(event, index?:number) {
@@ -142,10 +136,6 @@ export class Slider implements OnDestroy,ControlValueAccessor {
         else {
             this.starty = parseInt(touchobj.clientY, 10);
             this.barHeight = this.el.nativeElement.children[0].offsetHeight;
-        }
-
-        if (this.animate) {
-            DomHandler.removeClass(this.el.nativeElement.children[0], 'p-slider-animate');
         }
 
         event.preventDefault();
@@ -182,10 +172,6 @@ export class Slider implements OnDestroy,ControlValueAccessor {
             this.onSlideEnd.emit({originalEvent: event, values: this.values});
         else
             this.onSlideEnd.emit({originalEvent: event, value: this.value});
-
-        if (this.animate) {
-            DomHandler.addClass(this.el.nativeElement.children[0], 'p-slider-animate');
-        }
         
         event.preventDefault();
     }
@@ -250,13 +236,10 @@ export class Slider implements OnDestroy,ControlValueAccessor {
                     if (this.dragging) {
                         this.dragging = false;
                         this.ngZone.run(() => {
-                            if (this.range)
+                            if (this.range) {
                                 this.onSlideEnd.emit({originalEvent: event, values: this.values});
-                            else
+                            } else {
                                 this.onSlideEnd.emit({originalEvent: event, value: this.value});
-
-                            if (this.animate) {
-                                DomHandler.addClass(this.el.nativeElement.children[0], 'p-slider-animate');
                             }
                         });
                     }
@@ -296,8 +279,6 @@ export class Slider implements OnDestroy,ControlValueAccessor {
                 this.updateValue(newValue, event);
             }         
         }
-
-        this.cd.markForCheck();
     }
     
     handleStepChange(newValue: number, oldValue: number) {

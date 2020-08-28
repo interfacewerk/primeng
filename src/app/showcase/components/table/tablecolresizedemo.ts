@@ -1,22 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../domain/product';
-import { Customer } from '../../domain/customer';
-import { ProductService } from '../../service/productservice';
-import { CustomerService } from '../../service/customerservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
     templateUrl: './tablecolresizedemo.html'
 })
 export class TableColResizeDemo implements OnInit {
 
-    products: Product[];
+    cars1: Car[];
 
-    customers: Customer[];
+    cars2: Car[];
 
-    constructor(private productService: ProductService, private customerService: CustomerService) { }
+    cols: any[];
+
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.productService.getProductsSmall().then(data => this.products = data);
-        this.customerService.getCustomersLarge().then(customers => this.customers = customers);
+        this.carService.getCarsSmall().then(cars => this.cars1 = cars);
+        this.carService.getCarsMedium().then(cars => this.cars2 = cars);
+
+        this.cols = [
+            { field: 'vin', header: 'Vin', width: '25%' },
+            { field: 'year', header: 'Year', width: '15%' },
+            { field: 'brand', header: 'Brand', width: '35%' },
+            { field: 'color', header: 'Color', width: '25%' }
+        ];
     }
 }

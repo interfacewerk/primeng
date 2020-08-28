@@ -1,40 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../domain/product';
-import { ProductService } from '../../service/productservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
     templateUrl: './tablestyledemo.html',
     styles: [`
-        .outofstock {
-            font-weight: 700;
-            color: #FF5252;
-            text-decoration: line-through;
+        .new-car {
+            background-color: #1CA979 !important;
+            color: #ffffff !important;
         }
-        
-        .lowstock {
-            font-weight: 700;
-            color: #FFA726;
-        }
-        
-        .instock {
-            font-weight: 700;
-            color: #66BB6A;
-        }
-        
-        :host ::ng-deep .row-accessories {
-            background-color: rgba(0,0,0,.15) !important;
+
+        .old-car {
+            background-color: #2CA8B1 !important;
+            color: #ffffff !important;
         }
     `
     ]
 })
 export class TableStyleDemo implements OnInit {
 
-    products: Product[];
+    cars: Car[];
 
-    constructor(private productService: ProductService) { }
+    cols: any[];
+
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.productService.getProductsSmall().then(data => this.products = data);
+        this.carService.getCarsSmall().then(cars => this.cars = cars);
+
+        this.cols = [
+            { field: 'vin', header: 'Vin' },
+            { field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
+        ];
     }
-    
 }

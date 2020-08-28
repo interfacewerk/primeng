@@ -1,42 +1,55 @@
-.p-contextmenu {
+.ui-contextmenu {
+    width: 12.5em;
+    padding: .25em;
     position: absolute;
     display: none;
 }
 
-.p-contextmenu ul {
+.ui-contextmenu .ui-menu-separator {
+    border-width: 1px 0 0 0;
+}
+
+.ui-contextmenu ul {
+    list-style: none;
     margin: 0;
     padding: 0;
-    list-style: none;
 }
 
-.p-contextmenu .p-submenu-list {
-    position: absolute;
-    min-width: 100%;
-    z-index: 1;
+.ui-contextmenu .ui-submenu-list {
     display: none;
+    position: absolute;
+    width: 12.5em;
+    padding: .25em;
 }
 
-.p-contextmenu .p-menuitem-link {
+.ui-contextmenu .ui-menuitem-link {
+    padding: .25em;
+    display: block;
+    position: relative;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    overflow: hidden;
+}
+
+.ui-contextmenu .ui-menuitem-icon {
+    margin-right: .25em;
+    vertical-align: middle;
+}
+
+.ui-contextmenu .ui-menuitem-text {
+    vertical-align: middle;
+}
+
+.ui-contextmenu .ui-menuitem {
     position: relative;
 }
 
-.p-contextmenu .p-menuitem-text {
-    line-height: 1;
+
+.ui-contextmenu .ui-menuitem-link .ui-submenu-icon {
+    position: absolute;
+    margin-top: -.5em;
+    right: 0;
+    top: 50%;
 }
 
-.p-contextmenu .p-menuitem {
-    position: relative;
-}
-
-.p-contextmenu .p-menuitem-link .p-submenu-icon {
-    margin-left: auto;
-}
-
-.p-contextmenu .p-menuitem-active > p-contextmenusub > .p-submenu-list {
+.ui-contextmenu .ui-menuitem-active > .ui-submenu > .ui-submenu-list {
     display: block !important;
 }

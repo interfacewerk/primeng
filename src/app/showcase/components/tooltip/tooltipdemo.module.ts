@@ -5,9 +5,7 @@ import {TooltipDemoRoutingModule} from './tooltipdemo-routing.module';
 import {TooltipModule} from 'primeng/tooltip';
 import {InputTextModule} from 'primeng/inputtext';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
-import {ButtonModule} from 'primeng/button';
-import {RippleModule} from 'primeng/ripple';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -15,10 +13,8 @@ import {RippleModule} from 'primeng/ripple';
 		TooltipDemoRoutingModule,
         TooltipModule,
         InputTextModule,
-		TabViewModule,
-		AppCodeModule,
-		ButtonModule,
-		RippleModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		TooltipDemo

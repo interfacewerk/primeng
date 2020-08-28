@@ -1,30 +1,30 @@
-import {NgModule,Component,Input,Output,OnInit,AfterViewInit,AfterContentInit,OnDestroy,ElementRef,ViewChild,EventEmitter,ContentChildren,QueryList,TemplateRef,ChangeDetectionStrategy, NgZone, ChangeDetectorRef, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,Input,Output,OnInit,AfterViewInit,AfterContentInit,OnDestroy,ElementRef,ViewChild,EventEmitter,ContentChildren,QueryList,TemplateRef,ChangeDetectionStrategy, NgZone, ChangeDetectorRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Message} from 'primeng/api';
 import {DomHandler} from 'primeng/dom';
 import {PrimeTemplate,SharedModule} from 'primeng/api';
 import {MessageService} from 'primeng/api';
-import {RippleModule} from 'primeng/ripple';
 import {Subscription} from 'rxjs';
 import {trigger,state,style,transition,animate,query,animateChild,AnimationEvent} from '@angular/animations';
 
 @Component({
     selector: 'p-toastItem',
     template: `
-        <div #container [attr.id]="message.id" class="p-toast-message" [ngClass]="'p-toast-message-' + message.severity" [@messageState]="{value: 'visible', params: {showTransformParams: showTransformOptions, hideTransformParams: hideTransformOptions, showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}"
-                (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-            <div class="p-toast-message-content" role="alert" aria-live="assertive" aria-atomic="true">
+        <div #container [attr.id]="message.id" class="ui-toast-message ui-shadow" [@messageState]="{value: 'visible', params: {showTransformParams: showTransformOptions, hideTransformParams: hideTransformOptions, showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}"
+            [ngClass]="{'ui-toast-message-info': message.severity == 'info','ui-toast-message-warn': message.severity == 'warn',
+                'ui-toast-message-error': message.severity == 'error','ui-toast-message-success': message.severity == 'success'}"
+                (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="ui-toast-message-content">
+                <a tabindex="0" class="ui-toast-close-icon pi pi-times" (click)="onCloseIconClick($event)" (keydown.enter)="onCloseIconClick($event)" *ngIf="message.closable !== false"></a>
                 <ng-container *ngIf="!template">
-                    <span class="p-toast-message-icon pi" [ngClass]="{'pi-info-circle': message.severity == 'info', 'pi-exclamation-triangle': message.severity == 'warn',
-                        'pi-times-circle': message.severity == 'error', 'pi-check' :message.severity == 'success'}"></span>
-                    <div class="p-toast-message-text">
-                        <div class="p-toast-summary">{{message.summary}}</div>
-                        <div class="p-toast-detail">{{message.detail}}</div>
+                    <span class="ui-toast-icon pi"
+                        [ngClass]="{'pi-info-circle': message.severity == 'info', 'pi-exclamation-triangle': message.severity == 'warn',
+                            'pi-times-circle': message.severity == 'error', 'pi-check' :message.severity == 'success'}"></span>
+                    <div class="ui-toast-message-text-content">
+                        <div class="ui-toast-summary">{{message.summary}}</div>
+                        <div class="ui-toast-detail">{{message.detail}}</div>
                     </div>
                 </ng-container>
-                <button type="button" class="p-toast-icon-close p-link" (click)="onCloseIconClick($event)" (keydown.enter)="onCloseIconClick($event)" *ngIf="message.closable !== false" pRipple>
-                    <span class="p-toast-icon-close-icon pi pi-times"></span>
-                </button>
                 <ng-container *ngTemplateOutlet="template; context: {$implicit: message}"></ng-container>
             </div>
         </div>
@@ -47,9 +47,7 @@ import {trigger,state,style,transition,animate,query,animateChild,AnimationEvent
                 }))
             ])
         ])
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class ToastItem implements AfterViewInit, OnDestroy {
 
@@ -126,7 +124,15 @@ export class ToastItem implements AfterViewInit, OnDestroy {
 @Component({
     selector: 'p-toast',
     template: `
-        <div #container [ngClass]="'p-toast p-component p-toast-' + position" [ngStyle]="style" [class]="styleClass">
+        <div #container [ngClass]="{'ui-toast ui-widget': true, 
+                'ui-toast-top-right': position === 'top-right',
+                'ui-toast-top-left': position === 'top-left',
+                'ui-toast-bottom-right': position === 'bottom-right',
+                'ui-toast-bottom-left': position === 'bottom-left',
+                'ui-toast-top-center': position === 'top-center',
+                'ui-toast-bottom-center': position === 'bottom-center',
+                'ui-toast-center': position === 'center'}" 
+                [ngStyle]="style" [class]="styleClass">
             <p-toastItem *ngFor="let msg of messages; let i=index" [message]="msg" [index]="i" (onClose)="onMessageClose($event)"
                     [template]="template" @toastAnimation (@toastAnimation.start)="onAnimationStart($event)" 
                     [showTransformOptions]="showTransformOptions" [hideTransformOptions]="hideTransformOptions" 
@@ -140,9 +146,7 @@ export class ToastItem implements AfterViewInit, OnDestroy {
             ])
         ])
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./toast.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Toast implements OnInit,AfterContentInit,OnDestroy {
 
@@ -157,6 +161,8 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
     @Input() styleClass: string;
 
     @Input() position: string = 'top-right';
+
+    @Input() modal: boolean;
 
     @Input() preventOpenDuplicates: boolean = false;
 
@@ -185,6 +191,8 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
     messagesArchieve: Message[];
 
     template: TemplateRef<any>;
+
+    mask: HTMLDivElement;
     
     constructor(public messageService: MessageService, private cd: ChangeDetectorRef) {}
 
@@ -197,6 +205,10 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
                 }
                 else if (this.canAdd(messages)) {
                     this.add([messages]);
+                }
+
+                if (this.modal && this.messages && this.messages.length) {
+                    this.enableModality();
                 }
             }
         });
@@ -211,7 +223,9 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
                 this.messages = null;
             }
 
-            this.cd.markForCheck();
+            if (this.modal) {
+                this.disableModality();
+            }
         });       
     }
 
@@ -221,8 +235,6 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
         if (this.preventDuplicates) {
             this.messagesArchieve = this.messagesArchieve ? [...this.messagesArchieve, ...messages] : [...messages];
         }
-
-        this.cd.markForCheck();
     }
 
     canAdd(message: Message): boolean {
@@ -266,11 +278,33 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
     onMessageClose(event) {
         this.messages.splice(event.index, 1);
 
+        if (this.messages.length === 0) {
+            this.disableModality();
+        }
+
         this.onClose.emit({
             message: event.message
         });
 
         this.cd.detectChanges();
+    }
+
+    enableModality() {
+        if (!this.mask) {
+            this.mask = document.createElement('div');
+            this.mask.style.zIndex = String(parseInt(this.containerViewChild.nativeElement.style.zIndex) - 1);
+            this.mask.style.display = 'block';
+            let maskStyleClass = 'ui-widget-overlay ui-dialog-mask';
+            DomHandler.addMultipleClasses(this.mask, maskStyleClass);
+            document.body.appendChild(this.mask);
+        }
+    }
+    
+    disableModality() {
+        if (this.mask) {
+            document.body.removeChild(this.mask);
+            this.mask = null;
+        }
     }
 
     onAnimationStart(event: AnimationEvent) {
@@ -287,11 +321,13 @@ export class Toast implements OnInit,AfterContentInit,OnDestroy {
         if (this.clearSubscription) {
             this.clearSubscription.unsubscribe();
         }
+
+        this.disableModality();
     }
 }
 
 @NgModule({
-    imports: [CommonModule,RippleModule],
+    imports: [CommonModule],
     exports: [Toast,SharedModule],
     declarations: [Toast,ToastItem]
 })

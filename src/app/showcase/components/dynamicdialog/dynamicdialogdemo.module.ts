@@ -1,14 +1,14 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DynamicDialogModule} from '../../../components/dynamicdialog/dynamicdialog';
-import {ProductListDemo} from './productlistdemo';
 import {DynamicDialogDemo} from './dynamicdialogdemo';
 import {DynamicDialogDemoRoutingModule} from './dynamicdialogdemo-routing.module';
+import {CarsListDemo} from './carslistdemo';
 import {ToastModule} from 'primeng/toast';
 import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -18,15 +18,15 @@ import {AppCodeModule} from '../../app.code.component';
 		ToastModule,
 		TableModule,
         ButtonModule,
-		TabViewModule,
-		AppCodeModule
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		DynamicDialogDemo,
-		ProductListDemo
+		CarsListDemo
 	],
 	entryComponents: [
-		ProductListDemo
+		CarsListDemo
 	]
 })
 export class DynamicDialogDemoModule {}

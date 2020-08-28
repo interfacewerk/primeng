@@ -38,8 +38,8 @@ describe('MultiSelect', () => {
 		fixture.detectChanges();
 		
 		expect(showSpy).toHaveBeenCalled();
-		expect(containerEl.className).toContain('p-disabled');
-		expect(inputReadOnlyEl.className).toContain('p-disabled');
+		expect(containerEl.className).toContain('ui-state-disabled');
+		expect(inputReadOnlyEl.className).toContain('ui-state-disabled');
 		expect(multiselect.overlayVisible).toEqual(undefined);
 	});
 
@@ -47,21 +47,20 @@ describe('MultiSelect', () => {
 		multiselect.name = "PrimeNG";
 		fixture.detectChanges();
 
-		const inputReadOnlyEl = fixture.debugElement.query(By.css('.p-hidden-accessible')).children[0].nativeElement;
+		const inputReadOnlyEl = fixture.debugElement.query(By.css('.ui-helper-hidden-accessible')).children[0].nativeElement;
 		expect(inputReadOnlyEl.name).toContain("PrimeNG");
 	});
 
 	it('should set dropdown icon by default and able to change', () => {
 		fixture.detectChanges();
 
-		const dropdownIcon = fixture.debugElement.query(By.css('.p-multiselect-trigger-icon')).nativeElement;
+		const dropdownIcon = fixture.debugElement.query(By.css('.ui-multiselect-trigger-icon')).nativeElement;
 		expect(dropdownIcon.className).toContain('pi pi-chevron-down');
 		fixture.detectChanges();
 
 		multiselect.dropdownIcon = "Primeng Rocks!";
 		fixture.detectChanges();
 		
-		multiselect.cd.detectChanges();
 		expect(dropdownIcon.className).toContain("Primeng Rocks!");
 	});
 
@@ -72,7 +71,6 @@ describe('MultiSelect', () => {
 		multiselect.styleClass = "Primeng ROCKS!";
 		fixture.detectChanges();
 		
-		multiselect.cd.detectChanges();
 		const multiselectEl = fixture.debugElement.children[0].nativeElement;
 		expect(multiselectEl.className).toContain('Primeng ROCKS!');
 		expect(multiselectEl.style.height).toContain('300px');
@@ -87,8 +85,7 @@ describe('MultiSelect', () => {
 		multiselect.overlayVisible=true;
 		fixture.detectChanges();
 		
-		multiselect.cd.detectChanges();
-		const multiselectPanelEl = fixture.debugElement.query(By.css('.p-multiselect-panel')).nativeElement;
+		const multiselectPanelEl = fixture.debugElement.query(By.css('.ui-multiselect-panel ')).nativeElement;
 		expect(multiselectPanelEl.className).toContain('Primeng ROCKS!');
 		expect(multiselectPanelEl.style.height).toContain('300px');
 	});
@@ -102,8 +99,8 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const multiselectPanelEl = fixture.debugElement.query(By.css('.p-multiselect-panel'));
-		expect(multiselectEl.className).toContain('p-multiselect-open');
+		const multiselectPanelEl = fixture.debugElement.query(By.css('.ui-multiselect-panel'));
+		expect(multiselectEl.className).toContain('ui-multiselect-open');
 		expect(multiselect.overlayVisible).toEqual(true);
 		expect(multiselectPanelEl).toBeTruthy();
 		expect(clickSpy).toHaveBeenCalled();
@@ -123,7 +120,7 @@ describe('MultiSelect', () => {
 		fixture.detectChanges();
 
         const hideSpy = spyOn(multiselect,"hide").and.callThrough();
-		let multiselectPanelEl = fixture.debugElement.query(By.css('.p-multiselect-panel'));
+		let multiselectPanelEl = fixture.debugElement.query(By.css('.ui-multiselect-panel'));
 		expect(multiselect.overlayVisible).toEqual(true);
 		expect(multiselectPanelEl).toBeTruthy();
 		expect(onKeydownSpy).toHaveBeenCalled();
@@ -131,13 +128,13 @@ describe('MultiSelect', () => {
 		inputEl.nativeElement.dispatchEvent(keydownEvent);
 		fixture.detectChanges();
 
-		multiselectPanelEl = fixture.debugElement.query(By.css('.p-multiselect-panel'));
+		multiselectPanelEl = fixture.debugElement.query(By.css('.ui-multiselect-panel'));
 		expect(hideSpy).toHaveBeenCalled();
 		keydownEvent.which = 32;
 		inputEl.nativeElement.dispatchEvent(keydownEvent);
 		fixture.detectChanges();
 
-		multiselectPanelEl = fixture.debugElement.query(By.css('.p-multiselect-panel'));
+		multiselectPanelEl = fixture.debugElement.query(By.css('.ui-multiselect-panel'));
 		expect(multiselect.overlayVisible).toEqual(true);
 		expect(multiselectPanelEl).toBeTruthy();
 	});
@@ -154,7 +151,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		expect(multiselectEl.className).not.toContain('p-multiselect-open');
+		expect(multiselectEl.className).not.toContain('ui-multiselect-open');
 		expect(multiselect.overlayVisible).toEqual(false);
 		expect(clickSpy).toHaveBeenCalled();
 		expect(hideSpy).toHaveBeenCalled();
@@ -180,7 +177,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.p-multiselect-item'));
+		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.ui-multiselect-item'));
 		expect(multiselectItemEl.length).toEqual(10);
 		const bmwEl = multiselectItemEl[1];
 		const onOptionClickSpy = spyOn(multiselect,'onOptionClick').and.callThrough();
@@ -215,7 +212,7 @@ describe('MultiSelect', () => {
 		const keydownEvent: any = document.createEvent('CustomEvent');
         keydownEvent.which = 13;
 		keydownEvent.initEvent('keydown', true, true);
-		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.p-multiselect-item'));
+		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.ui-multiselect-item'));
 		const bmwEl = multiselectItemEl[1];
 		expect(multiselectItemEl.length).toEqual(10);
 		expect(multiselect.value[0]).toEqual('BMW');
@@ -259,7 +256,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.p-multiselect-item'));
+		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.ui-multiselect-item'));
 		expect(multiselectItemEl.length).toEqual(10);
 		const audiEl = multiselectItemEl[0];
 		const bmwEl = multiselectItemEl[1];
@@ -298,7 +295,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.p-multiselect-item'));
+		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.ui-multiselect-item'));
 		expect(multiselectItemEl.length).toEqual(10);
 		const fiatEl = multiselectItemEl[2];
 		const bmwEl = multiselectItemEl[1];
@@ -312,7 +309,7 @@ describe('MultiSelect', () => {
 		fixture.detectChanges();
 
 		expect(multiselect.value[0]).not.toEqual('BMW');
-		expect(bmwEl.nativeElement.className).not.toContain('p-highlight');
+		expect(bmwEl.nativeElement.className).not.toContain('ui-state-highlight');
 		expect(onOptionClickSpy).toBeTruthy();
 	});
 
@@ -336,7 +333,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.p-multiselect-item'));
+		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.ui-multiselect-item'));
 		expect(multiselectItemEl.length).toEqual(10);
 		const bmwEl = multiselectItemEl[1];
 		const fordEl = multiselectItemEl[3];
@@ -372,7 +369,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.p-multiselect-item'));
+		const multiselectItemEl = fixture.debugElement.queryAll(By.css('.ui-multiselect-item'));
 		expect(multiselectItemEl.length).toEqual(10);
 		const bmwEl = multiselectItemEl[1];
 		const fordEl = multiselectItemEl[3];
@@ -384,7 +381,7 @@ describe('MultiSelect', () => {
 		
 		expect(multiselect.value[0]).toEqual('BMW');
 		expect(multiselect.value[1]).toEqual('Ford');
-		expect(fiatEl.nativeElement.className).not.toContain('p-highlight');
+		expect(fiatEl.nativeElement.className).not.toContain('ui-state-highlight');
 		expect(onOptionClickSpy).toHaveBeenCalledTimes(3);
 	});
 
@@ -409,8 +406,8 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const allCheckedEl = fixture.debugElement.query(By.css('.p-checkbox-box')).nativeElement;
-		const readOnlyEl = fixture.debugElement.query(By.css(".p-checkbox")).children[0].children[0].nativeElement;
+		const allCheckedEl = fixture.debugElement.query(By.css('.ui-chkbox-box')).nativeElement;
+		const readOnlyEl = fixture.debugElement.query(By.css(".ui-chkbox")).children[0].children[0].nativeElement;
 		readOnlyEl.dispatchEvent(new Event('focus'));
 		allCheckedEl.click();
 		fixture.detectChanges();
@@ -444,12 +441,12 @@ describe('MultiSelect', () => {
 		fixture.detectChanges();
 
 		readOnlyEl.dispatchEvent(new Event('blur'));
-		const filterInputEl = fixture.debugElement.query(By.css('.p-inputtext')).nativeElement;
+		const filterInputEl = fixture.debugElement.query(By.css('.ui-inputtext')).nativeElement;
 		filterInputEl.value = "v";
 		filterInputEl.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 
-		const allCheckedEl = fixture.debugElement.query(By.css('.p-checkbox-box')).nativeElement;
+		const allCheckedEl = fixture.debugElement.query(By.css('.ui-chkbox-box')).nativeElement;
 		allCheckedEl.click();
 		fixture.detectChanges();
 		
@@ -479,7 +476,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		let allCheckedEl = fixture.debugElement.query(By.css('.p-checkbox-box')).nativeElement;
+		let allCheckedEl = fixture.debugElement.query(By.css('.ui-chkbox-box')).nativeElement;
 		allCheckedEl.click();
 		fixture.detectChanges();
 
@@ -488,7 +485,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		allCheckedEl = fixture.debugElement.query(By.css('.p-checkbox-box')).nativeElement
+		allCheckedEl = fixture.debugElement.query(By.css('.ui-chkbox-box')).nativeElement
 		allCheckedEl.click();
 		fixture.detectChanges();
 
@@ -516,7 +513,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const filterInputEl = fixture.debugElement.query(By.css('.p-inputtext')).nativeElement;
+		const filterInputEl = fixture.debugElement.query(By.css('.ui-inputtext')).nativeElement;
 		filterInputEl.value = "f";
 		filterInputEl.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
@@ -544,7 +541,7 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const filterInputEl = fixture.debugElement.query(By.css('.p-inputtext')).nativeElement;
+		const filterInputEl = fixture.debugElement.query(By.css('.ui-inputtext')).nativeElement;
 		filterInputEl.value = "f";
 		filterInputEl.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
@@ -582,17 +579,17 @@ describe('MultiSelect', () => {
 		multiselectEl.click();
 		fixture.detectChanges();
 
-		const filterInputEl = fixture.debugElement.query(By.css('.p-inputtext')).nativeElement;
+		const filterInputEl = fixture.debugElement.query(By.css('.ui-inputtext')).nativeElement;
 		filterInputEl.value = "f";
 		filterInputEl.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 
 		expect(multiselect.visibleOptions.length).toEqual(2);
-		const closeEl = fixture.debugElement.query(By.css(".p-multiselect-close"));
+		const closeEl = fixture.debugElement.query(By.css(".ui-multiselect-close"));
 		closeEl.nativeElement.click();
 		fixture.detectChanges();
 
-		expect(fixture.debugElement.query(By.css("div")).nativeElement.className).not.toContain("p-multiselect-open");
+		expect(fixture.debugElement.query(By.css("div")).nativeElement.className).not.toContain("ui-multiselect-open");
 	});
 
 	it('should display not found message when filter returns 0 results', () => {
@@ -615,15 +612,14 @@ describe('MultiSelect', () => {
 			multiselectEl.click();
 			fixture.detectChanges();
 	
-			const filterInputEl = fixture.debugElement.query(By.css('.p-inputtext')).nativeElement;
+			const filterInputEl = fixture.debugElement.query(By.css('.ui-inputtext')).nativeElement;
 			filterInputEl.value = "1";
 			filterInputEl.dispatchEvent(new Event('input'));
 			fixture.detectChanges();
 	
-			multiselect.cd.detectChanges();
-			const visibleItems = fixture.debugElement.queryAll(By.css('.p-multiselect-items li'))
+			const visibleItems = fixture.debugElement.queryAll(By.css('.ui-multiselect-items li'))
 				.filter(el => el.styles.display !== 'none');
-			const emptyMesage = fixture.debugElement.query(By.css('.p-multiselect-empty-message')); 
+			const emptyMesage = visibleItems[0]; 
 			expect(multiselect.visibleOptions.length).toEqual(0);
 			expect(visibleItems.length).toEqual(1);
 			expect(emptyMesage).toBeTruthy();

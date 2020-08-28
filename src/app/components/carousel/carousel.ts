@@ -1,63 +1,57 @@
-import { Component, Input, ElementRef, ViewChild, AfterContentInit, TemplateRef, ContentChildren, QueryList, NgModule, NgZone, EventEmitter, Output, ContentChild, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, AfterContentInit, TemplateRef, ContentChildren, QueryList, NgModule, NgZone, EventEmitter, Output, ContentChild, ChangeDetectionStrategy } from '@angular/core';
 import { PrimeTemplate, SharedModule, Header, Footer } from 'primeng/api';
-import { RippleModule } from 'primeng/ripple';  
 import { CommonModule } from '@angular/common';
 import { UniqueComponentId } from 'primeng/utils';
 
 @Component({
 	selector: 'p-carousel',
 	template: `
-		<div [attr.id]="id" [ngClass]="{'p-carousel p-component':true, 'p-carousel-vertical': isVertical(), 'p-carousel-horizontal': !isVertical()}" [ngStyle]="style" [class]="styleClass">
-			<div class="p-carousel-header" *ngIf="headerFacet || headerTemplate">
-                <ng-content select="p-header"></ng-content>
-                <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+		<div [attr.id]="id" [ngClass]="containerClass()" [ngStyle]="style" [class]="styleClass">
+			<div class="ui-carousel-header" *ngIf="headerFacet">
+				<ng-content select="p-header"></ng-content>
 			</div>
-			<div [class]="contentClass" [ngClass]="'p-carousel-content'">
-				<div class="p-carousel-container">
-					<button type="button" [ngClass]="{'p-carousel-prev p-link':true, 'p-disabled': isBackwardNavDisabled()}" [disabled]="isBackwardNavDisabled()" (click)="navBackward($event)" pRipple>
-						<span [ngClass]="{'p-carousel-prev-icon pi': true, 'pi-chevron-left': !isVertical(), 'pi-chevron-up': isVertical()}"></span>
+			<div [class]="contentClasses()">
+				<div class="ui-carousel-container">
+					<button [ngClass]="{'ui-carousel-prev ui-button ui-widget ui-state-default ui-corner-all':true, 'ui-state-disabled': isBackwardNavDisabled()}" [disabled]="isBackwardNavDisabled()" (click)="navBackward($event)">
+						<span [ngClass]="{'ui-carousel-prev-icon pi': true, 'pi-chevron-left': !isVertical(), 'pi-chevron-up': isVertical()}"></span>
 					</button>
-					<div class="p-carousel-items-content" [ngStyle]="{'height': isVertical() ? verticalViewPortHeight : 'auto'}">
-						<div #itemsContainer class="p-carousel-items-container" (transitionend)="onTransitionEnd()" (touchend)="onTouchEnd($event)" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)">
-                            <div *ngFor="let item of clonedItemsForStarting; let index = index" [ngClass]= "{'p-carousel-item p-carousel-item-cloned': true,
-                                'p-carousel-item-active': (totalShiftedItems * -1) === (value.length),
-							    'p-carousel-item-start': 0 === index,
-							    'p-carousel-item-end': (clonedItemsForStarting.length - 1) === index}">
+					<div class="ui-carousel-items-content" [ngStyle]="{'height': isVertical() ? verticalViewPortHeight : 'auto'}">
+						<div #itemsContainer class="ui-carousel-items-container" (transitionend)="onTransitionEnd()" (touchend)="onTouchEnd($event)" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)">
+							<div *ngFor="let item of clonedItemsForStarting; let index = index" [ngClass]= "{'ui-carousel-item ui-carousel-item-cloned': true,'ui-carousel-item-active': (totalShiftedItems * -1) === (value.length),
+							'ui-carousel-item-start': 0 === index,
+							'ui-carousel-item-end': (clonedItemsForStarting.length - 1) === index}">
 								<ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
 							</div>
-                            <div *ngFor="let item of value; let index = index" [ngClass]= "{'p-carousel-item': true,
-                                'p-carousel-item-active': (firstIndex() <= index && lastIndex() >= index),
-							    'p-carousel-item-start': firstIndex() === index,
-							    'p-carousel-item-end': lastIndex() === index}">
+							<div *ngFor="let item of value; let index = index" [ngClass]= "{'ui-carousel-item': true,'ui-carousel-item-active': (firstIndex() <= index && lastIndex() >= index),
+							'ui-carousel-item-start': firstIndex() === index,
+							'ui-carousel-item-end': lastIndex() === index}">
 								<ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
 							</div>
-                            <div *ngFor="let item of clonedItemsForFinishing; let index = index" [ngClass]= "{'p-carousel-item p-carousel-item-cloned': true,
-                                'p-carousel-item-active': ((totalShiftedItems *-1) === numVisible),
-							    'p-carousel-item-start': 0 === index,
-							    'p-carousel-item-end': (clonedItemsForFinishing.length - 1) === index}">
+							<div *ngFor="let item of clonedItemsForFinishing; let index = index" [ngClass]= "{'ui-carousel-item ui-carousel-item-cloned': true,'ui-carousel-item-active': ((totalShiftedItems *-1) === numVisible),
+							'ui-carousel-item-start': 0 === index,
+							'ui-carousel-item-end': (clonedItemsForFinishing.length - 1) === index}">
 								<ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
 							</div>
 						</div>
 					</div>
-					<button type="button" [ngClass]="{'p-carousel-next p-link': true, 'p-disabled': isForwardNavDisabled()}" [disabled]="isForwardNavDisabled()" (click)="navForward($event)" pRipple>
-						<span [ngClass]="{'p-carousel-prev-icon pi': true, 'pi-chevron-right': !isVertical(), 'pi-chevron-down': isVertical()}"></span>
+					<button [ngClass]="{'ui-carousel-next ui-button ui-widget ui-state-default ui-corner-all': true, 'ui-state-disabled': isForwardNavDisabled()}" [disabled]="isForwardNavDisabled()" (click)="navForward($event)">
+						<span [ngClass]="{'ui-carousel-next-icon pi': true, 'pi-chevron-right': !isVertical(), 'pi-chevron-down': isVertical()}"></span>
 					</button>
 				</div>
-				<ul [ngClass]="'p-carousel-indicators p-reset'" [class]="indicatorsContentClass">
-					<li *ngFor="let totalDot of totalDotsArray(); let i = index" [ngClass]="{'p-carousel-indicator':true,'p-highlight': _page === i}">
-						<button type="button" class="p-link" (click)="onDotClick($event, i)"></button>
+				<ul [class]="dotsContentClasses()">
+					<li *ngFor="let totalDot of totalDotsArray(); let i = index" [ngClass]="{'ui-carousel-dot-item':true,'ui-state-highlight': _page === i}">
+						<button class="ui-button ui-widget ui-state-default ui-corner-all" (click)="onDotClick($event, i)">
+							<span [ngClass]="{'ui-carousel-dot-icon pi':true, 'pi-circle-on': _page === i, 'pi-circle-off': !(_page === i)}"></span>
+						</button>
 					</li>
 				</ul>
 			</div>
-			<div class="p-carousel-footer" *ngIf="footerFacet || footerTemplate">
-                <ng-content select="p-footer"></ng-content>
-                <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+			<div class="ui-carousel-footer" *ngIf="footerFacet">
+				<ng-content select="p-footer"></ng-content>
 			</div>
 		</div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./carousel.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Carousel implements AfterContentInit {
 
@@ -104,7 +98,7 @@ export class Carousel implements AfterContentInit {
 	
 	@Input() contentClass: String = "";
 
-	@Input() indicatorsContentClass: String = "";
+	@Input() dotsContainerClass: String = "";
 
 	@Input() get value() :any[] {
 		return this._value;
@@ -186,13 +180,9 @@ export class Carousel implements AfterContentInit {
 
 	swipeThreshold: number = 20;
 
-    itemTemplate: TemplateRef<any>;
-    
-    headerTemplate: TemplateRef<any>;
+	public itemTemplate: TemplateRef<any>;
 
-    footerTemplate: TemplateRef<any>;
-
-	constructor(public el: ElementRef, public zone: NgZone, public cd: ChangeDetectorRef) { 
+	constructor(public el: ElementRef, public zone: NgZone) { 
 		this.totalShiftedItems = this.page * this.numScroll * -1; 
 	}
 
@@ -220,19 +210,11 @@ export class Carousel implements AfterContentInit {
 			switch (item.getType()) {
 				case 'item':
 					this.itemTemplate = item.template;
-                break;
-
-                case 'header':
-                    this.headerTemplate = item.template;
-                break;
-
-                case 'footer':
-                    this.footerTemplate = item.template;
-                break;
+					break;
 
 				default:
 					this.itemTemplate = item.template;
-                break;
+					break;
 			}
 		});
 	}
@@ -315,7 +297,7 @@ export class Carousel implements AfterContentInit {
 			}
 
 			let innerHTML = `
-            #${this.id} .p-carousel-item {
+            #${this.id} .ui-carousel-item {
 				flex: 1 0 ${ (100/ this.numVisible) }%
 			}
         `;
@@ -345,7 +327,7 @@ export class Carousel implements AfterContentInit {
 
 					innerHTML += `
                     @media screen and (max-width: ${res.breakpoint}) {
-                        #${this.id} .p-carousel-item {
+                        #${this.id} .ui-carousel-item {
                             flex: 1 0 ${ (100/ res.numVisible) }%
                         }
                     }
@@ -395,8 +377,6 @@ export class Carousel implements AfterContentInit {
 				this._numVisible = matchedResponsiveData.numVisible;
 				this.setCloneItems();
 			}
-
-			this.cd.markForCheck();
 		}
 	}
 	
@@ -424,6 +404,22 @@ export class Carousel implements AfterContentInit {
 	totalDotsArray() {
 		const totalDots = this.totalDots();
 		return totalDots <= 0 ? [] : Array(totalDots).fill(0);
+	}
+
+	containerClass() {
+		return {
+			'ui-carousel ui-widget':true, 
+			'ui-carousel-vertical': this.isVertical(),
+			'ui-carousel-horizontal': !this.isVertical()
+		};
+	}
+
+	contentClasses() {
+		return 'ui-carousel-content '+ this.contentClass;
+	}
+
+	dotsContentClasses() {
+		return 'ui-carousel-dots-container ui-helper-reset ' + this.dotsContainerClass;
 	}
 
 	isVertical() {
@@ -641,7 +637,7 @@ export class Carousel implements AfterContentInit {
 }
 
 @NgModule({
-	imports: [CommonModule, SharedModule, RippleModule],
+	imports: [CommonModule, SharedModule],
 	exports: [CommonModule, Carousel, SharedModule],
 	declarations: [Carousel]
 })

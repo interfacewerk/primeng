@@ -1,10 +1,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TabMenuDemo} from './tabmenudemo';
+import {TabMenuDemo, InfoComponent, MessageComponent} from './tabmenudemo';
 import {TabMenuDemoRoutingModule} from './tabmenudemo-routing.module';
 import {TabMenuModule} from 'primeng/tabmenu';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import { MessageModule } from 'primeng/message';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -12,10 +13,13 @@ import {AppCodeModule} from '../../app.code.component';
 		TabMenuDemoRoutingModule,
         TabMenuModule,
 		TabViewModule,
-		AppCodeModule
+		MessageModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		TabMenuDemo,
+		InfoComponent,
+		MessageComponent
 	]
 })
 export class TabMenuDemoModule {}

@@ -59,7 +59,7 @@ describe('Dialog', () => {
         buttonEl.nativeElement.click();
         fixture.detectChanges();
 
-        const headerEl = fixture.debugElement.query(By.css('.p-dialog-title'));
+        const headerEl = fixture.debugElement.query(By.css('.ui-dialog-title'));
         expect(headerEl.nativeElement.textContent).toContain('PrimeNG Dialog Header')
     });
     
@@ -68,7 +68,7 @@ describe('Dialog', () => {
         buttonEl.nativeElement.click();
         fixture.detectChanges();
         
-        const closeEl = fixture.debugElement.query(By.css('.p-dialog-header-close'));
+        const closeEl = fixture.debugElement.query(By.css('.ui-dialog-titlebar-close'));
         expect(closeEl).not.toBeNull();
     });
     
@@ -77,7 +77,7 @@ describe('Dialog', () => {
         buttonEl.nativeElement.click();
         fixture.detectChanges();
 
-        const resizeEl = fixture.debugElement.query(By.css('.p-resizable-handle'));
+        const resizeEl = fixture.debugElement.query(By.css('.ui-resizable-handle'));
         expect(resizeEl).not.toBeNull();
     });
 
@@ -94,7 +94,7 @@ describe('Dialog', () => {
         buttonEl.nativeElement.click();
         fixture.detectChanges();
 
-        const rtlEl = fixture.debugElement.query(By.css('.p-dialog-rtl'));
+        const rtlEl = fixture.debugElement.query(By.css('.ui-dialog-rtl'));
         expect(rtlEl).toBeTruthy();
     });
     
@@ -103,7 +103,7 @@ describe('Dialog', () => {
         buttonEl.nativeElement.click();
         fixture.detectChanges();
 
-        const draggableEl = fixture.debugElement.query(By.css('.p-dialog-draggable'));
+        const draggableEl = fixture.debugElement.query(By.css('.ui-dialog-draggable'));
         expect(draggableEl).toBeTruthy();
     });
             
@@ -114,7 +114,7 @@ describe('Dialog', () => {
         fixture.detectChanges();
         dialog.visibleChange.subscribe(value => show = value);
         
-        const closeEl = fixture.nativeElement.querySelector('.p-dialog-header-close');
+        const closeEl = fixture.nativeElement.querySelector('.ui-dialog-titlebar-close');
         closeEl.click();
         
         expect(show).toEqual(false);
@@ -130,7 +130,7 @@ describe('Dialog', () => {
         
         tick(300);
         const maximizeSpy = spyOn(dialog,'maximize').and.callThrough();
-        const maximizableEl = fixture.nativeElement.querySelector('.p-dialog-header-maximize');
+        const maximizableEl = fixture.nativeElement.querySelector('.ui-dialog-titlebar-maximize');
         expect(maximizableEl).toBeTruthy();
         maximizableEl.click();
         fixture.detectChanges();
@@ -160,12 +160,12 @@ describe('Dialog', () => {
         dialog.container = fixture.debugElement.query(By.css('div')).nativeElement;
         fixture.detectChanges();
 
-        const maximizableEl = fixture.nativeElement.querySelector('.p-dialog-header-maximize ');
+        const maximizableEl = fixture.nativeElement.querySelector('.ui-dialog-titlebar-maximize ');
         expect(maximizableEl).toBeTruthy();
         maximizableEl.click();
         fixture.detectChanges();
 
-        const closeEl = fixture.debugElement.query(By.css('.p-dialog-header-close'));    
+        const closeEl = fixture.debugElement.query(By.css('.ui-dialog-titlebar-close'));    
         dialog.visibleChange.subscribe(value => dialog.visible = value);
         closeEl.nativeElement.click();
         tick(350);
@@ -181,12 +181,11 @@ describe('Dialog', () => {
         dialog.dismissableMask = true;
         fixture.detectChanges();
 
-        const buttonEl = fixture.debugElement.query(By.css('button'));
-        buttonEl.nativeElement.click();
+        dialog.visible = true;
         fixture.detectChanges();
 
         const dialogEl = fixture.debugElement.query(By.css('div'));
-        const closeEl = fixture.debugElement.query(By.css('.p-dialog-header-close'));
+        const closeEl = fixture.debugElement.query(By.css('.ui-dialog-titlebar-close'));
         expect(dialogEl).toBeTruthy();
         dialog.visibleChange.subscribe(value => dialog.visible = value);
         closeEl.nativeElement.click();
@@ -247,7 +246,7 @@ describe('Dialog', () => {
         dialog.container = fixture.debugElement.query(By.css('div')).nativeElement;
         fixture.detectChanges();
 
-        const maximizableEl = fixture.nativeElement.querySelector('.p-dialog-header-maximize ');
+        const maximizableEl = fixture.nativeElement.querySelector('.ui-dialog-titlebar-maximize ');
         maximizableEl.click();
         fixture.detectChanges();
 
@@ -280,7 +279,7 @@ describe('Dialog', () => {
         let event = {
             'pageX':500,
             'pageY':500,
-            'target': fixture.debugElement.nativeElement.querySelector('.p-dialog-header')
+            'target': fixture.debugElement.nativeElement.querySelector('.ui-dialog-titlebar')
         };
         dialog.initDrag(event as MouseEvent);
         expect(dialog.dragging).toEqual(true);        

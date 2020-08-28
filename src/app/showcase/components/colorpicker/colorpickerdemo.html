@@ -1,52 +1,63 @@
 <div class="content-section introduction">
-    <div class="feature-intro">
-        <h1>ColorPicker</h1>
-        <p>ColorPicker is an input component to select a color.</p>
+    <div>
+        <span class="feature-title">ColorPicker</span>
+        <span>ColorPicker is an input component to select a color.</span>
     </div>
 </div>
 
 <div class="content-section implementation">
-    <div class="card">
-        <h5>Inline</h5>
-        <p-colorPicker [(ngModel)]="color1" [inline]="true"></p-colorPicker>
-        
-        <h5>Overlay</h5>
-        <p-colorPicker [(ngModel)]="color2"></p-colorPicker>
-    </div>
+    <h3 class="first">Inline</h3>
+    <p-colorPicker [(ngModel)]="color1" [inline]="true"></p-colorPicker>
+    
+    <p style="margin-top:.5em">Selected Color: <span style="display:inline-block;width:32px;height:32px;vertical-align:middle" [style.backgroundColor]="color1"></span> {{color1}} </p>    
+    
+    <h3>Overlay</h3>
+    <p-colorPicker [(ngModel)]="color2"></p-colorPicker>
+    
+    <p style="margin-top:.5em">Selected Color: <span [ngStyle]="{'color':color2}">{{color2}}</span></p> 
 </div>
 
 <div class="content-section documentation">
     <p-tabView>
         <p-tabPanel header ="Documentation">
-            <h5>Import</h5>
-<app-code lang="typescript" ngNonBindable ngPreserveWhitespaces>
+            <h3>Import</h3>
+<pre>
+<code class="language-typescript" pCode ngNonBindable>
 import &#123;ColorPickerModule&#125; from 'primeng/colorpicker';
-</app-code>
+</code>
+</pre>
 
-            <h5>Getting Started</h5>
+            <h3>Getting Started</h3>
             <p>ColorPicker uses ngModel directive to bind a value.</p>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-markup" pCode ngNonBindable>
 &lt;p-colorPicker [(ngModel)]="color"&gt;&lt;/p-colorPicker&gt;
-</app-code>
+</code>
+</pre>
 
-<app-code lang="typescript" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-typescript" pCode ngNonBindable>
 export class MyComponent &#123;
 
     color: string;
 
 &#125;
-</app-code>
+</code>
+</pre>
 
-            <h5>Formats</h5>
+            <h3>Formats</h3>
             <p>Default color format to use in value binding is "hex" and other possible values are "rgb" and "hsb". 
                 Example below has 3 colorpickers having default values with different formats.</p>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-markup" pCode ngNonBindable>
 &lt;p-colorPicker [(ngModel)]="color1"&gt;&lt;/p-colorPicker&gt;
 &lt;p-colorPicker [(ngModel)]="color2" format="rgb"&gt;&lt;/p-colorPicker&gt;
 &lt;p-colorPicker [(ngModel)]="color3" format="hsb"&gt;&lt;/p-colorPicker&gt;
-</app-code>
+</code>
+</pre>
 
-<app-code lang="typescript" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-typescript" pCode ngNonBindable>
 export class MyComponent &#123;
 
     color1: string;
@@ -60,29 +71,36 @@ export class MyComponent &#123;
     &#125;;
 
 &#125;
-</app-code>
+</code>
+</pre>
 
-            <h5>Overlay and Inline</h5>
+            <h3>Overlay and Inline</h3>
             <p>ColorPicker can be displayed as inline or as an overlay (default) using the "inline" property.</p>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-markup" pCode ngNonBindable>
 &lt;p-colorPicker [(ngModel)]="color1" &gt;&lt;/p-colorPicker&gt;
 &lt;p-colorPicker [(ngModel)]="color2" [inline]="true"&gt;&lt;/p-colorPicker&gt;
-</app-code>
+</code>
+</pre>
 
-            <h5>Model Driven Forms</h5>
+            <h3>Model Driven Forms</h3>
             <p>Colorpicker can be used in a model driven form as well.</p>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-markup" pCode ngNonBindable>
 &lt;p-colorPicker formControlName="color"&gt;&lt;/p-colorPicker&gt;
-</app-code>
+</code>
+</pre>
      
-        <h5>Animation Configuration</h5>
+        <h3>Animation Configuration</h3>
         <p>Transition of the open and hide animations can be customized using the showTransitionOptions and hideTransitionOptions properties, 
             example below disables the animations altogether.</p>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-markup" pCode ngNonBindable>
 &lt;p-colorPicker [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" formControlName="color"&gt;&lt;/p-colorPicker&gt;
-</app-code>       
+</code>
+</pre>       
     
-            <h5>Properties</h5>
+            <h3>Properties</h3>
             <div class="doc-tablewrapper">
                 <table class="doc-table">
                     <thead>
@@ -157,20 +175,20 @@ export class MyComponent &#123;
                         <tr>
                             <td>showTransitionOptions</td>
                             <td>string</td>
-                            <td>.12s cubic-bezier(0, 0, 0.2, 1)</td>
+                            <td>225ms ease-out</td>
                             <td>Transition options of the show animation.</td>
                         </tr>
                         <tr>
                             <td>hideTransitionOptions</td>
                             <td>string</td>
-                            <td>.1s linear</td>
+                            <td>195ms ease-in</td>
                             <td>Transition options of the hide animation.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-        <h5>Events</h5>
+        <h3>Events</h3>
         <div class="doc-tablewrapper">
             <table class="doc-table">
                 <thead>
@@ -192,7 +210,7 @@ export class MyComponent &#123;
             </table>
         </div>
 
-        <h5>Styling</h5>
+        <h3>Styling</h3>
         <p>Following is the list of structural style classes, for theming classes visit <a href="#" [routerLink]="['/theming']">theming page</a>.</p>
         <div class="doc-tablewrapper">
             <table class="doc-table">
@@ -204,50 +222,50 @@ export class MyComponent &#123;
                 </thead>
                 <tbody>
                     <tr>
-                        <td>p-colorpicker</td>
+                        <td>ui-colorpicker</td>
                         <td>Container element.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-overlay</td>
+                        <td>ui-colorpicker-overlay</td>
                         <td>Container element in overlay mode.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-preview </td>
+                        <td>ui-colorpicker-preview </td>
                         <td>Preview input in overlay mode.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-panel</td>
+                        <td>ui-colorpicker-panel</td>
                         <td>Panel element of the colorpicker.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-content</td>
+                        <td>ui-colorpicker-content</td>
                         <td>Wrapper that contains color and hue sections.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-color-selector</td>
+                        <td>ui-colorpicker-color-selector</td>
                         <td>Color selector container.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-color</td>
+                        <td>ui-colorpicker-color</td>
                         <td>Color element.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-color-handle</td>
+                        <td>ui-colorpicker-color-handle</td>
                         <td>Handle of the color element.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-hue</td>
+                        <td>ui-colorpicker-hue</td>
                         <td>Hue slider.</td>
                     </tr>
                     <tr>
-                        <td>p-colorpicker-hue-handle</td>
+                        <td>ui-colorpicker-hue-handle</td>
                         <td>Handle of the hue slider.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <h5>Dependencies</h5>
+        <h3>Dependencies</h3>
         <p>None.</p>
 
         </p-tabPanel>
@@ -256,23 +274,30 @@ export class MyComponent &#123;
             <a href="https://github.com/primefaces/primeng/tree/master/src/app/showcase/components/colorpicker" class="btn-viewsource" target="_blank">
                 <span>View on GitHub</span>
             </a>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
-&lt;h5&gt;Inline&lt;/h5&gt;
+<pre>
+<code class="language-markup" pCode ngNonBindable>
+&lt;h3 class="first"&gt;Inline&lt;/h3&gt;
 &lt;p-colorPicker [(ngModel)]="color1" [inline]="true"&gt;&lt;/p-colorPicker&gt;
 
+&lt;p style="margin-top:.5em"&gt;Selected Color: &lt;span style="display:inline-block;width:32px;height:32px;vertical-align:middle" [style.backgroundColor]="color1"&gt;&lt;/span&gt; &#123;&#123;color1&#125;&#125; &lt;/p&gt;    
 
-&lt;h5&gt;Overlay&lt;/h5&gt;
+&lt;h3&gt;Overlay&lt;/h3&gt;
 &lt;p-colorPicker [(ngModel)]="color2"&gt;&lt;/p-colorPicker&gt;
-</app-code>
 
-<app-code lang="typescript" ngNonBindable ngPreserveWhitespaces>
+&lt;p style="margin-top:.5em"&gt;Selected Color: &lt;span [ngStyle]="&#123;'color':color2&#125;"&gt;&#123;&#123;color2&#125;&#125;&lt;/span&gt;&lt;/p&gt; 
+</code>
+</pre>
+
+<pre>
+<code class="language-typescript" pCode ngNonBindable>
 export class ColorPickerDemo &#123;
 
     color1: string;
     
     color2: string = '#1976D2';
 &#125;
-</app-code>
+</code>
+</pre>
         </p-tabPanel>
     </p-tabView>
 </div>

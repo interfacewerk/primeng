@@ -1,4 +1,4 @@
-import {NgModule,Component,ElementRef,OnInit,Input,Output,EventEmitter,forwardRef,ViewChild,ChangeDetectorRef,ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {NgModule,Component,ElementRef,OnInit,Input,Output,EventEmitter,forwardRef,ViewChild,ChangeDetectorRef,ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
@@ -32,9 +32,7 @@ export const SPINNER_VALUE_ACCESSOR: any = {
         '[class.ui-inputwrapper-focus]': 'focus'
     },
     providers: [SPINNER_VALUE_ACCESSOR],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./spinner.css']
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class Spinner implements OnInit,ControlValueAccessor {
     

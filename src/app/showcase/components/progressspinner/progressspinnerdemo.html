@@ -1,37 +1,39 @@
 <div class="content-section introduction">
-    <div class="feature-intro">
-        <h1>ProgressSpinner</h1>
-        <p>ProgressSpinner is a process status indicator.</p>
+    <div>
+        <span class="feature-title">ProgressSpinner</span>
+        <span>ProgressSpinner is a process status indicator.</span>
     </div>
 </div>
 
 <div class="content-section implementation">
-    <div class="card">
-        <h5>Basic</h5>
-        <p-progressSpinner></p-progressSpinner>
-    
-        <h5>Custom</h5>
-        <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
-    </div>
+    <h3 class="first">Basic</h3>
+    <p-progressSpinner></p-progressSpinner>
+
+    <h3>Custom</h3>
+    <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
 </div>
 
 <div class="content-section documentation">
     <p-tabView>
         <p-tabPanel header="Documentation">
-            <h5>Import</h5>
-<app-code lang="typescript" ngNonBindable ngPreserveWhitespaces>
+            <h3>Import</h3>
+<pre>
+<code class="language-typescript" pCode ngNonBindable>
 import &#123;ProgressSpinnerModule&#125; from 'primeng/progressspinner';
-</app-code>
+</code>
+</pre>
 
-            <h5>Getting Started</h5>
+            <h3>Getting Started</h3>
             <p>ProgressSpinner is defined using p-progressSpinner element.</p>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-markup" pCode ngNonBindable>
 &lt;p-progressSpinner&gt;&lt;/p-progressSpinner&gt;
-</app-code>
-            <h5>Colors</h5>
+</code>
+</pre>
+            <h3>Colors</h3>
             <p>Colors of the spinner can be changed by overriding the keyframes animation</p>
-
-<app-code lang="css" ngNonBindable ngPreserveWhitespaces>
+<pre>
+<code class="language-css" pCode ngNonBindable>
 @keyframes ui-progress-spinner-color &#123;
     100%,
     0% &#123;
@@ -48,11 +50,12 @@ import &#123;ProgressSpinnerModule&#125; from 'primeng/progressspinner';
         stroke: #ffa700;
     &#125;
 &#125;
-</app-code>
+</code>
+</pre>
             
 
 
-            <h5>Properties</h5>
+            <h3>Properties</h3>
             <div class="doc-tablewrapper">
                 <table class="doc-table">
                     <thead>
@@ -86,7 +89,7 @@ import &#123;ProgressSpinnerModule&#125; from 'primeng/progressspinner';
                 </table>
             </div>
 
-            <h5>Styling</h5>
+            <h3>Styling</h3>
             <p>Following is the list of structural style classes, for theming classes visit <a href="#" [routerLink]="['/theming']">theming page</a>.</p>
             <div class="doc-tablewrapper">
                 <table class="doc-table">
@@ -98,22 +101,22 @@ import &#123;ProgressSpinnerModule&#125; from 'primeng/progressspinner';
                     </thead>
                     <tbody>
                         <tr>
-                            <td>p-progress-spinner</td>
+                            <td>ui-progress-spinner</td>
                             <td>Container element.</td>
                         </tr>
                         <tr>
-                            <td>p-progress-circle</td>
+                            <td>ui-progress-circle</td>
                             <td>SVG element.</td>
                         </tr>
                         <tr>
-                            <td>p-progress-path</td>
+                            <td>ui-progress-path</td>
                             <td>Circle element.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <h5>Dependencies</h5>
+            <h3>Dependencies</h3>
             <p>None.</p>
         </p-tabPanel>
 
@@ -124,13 +127,15 @@ import &#123;ProgressSpinnerModule&#125; from 'primeng/progressspinner';
             <a href="https://stackblitz.com/edit/primeng-progressspinner-demo" class="btn-viewsource" style="margin-left: .5em;" target="_blank">
                 <span>Edit in StackBlitz</span>
             </a>
-<app-code lang="markup" ngNonBindable ngPreserveWhitespaces>
-&lt;h5&gt;Basic&lt;/h5&gt;
+<pre>
+<code class="language-markup" pCode ngNonBindable>
+&lt;h3&gt;Basic&lt;/h3&gt;
 &lt;p-progressSpinner&gt;&lt;/p-progressSpinner&gt;
 
-&lt;h5&gt;Custom&lt;/h5&gt;
+&lt;h3&gt;Custom&lt;/h3&gt;
 &lt;p-progressSpinner [style]="&#123;width: '50px', height: '50px'&#125;" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"&gt;&lt;/p-progressSpinner&gt;
-</app-code>
+</code>
+</pre>
         </p-tabPanel>
         <p-tabPanel header="StackBlitz">
             <ng-template pTemplate="content">

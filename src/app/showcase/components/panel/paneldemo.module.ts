@@ -4,9 +4,9 @@ import {PanelDemo} from './paneldemo';
 import {PanelDemoRoutingModule} from './paneldemo-routing.module';
 import {PanelModule} from 'primeng/panel';
 import {ToastModule} from 'primeng/toast';
-import { MenuModule } from 'primeng/menu';
+import {SplitButtonModule} from 'primeng/splitbutton';
 import {TabViewModule} from 'primeng/tabview';
-import {AppCodeModule} from '../../app.code.component';
+import {CodeHighlighterModule} from 'primeng/codehighlighter';
 
 @NgModule({
 	imports: [
@@ -14,9 +14,9 @@ import {AppCodeModule} from '../../app.code.component';
 		PanelDemoRoutingModule,
         PanelModule,
         ToastModule,
-		TabViewModule,
-		AppCodeModule,
-		MenuModule
+        SplitButtonModule,
+        TabViewModule,
+        CodeHighlighterModule
 	],
 	declarations: [
 		PanelDemo

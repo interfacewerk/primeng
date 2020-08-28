@@ -1,26 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../domain/product';
-import { ProductService } from '../../service/productservice';
+import { Car } from '../../components/domain/car';
+import { CarService } from '../../service/carservice';
 
 @Component({
     templateUrl: './tabledynamicdemo.html',
 })
 export class TableDynamicDemo implements OnInit {
 
-    products: Product[];
+    cars: Car[];
 
     cols: any[];
 
-    constructor(private productService: ProductService) { }
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.productService.getProductsSmall().then(data => this.products = data);
+        this.carService.getCarsSmall().then(cars => this.cars = cars);
 
         this.cols = [
-            { field: 'code', header: 'Code' },
-            { field: 'name', header: 'Name' },
-            { field: 'category', header: 'Category' },
-            { field: 'quantity', header: 'Quantity' }
+            { field: 'vin', header: 'Vin' },
+            {field: 'year', header: 'Year' },
+            { field: 'brand', header: 'Brand' },
+            { field: 'color', header: 'Color' }
         ];
     }
 }

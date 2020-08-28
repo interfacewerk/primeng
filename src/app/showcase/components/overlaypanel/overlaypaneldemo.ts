@@ -1,26 +1,28 @@
 import {Component} from '@angular/core';
-import { ProductService } from '../../service/productservice';
-import { Product } from '../../domain/product';
-import { MessageService } from 'primeng/api';
+import {OverlayPanel} from '../../../components/overlaypanel/overlaypanel';
+import {Car} from '../../components/domain/car';
+import {CarService} from '../../service/carservice';
 
 @Component({
-    templateUrl: './overlaypaneldemo.html',
-    styleUrls: ['./overlaypanel.scss'],
-    providers: [MessageService]
+    templateUrl: './overlaypaneldemo.html'
 })
 export class OverlayPanelDemo {
 
-    products: Product[];
+    cars1: Car[];
     
-    selectedProduct: Product;
-
-    constructor(private productService: ProductService, private messageService: MessageService) { }
+    cars2: Car[];
+    
+    selectedCar: Car;
+    
+    constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.productService.getProductsSmall().then(products => this.products = products);
+        this.carService.getCarsSmall().then(cars => this.cars1 = cars);
+        this.carService.getCarsSmall().then(cars => this.cars2 = cars);
     }
-
-    onRowSelect(event) {
-        this.messageService.add({severity: 'info', summary: 'Product Selected', detail: event.data.name});
+    
+    selectCar(event,car: Car, overlaypanel: OverlayPanel) {
+        this.selectedCar = car;
+        overlaypanel.toggle(event);
     }
 }
